@@ -1,0 +1,14 @@
+id: R4
+title: { es: "Alguien ha tocado los datos", gl: "Alguén tocou os datos" }
+number: "3"
+stage: { es: "Calidad", gl: "Calidade" }
+icon: "🔎"
+intro:
+  es: "La primera cifra no es de fiar: hay registros raros. Toca investigar como detectives y decidir qué hacer con cada dato sucio."
+  gl: "A primeira cifra non é de fiar: hai rexistros raros. Toca investigar como detectives e decidir que facer con cada dato sucio."
+briefing:
+  - { es: "Encontrar la causa de tres grupos de datos raros.", gl: "Atopar a causa de tres grupos de datos raros." }
+  - { es: "Entrevistar a Noa y a Brais (personajes con IA).", gl: "Entrevistar a Noa e a Brais (personaxes con IA)." }
+  - { es: "Decidir qué hacer con cada dato sucio y contar cuántos se quitan.", gl: "Decidir que facer con cada dato sucio e contar cantos se quitan." }
+target_minutes: 25
+locks: [r4a_pruebas, r4b_entrevistas, r4c_veredicto, r4d_codigo]

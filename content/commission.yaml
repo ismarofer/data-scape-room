@@ -1,0 +1,71 @@
+# La Comisión (final). Tres personas, dos preguntas cada una (6 turnos). Las preguntas por plantilla se eligen según las decisiones del equipo;
+# con IA live se generan a partir de las mismas decisiones y se cae a esta plantilla si el modelo tarda o falla.
+turns: 6
+personas:
+  - id: valcarcel
+    name: "Dra. Marta Valcárcel"
+    role: { es: "Directora Médica y presidenta de la Comisión", gl: "Directora Médica e presidenta da Comisión" }
+    focus: { es: "Rigurosa y cálida; odia las cifras sin contexto: denominadores, comparabilidad y honestidad con los límites.", gl: "Rigorosa e cálida; odia as cifras sen contexto: denominadores, comparabilidade e honestidade cos límites." }
+  - id: pardo
+    name: "Xaquín Pardo"
+    role: { es: "Gerente del hospital", gl: "Xerente do hospital" }
+    focus: { es: "Pragmático; mira riesgos legales, costes y plazos: privacidad, tiempo empleado y si el proceso se puede repetir.", gl: "Pragmático; mira riscos legais, custos e prazos: privacidade, tempo empregado e se o proceso se pode repetir." }
+  - id: louzao
+    name: "Carmen Louzao"
+    role: { es: "Enfermera jefa", gl: "Enfermeira xefa" }
+    focus: { es: "Cercana a la realidad asistencial; pregunta «¿y qué hago yo con esto?»: anomalías, acciones concretas en planta.", gl: "Próxima á realidade asistencial; pregunta «e que fago eu con isto?»: anomalías, accións concretas en planta." }
+# turno -> persona (índice en personas)
+order: [valcarcel, pardo, louzao, valcarcel, pardo, louzao]
+questions:
+  v1_dup:
+    es: "Vuestra decisión sobre los ficheros reenviados dejó duplicados o versiones antiguas en los datos. ¿Cómo cambia eso la cifra de encuentros y cómo podéis estar seguros del número que me presentáis?"
+    gl: "A vosa decisión sobre os ficheiros reenviados deixou duplicados ou versións antigas nos datos. Como cambia iso a cifra de encontros e como podedes estar seguros do número que me presentades?"
+  v1_ok:
+    es: "Decidisteis quedaros con una sola versión de cada encuentro. ¿Cómo sabéis que la cifra de encuentros es fiable y qué habríais hecho si las dos versiones no coincidieran?"
+    gl: "Decidistes quedar cunha soa versión de cada encontro. Como sabedes que a cifra de encontros é fiable e que fariades se as dúas versións non coincidisen?"
+  p1_priv_bad:
+    es: "En algún momento dejasteis datos que identifican directamente a una persona. Si esto fuera real, ¿qué riesgo legal habría corrido el hospital y qué habéis cambiado para que no se repita?"
+    gl: "Nalgún momento deixastes datos que identifican directamente a unha persoa. Se isto fose real, que risco legal correría o hospital e que cambiastes para que non se repita?"
+  p1_priv_ok:
+    es: "Habéis tratado los datos personales antes de analizarlos. Explicadme, sin tecnicismos, qué hicisteis con el SSN y por qué no bastaba con borrarlo."
+    gl: "Tratastes os datos persoais antes de analizalos. Explicádeme, sen tecnicismos, que fixestes co SSN e por que non abondaba con borralo."
+  l1_anom:
+    es: "Hay pacientes con ingresos anotados después de fallecer y estancias con el alta antes del ingreso. ¿Qué ha pasado con esos registros, qué habéis decidido y qué tengo que decirle yo a mi equipo de planta?"
+    gl: "Hai pacientes con ingresos anotados despois de falecer e estadías coa alta antes do ingreso. Que pasou con eses rexistros, que decidistes e que teño que lle dicir eu ao meu equipo de planta?"
+  v2_small_bad:
+    es: "Un centro con muy pocos casos aparece con una tasa de reingresos altísima. ¿Cómo habéis tratado ese centro y por qué no confiaríais en compararlo con los hospitales grandes?"
+    gl: "Un centro con moi poucos casos aparece cunha taxa de reingresos altísima. Como tratastes ese centro e por que non confiariades en comparalo cos hospitais grandes?"
+  v2_small_ok:
+    es: "Habéis fijado un mínimo de altas y avisáis de los centros pequeños. ¿Por qué ese mínimo y no otro, y qué le diríais a un director de un centro pequeño que se siente excluido?"
+    gl: "Fixestes un mínimo de altas e avisades dos centros pequenos. Por que ese mínimo e non outro, e que lle diriades ao director dun centro pequeno que se sente excluído?"
+  p2_time:
+    es: "Habéis necesitado ayudas o atajos para llegar hasta aquí. Si esto hubiera que repetirlo cada mes, ¿qué parte del proceso automatizaríais y qué os preocupa que falle?"
+    gl: "Necesitastes axudas ou atallos para chegar ata aquí. Se isto houbese que repetilo cada mes, que parte do proceso automatizariades e que vos preocupa que falle?"
+  p2_cost:
+    es: "Habéis llegado con buen ritmo. Si hubiera que repetir este análisis cada mes con datos nuevos, ¿qué necesitaríais del hospital (personas, tiempo, datos) y qué garantizaría que el resultado es siempre fiable?"
+    gl: "Chegastes con bo ritmo. Se houbese que repetir esta análise cada mes con datos novos, que precisariades do hospital (persoas, tempo, datos) e que garantiría que o resultado é sempre fiable?"
+  l2_action:
+    es: "Ya tenéis el centro con la tasa más alta de reingresos. Yo soy enfermera jefa: ¿qué debería hacer mi equipo mañana con esa información y qué NO deberíamos concluir todavía?"
+    gl: "Xa tedes o centro coa taxa máis alta de reingresos. Eu son enfermeira xefa: que debería facer o meu equipo mañá con esa información e que NON deberiamos concluír aínda?"
+  l2_ml:
+    es: "Habéis probado un modelo para avisar de pacientes con riesgo de reingreso. ¿Me lo recomendáis para usarlo en planta mañana, con qué condiciones y a quién podría perjudicar?"
+    gl: "Probastes un modelo para avisar de pacientes con risco de reingreso. Recomendádesmo para usalo en planta mañá, con que condicións e a quen podería prexudicar?"
+endings:
+  approved:
+    title: { es: "Plan aprobado", gl: "Plan aprobado" }
+    text: { es: "La Comisión aprueba vuestro plan: la cifra es clara, honesta con sus límites y la acción propuesta es viable. Habéis convencido a quien decide.", gl: "A Comisión aproba o voso plan: a cifra é clara, honesta cos seus límites e a acción proposta é viable. Convencestes a quen decide." }
+  conditions:
+    title: { es: "Aprobado con condiciones", gl: "Aprobado con condicións" }
+    text: { es: "La Comisión aprueba vuestro plan con condiciones: pide reforzar algunos puntos antes de actuar. Es un resultado muy sólido: así se trabaja de verdad.", gl: "A Comisión aproba o voso plan con condicións: pide reforzar algúns puntos antes de actuar. É un resultado moi sólido: así se traballa de verdade." }
+  more_data:
+    title: { es: "Piden más datos", gl: "Piden máis datos" }
+    text: { es: "La Comisión pide más datos antes de decidir. No es un fracaso: pedir más evidencia ante una duda razonable también forma parte del buen trabajo con datos.", gl: "A Comisión pide máis datos antes de decidir. Non é un fracaso: pedir máis evidencia ante unha dúbida razoable tamén forma parte do bo traballo con datos." }
+badges:
+  ojo_halcon: { es: "Ojo de halcón", gl: "Ollo de falcón", why: { es: "Detectasteis las afirmaciones falsas de Ada a la primera.", gl: "Detectastes as afirmacións falsas de Ada á primeira." } }
+  cero_fugas: { es: "Cero fugas", gl: "Cero fugas", why: { es: "No dejasteis en claro ningún dato identificativo.", gl: "Non deixastes en claro ningún dato identificativo." } }
+  auditor_ia: { es: "Auditor/a de IA", gl: "Auditor/a de IA", why: { es: "Comprobasteis lo que decía una IA con los datos.", gl: "Comprobastes o que dicía unha IA cos datos." } }
+  detective: { es: "Detective forense", gl: "Detective forense", why: { es: "Investigasteis y resolvisteis las anomalías de los datos.", gl: "Investigastes e resolvestes as anomalías dos datos." } }
+  sin_atajos: { es: "Sin atajos", gl: "Sen atallos", why: { es: "No usasteis la llave maestra en ningún candado.", gl: "Non usastes a chave mestra en ningún cadeado." } }
+  esquema_estelar: { es: "Esquema estelar", gl: "Esquema estelar", why: { es: "Dibujasteis el esquema en estrella a la primera.", gl: "Debuxastes o esquema en estrela á primeira." } }
+  cartografo: { es: "Cartógrafo/a", gl: "Cartógrafo/a", why: { es: "Vuestro dashboard pasó la revisión del crítico a la primera.", gl: "O voso dashboard pasou a revisión do crítico á primeira." } }
+  etica_primero: { es: "Ética primero", gl: "Ética primeiro", why: { es: "Revisasteis la equidad del modelo antes de usarlo.", gl: "Revistes a equidade do modelo antes de usalo." } }

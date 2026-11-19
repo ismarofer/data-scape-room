@@ -1,0 +1,1 @@
+{"decision":null,"code":"types:dim_date=dim,dim_hospital=dim,dim_patient=dim,fct_admission=fact,fct_condition=fact|edges:fct_admission>dim_date,fct_admission>dim_hospital,fct_admission>dim_patient,fct_condition>dim_date,fct_condition>dim_patient"}

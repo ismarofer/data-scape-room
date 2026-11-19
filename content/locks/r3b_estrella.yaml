@@ -1,0 +1,19 @@
+id: r3b_estrella
+room: R3
+type: build
+title: { es: "Esquema en estrella", gl: "Esquema en estrela" }
+docs_needed: [doc_de_keys]
+story:
+  es: "Toca dibujar el plano de los datos. Marcad cada tabla como hecho (algo que pasa, como un ingreso) o dimensión (lo que lo describe: quién, dónde, cuándo) y unid cada hecho con sus dimensiones."
+  gl: "Toca debuxar o plano dos datos. Marcade cada táboa como feito (algo que pasa, como un ingreso) ou dimensión (o que o describe: quen, onde, cando) e unide cada feito coas súas dimensións."
+tools: [star_canvas]
+answer: { source: "build_answers.public.json#r3b_estrella", normalize: report }
+points: 110
+time_target_min: 8
+hints:
+  - { es: "Las tablas que empiezan por fct_ son hechos; las que empiezan por dim_ son dimensiones.", gl: "As táboas que comezan por fct_ son feitos; as que comezan por dim_ son dimensións." }
+  - { es: "Un ingreso (fct_admission) le pasa a un paciente, en un hospital y en una fecha: unidlo con esas tres dimensiones.", gl: "Un ingreso (fct_admission) pásalle a un paciente, nun hospital e nunha data: unídeo con esas tres dimensións." }
+  - { es: "Un diagnóstico (fct_condition) se une con el paciente y con la fecha. No se une con el hospital.", gl: "Un diagnóstico (fct_condition) úñese co paciente e coa data. Non se une co hospital." }
+solution:
+  es: "Hechos: fct_admission y fct_condition. Dimensiones: dim_date, dim_hospital y dim_patient. Uniones: fct_admission → dim_date, dim_hospital y dim_patient; fct_condition → dim_date y dim_patient. Después, «Comprobar esquema»."
+  gl: "Feitos: fct_admission e fct_condition. Dimensións: dim_date, dim_hospital e dim_patient. Unións: fct_admission → dim_date, dim_hospital e dim_patient; fct_condition → dim_date e dim_patient. Despois, «Comprobar esquema»."

@@ -1,0 +1,19 @@
+id: r4a_pruebas
+room: R4
+type: build
+title: { es: "Tablero de pruebas", gl: "Taboleiro de probas" }
+docs_needed: [doc_ds_analysis]
+story:
+  es: "Alguien ha tocado los datos: tres detectores han encontrado registros raros. Decidid la causa más probable de cada grupo: un error al teclear, un fallo de la migración informática o un fallecimiento registrado tarde."
+  gl: "Alguén tocou os datos: tres detectores atoparon rexistros raros. Decidide a causa máis probable de cada grupo: un erro ao teclear, un fallo da migración informática ou un falecemento rexistrado tarde."
+tools: [evidence_board]
+answer: { source: "build_answers.public.json#r4a_pruebas", normalize: report }
+points: 110
+time_target_min: 8
+hints:
+  - { es: "Fijaos en cuántos centros aparece cada grupo y desde qué fecha.", gl: "Fixádevos en cantos centros aparece cada grupo e desde que data." }
+  - { es: "El grupo que solo ocurre en un centro y a partir de una fecha es un fallo de migración.", gl: "O grupo que só ocorre nun centro e a partir dunha data é un fallo de migración." }
+  - { es: "Altas y reingresos del mismo día → migración. De los otros dos, uno tiene que ver con fallecimientos.", gl: "Altas e reingresos do mesmo día → migración. Dos outros dous, un ten que ver con falecementos." }
+solution:
+  es: "Altas y reingresos del mismo día → «Error de migración». Estancias negativas → «Error de captura». Encuentros posteriores al fallecimiento → «Registro tardío de fallecimiento»."
+  gl: "Altas e reingresos do mesmo día → «Erro de migración». Estadías negativas → «Erro de captura». Encontros posteriores ao falecemento → «Rexistro tardío de falecemento»."

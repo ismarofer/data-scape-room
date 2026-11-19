@@ -1,0 +1,85 @@
+# What each table of the in-browser database is (explorer «BASE DE DATOS» and the table tab). Same card as the data files (files.yaml).
+# Key: schema.table. label = friendly name shown first; the technical name is shown small next to it.
+# Keys ending in "*" match by prefix (raw.encounters_h* = every hospital file).
+raw.patients:
+  label: { es: "Pacientes (tal cual llegan)", gl: "Pacientes (tal cal chegan)" }
+  what: { es: "La ficha de cada paciente, tal cual la mandó el hospital. Una fila = una ficha. Ojo: una misma persona puede tener dos fichas.", gl: "A ficha de cada paciente, tal cal a mandou o hospital. Unha fila = unha ficha. Ollo: unha mesma persoa pode ter dúas fichas." }
+  cols:
+    - { name: patient_id, es: "código de la ficha (uno por ficha, no por persona)", gl: "código da ficha (un por ficha, non por persoa)" }
+    - { name: ssn, es: "número de identificación de la persona: sirve para saber si dos fichas son la misma persona", gl: "número de identificación da persoa: serve para saber se dúas fichas son a mesma persoa" }
+    - { name: birthdate / deathdate, es: "fecha de nacimiento y de fallecimiento (vacía si vive)", gl: "data de nacemento e de falecemento (baleira se vive)" }
+    - { name: first_name / last_name / address, es: "datos personales (ficticios): no hacen falta para medir", gl: "datos persoais (ficticios): non fan falta para medir" }
+raw.organizations:
+  label: { es: "Centros", gl: "Centros" }
+  what: { es: "Los hospitales y clínicas de la red. Una fila = un centro.", gl: "Os hospitais e clínicas da rede. Unha fila = un centro." }
+  cols:
+    - { name: organization_id, es: "código del centro (ORG01, ORG02…)", gl: "código do centro (ORG01, ORG02…)" }
+    - { name: name, es: "nombre del centro", gl: "nome do centro" }
+    - { name: feed, es: "qué envío de datos es el suyo (H1, H2…)", gl: "que envío de datos é o seu (H1, H2…)" }
+raw.conditions:
+  label: { es: "Diagnósticos", gl: "Diagnósticos" }
+  what: { es: "Cada diagnóstico que se le hizo a un paciente en una visita. Una fila = un diagnóstico.", gl: "Cada diagnóstico que se lle fixo a un paciente nunha visita. Unha fila = un diagnóstico." }
+  cols:
+    - { name: patient_id, es: "a qué ficha de paciente pertenece", gl: "a que ficha de paciente pertence" }
+    - { name: encounter_id, es: "en qué visita se diagnosticó", gl: "en que visita se diagnosticou" }
+    - { name: description, es: "el diagnóstico en palabras", gl: "o diagnóstico en palabras" }
+raw.encounters:
+  label: { es: "Visitas de los 4 hospitales juntas", gl: "Visitas dos 4 hospitais xuntas" }
+  what: { es: "Todas las visitas (encuentros) de los 5 ficheros juntas, incluido el reenvío de H2. Por eso hay visitas repetidas. Una fila = una visita.", gl: "Todas as visitas (encontros) dos 5 ficheiros xuntas, incluído o reenvío de H2. Por iso hai visitas repetidas. Unha fila = unha visita." }
+  cols:
+    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita dos veces)", gl: "código da visita (se se repite, é a mesma visita dúas veces)" }
+    - { name: patient_id, es: "de qué ficha de paciente es", gl: "de que ficha de paciente é" }
+    - { name: organization_id, es: "en qué centro fue", gl: "en que centro foi" }
+    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó (stop_ts vacía = sin fecha de alta)", gl: "cando comezou e cando rematou (stop_ts baleira = sen data de alta)" }
+    - { name: encounter_class, es: "tipo de visita: inpatient = ingreso; emergency = urgencias; ambulatory = consulta…", gl: "tipo de visita: inpatient = ingreso; emergency = urxencias; ambulatory = consulta…" }
+    - { name: loaded_at, es: "cuándo se cargó la fila (la más nueva es la buena)", gl: "cando se cargou a fila (a máis nova é a boa)" }
+    - { name: source_file, es: "de qué fichero viene", gl: "de que ficheiro vén" }
+raw.encounters_h*:
+  label: { es: "Visitas de un hospital", gl: "Visitas dun hospital" }
+  what: { es: "Las visitas de un solo envío (un fichero), tal cual llegaron. Una fila = una visita.", gl: "As visitas dun só envío (un ficheiro), tal cal chegaron. Unha fila = unha visita." }
+  cols:
+    - { name: encounter_id, es: "código de la visita", gl: "código da visita" }
+    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó", gl: "cando comezou e cando rematou" }
+    - { name: encounter_class, es: "tipo de visita (inpatient = ingreso)", gl: "tipo de visita (inpatient = ingreso)" }
+staging.stg_encounters:
+  label: { es: "Visitas limpias", gl: "Visitas limpas" }
+  what: { es: "Las visitas ya limpias: fechas de verdad, tipos de visita unificados y una sola fila por visita (la más reciente).", gl: "As visitas xa limpas: datas de verdade, tipos de visita unificados e unha soa fila por visita (a máis recente)." }
+  cols:
+    - { name: encounter_id, es: "código de la visita (ya no se repite)", gl: "código da visita (xa non se repite)" }
+    - { name: start_ts / stop_ts, es: "inicio y fin, ya como fechas", gl: "inicio e fin, xa como datas" }
+    - { name: encounter_class, es: "tipo de visita en minúsculas", gl: "tipo de visita en minúsculas" }
+staging.stg_patients:
+  label: { es: "Pacientes limpios y protegidos", gl: "Pacientes limpos e protexidos" }
+  what: { es: "Los pacientes sin datos personales: cada persona tiene un código seudónimo (patient_key) en lugar de su ssn.", gl: "Os pacientes sen datos persoais: cada persoa ten un código pseudónimo (patient_key) no canto do seu ssn." }
+  cols:
+    - { name: patient_key, es: "código seudónimo de la persona (igual en todas sus fichas)", gl: "código pseudónimo da persoa (igual en todas as súas fichas)" }
+    - { name: birth_date / death_date, es: "fecha de nacimiento y de fallecimiento", gl: "data de nacemento e de falecemento" }
+    - { name: postal_prefix, es: "solo los 2 primeros números del código postal (zona)", gl: "só os 2 primeiros números do código postal (zona)" }
+marts.int_admission_episodes:
+  label: { es: "Episodios de ingreso", gl: "Episodios de ingreso" }
+  what: { es: "Cada estancia en el hospital de una persona. Si dos ingresos están muy seguidos, cuentan como un solo episodio. Una fila = un episodio.", gl: "Cada estadía no hospital dunha persoa. Se dous ingresos están moi seguidos, contan como un só episodio. Unha fila = un episodio." }
+  cols:
+    - { name: episode_id, es: "código del episodio", gl: "código do episodio" }
+    - { name: patient_key, es: "quién (código seudónimo)", gl: "quen (código pseudónimo)" }
+    - { name: episode_no, es: "número de episodio de esa persona (1.º, 2.º…)", gl: "número de episodio desa persoa (1.º, 2.º…)" }
+    - { name: admit_ts / discharge_ts, es: "fecha de ingreso y de alta", gl: "data de ingreso e de alta" }
+marts.fct_admission:
+  label: { es: "Ingresos con reingreso marcado", gl: "Ingresos con reingreso marcado" }
+  what: { es: "Los episodios con una marca que dice si cada uno es un reingreso a 30 días. Es la tabla de la que sale la cifra.", gl: "Os episodios cunha marca que di se cada un é un reingreso a 30 días. É a táboa da que sae a cifra." }
+  cols:
+    - { name: days_since_prev_discharge, es: "días desde el alta anterior de esa persona", gl: "días desde a alta anterior desa persoa" }
+    - { name: is_readmission_30d, es: "true = es un reingreso a 30 días", gl: "true = é un reingreso a 30 días" }
+canon.fct_admission_clean:
+  label: { es: "Ingresos limpios (modelo final)", gl: "Ingresos limpos (modelo final)" }
+  what: { es: "El cálculo final, ya sin los datos raros. Es igual para todos los equipos y es el que ve la Comisión.", gl: "O cálculo final, xa sen os datos raros. É igual para todos os equipos e é o que ve a Comisión." }
+  cols:
+    - { name: organization_name, es: "nombre del centro", gl: "nome do centro" }
+    - { name: is_readmission_30d, es: "true = reingreso a 30 días", gl: "true = reingreso a 30 días" }
+    - { name: age_band, es: "tramo de edad", gl: "tramo de idade" }
+    - { name: admit_month, es: "mes del ingreso", gl: "mes do ingreso" }
+canon.anomalies:
+  label: { es: "Registros sospechosos", gl: "Rexistros sospeitosos" }
+  what: { es: "Los registros raros que encontraron los detectores. Una fila = un registro sospechoso.", gl: "Os rexistros raros que atoparon os detectores. Unha fila = un rexistro sospeitoso." }
+  cols:
+    - { name: kind, es: "qué tipo de rareza: negative_stay (alta antes del ingreso), post_mortem (después de fallecer), frag_h3 (fragmentación en H3)", gl: "que tipo de rareza: negative_stay (alta antes do ingreso), post_mortem (despois de falecer), frag_h3 (fragmentación en H3)" }
+    - { name: ts, es: "cuándo ocurrió", gl: "cando ocorreu" }

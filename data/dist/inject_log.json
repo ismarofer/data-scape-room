@@ -1,0 +1,166 @@
+{
+ "T6": {
+  "pairs": [
+   [
+    "b0f0c5fa-c038-c848-cb8f-7aade7bf0615",
+    "6de7d9d7602e"
+   ],
+   [
+    "17bd0a77-d82a-039e-e4b3-367e5307e5f2",
+    "1af69e4660ce"
+   ],
+   [
+    "70feeb31-5b35-cd96-cbc3-17799fb22318",
+    "608da91762d9"
+   ],
+   [
+    "cd1d96cb-f43d-d599-92b2-1df6d2e07384",
+    "1697832293b9"
+   ],
+   [
+    "9c9e19b7-b224-7235-6ab8-dd87624d080e",
+    "6f4fb419284e"
+   ],
+   [
+    "702baf9b-14f0-686d-ac64-d64173ba7cb9",
+    "673ceb737a89"
+   ],
+   [
+    "c3120ea6-4bdd-98a1-c433-9d133237ac01",
+    "59fa44fcf66a"
+   ],
+   [
+    "7a491821-f419-8237-66f2-fab9db1cc814",
+    "00ae9043b35f"
+   ],
+   [
+    "2773ebe3-9bfe-305f-d01c-27cdb773db76",
+    "651c3546e8f3"
+   ],
+   [
+    "de4f29c9-77f5-09ca-7cf7-baf2213def19",
+    "7a13ca8d20db"
+   ],
+   [
+    "7cb9a753-d328-3ebb-7e37-5ad2e25e5b8e",
+    "54e1c343973c"
+   ],
+   [
+    "c28dc1cd-bbd8-6af3-3831-77b77eeeedc2",
+    "71045b6a8be6"
+   ]
+  ]
+ },
+ "T7": {
+  "pairs": [
+   [
+    "aab78b20-6a85-6680-fcf6-9b095a50d6ad",
+    "6e1b5ac8c970"
+   ],
+   [
+    "6b1ef178-d289-989b-9ef8-6da6f5b2f647",
+    "7135a78f8042"
+   ],
+   [
+    "67a4e0f9-dab9-913b-9bfd-7f6f6bc6ba04",
+    "0b06cdce8f0e"
+   ]
+  ]
+ },
+ "T8": {
+  "fragmented_admissions": 150,
+  "from": "2019-03-14",
+  "org": "ORG05"
+ },
+ "T4": {
+  "encounter_ids": [
+   "98ef96f7-4601-11b6-99cf-64a2e10f689a",
+   "0b8b9793-0f99-35a5-2440-ac02188515ad",
+   "468d1826-c15f-64a6-f0e7-92a0c5f063e7",
+   "3bda1c25-170f-fb82-0b13-17ff6e77fa13",
+   "b1791ccd-cf89-68cb-b375-ea44f148c439",
+   "1103d5ff-5aea-64d7-24ea-b14a62a24d9b",
+   "3306daab-662b-7909-9789-62d53b5a0690",
+   "93593b37-f67f-fde9-1a5d-8129208461af",
+   "1efe53e2-24bc-cb55-d0e1-9ed2780577da",
+   "ee11fc12-8f36-aed7-28da-eeebf2a4dbbf",
+   "420e0ad7-1702-257f-72a2-26f9f2015191",
+   "7f82cb35-0198-8b1c-d695-c56ae2959178",
+   "8672da6a-0d76-1367-5344-2477b967361f",
+   "f46766c3-d656-3902-e92b-27437c2a425a",
+   "fe505fc0-1ba9-8ff1-f3bd-fb7d8e4f174a",
+   "3173b936-4ecf-d366-4a23-999387b2d69d",
+   "ccf69bb2-a9f8-d6b3-4906-f5a22e5ebd1a",
+   "5773f586-ddda-d14d-6389-85c53460aed8",
+   "e8811005-bcf8-a3b1-49e3-a322e7ed35fd",
+   "3173b936-4ecf-d366-aa4a-284b8b461808",
+   "68680fdb-e422-665a-98b0-5798dc0eb239",
+   "ea5158dd-7266-81f4-abfd-189a3c850af1",
+   "09ea58c9-f03e-2e18-b651-c963fd842851"
+  ]
+ },
+ "T9": {
+  "clinic": "ORG09",
+  "admissions": 3
+ },
+ "T5": {
+  "patients": [
+   "144715c3-9ea3-37bc-e471-10f1dfba515b",
+   "fc7da7e0-9b68-2553-8db7-9f9887b5fc7e",
+   "09906451-72d6-e4c0-392b-a99db8a61101",
+   "395d5d56-61ad-740e-3a59-5917caee1a08",
+   "c7af4c02-af01-f89c-f19d-82d29d4c7e21",
+   "4285a49e-42a6-81b3-f879-ff8c35dc3115",
+   "a3bbc7eb-3f52-be75-dc88-ba883c7bec25",
+   "2b51f3e8-e66d-cb60-2c34-5d059a29020e",
+   "d40645d8-7eaf-8c63-49aa-cb6b12ec4005"
+  ],
+  "encounters": 12
+ },
+ "T12": {
+  "open_admissions": 6
+ },
+ "T2": {
+  "rows": 17
+ },
+ "T1": {
+  "corrections": 214,
+  "h2_rows": 12461
+ },
+ "manifest": {
+  "files": {
+   "encounters_H1.csv": {
+    "rows_loaded": 19260,
+    "rows_rejected": 0
+   },
+   "encounters_H2.csv": {
+    "rows_loaded": 12461,
+    "rows_rejected": 0
+   },
+   "encounters_H3.csv": {
+    "rows_loaded": 8367,
+    "rows_rejected": 0
+   },
+   "encounters_H4.csv": {
+    "rows_loaded": 19396,
+    "rows_rejected": 17
+   },
+   "encounters_H2_reenvio.csv": {
+    "rows_loaded": 12461,
+    "rows_rejected": 0
+   },
+   "patients.csv": {
+    "rows_loaded": 9015,
+    "rows_rejected": 0
+   },
+   "organizations.csv": {
+    "rows_loaded": 9,
+    "rows_rejected": 0
+   },
+   "conditions.csv": {
+    "rows_loaded": 61132,
+    "rows_rejected": 0
+   }
+  }
+ }
+}

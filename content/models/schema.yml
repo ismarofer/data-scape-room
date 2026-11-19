@@ -1,0 +1,29 @@
+models:
+  - name: stg_patients
+    columns:
+      - name: patient_id
+        tests: [not_null, unique]
+      - name: patient_key
+        tests: [not_null]
+  - name: stg_encounters
+    columns:
+      - name: encounter_id
+        tests: [unique, not_null]
+      - name: start_ts
+        tests: [not_null]
+      - name: patient_id
+        tests:
+          - relationships: { to: "ref('stg_patients')", field: patient_id }
+      - name: encounter_class
+        tests:
+          - accepted_values: { values: [inpatient, emergency, ambulatory, wellness, outpatient, urgentcare] }
+  - name: int_admission_episodes
+    columns:
+      - name: episode_id
+        tests: [not_null, unique]
+  - name: fct_admission
+    columns:
+      - name: episode_id
+        tests: [not_null, unique]
+    tests:
+      - expression_is_true: { expression: "discharge_ts >= admit_ts", severity: warn }

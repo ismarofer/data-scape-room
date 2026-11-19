@@ -1,0 +1,16 @@
+id: f_comision
+room: FINAL
+type: final
+title: { es: "La Comisión", gl: "A Comisión" }
+docs_needed: [doc_analyst_requests]
+story:
+  es: "Llega la Comisión: tres personas os harán 6 preguntas sobre vuestro trabajo. Responded corto, con una cifra, reconociendo lo que no sabéis y proponiendo qué hacer. Podéis adjuntar tarjetas de evidencia."
+  gl: "Chega a Comisión: tres persoas faranvos 6 preguntas sobre o voso traballo. Respondede curto, cunha cifra, recoñecendo o que non sabedes e propoñendo que facer. Podedes anexar tarxetas de evidencia."
+tools: [commission]
+validator: { type: commission, turns: 6 }
+points: 100
+time_target_min: 20
+hints:
+  - { es: "Responde a lo que te preguntan, con una cifra o un hecho concreto.", gl: "Responde ao que che preguntan, cunha cifra ou un feito concreto." }
+  - { es: "Reconocer un límite de vuestros datos suma, no resta.", gl: "Recoñecer un límite dos vosos datos suma, non resta." }
+  - { es: "Termina cada respuesta con una propuesta: qué haríais ahora.", gl: "Remata cada resposta cunha proposta: que fariades agora." }

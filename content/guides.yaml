@@ -1,0 +1,211 @@
+rooms:
+  R0:
+    context: { es: "Antes de empezar a trabajar con datos, hay que aprender a moverse por el centro de control: dónde está cada cosa y qué significa cada medidor.", gl: "Antes de comezar a traballar con datos, hai que aprender a moverse polo centro de control: onde está cada cousa e que significa cada medidor." }
+    learn: { es: "Cómo funciona la pantalla, qué hace cada medidor y cómo pedir ayuda.", gl: "Como funciona a pantalla, que fai cada medidor e como pedir axuda." }
+  R1:
+    context: { es: "Un proyecto de datos empieza siempre recibiendo datos de otros. Cuatro hospitales han enviado sus ficheros y Brais, de Admisiones, os los ha dejado en la bandeja. Hay que cargarlos bien, decidir qué hacer con un fichero reenviado y comprobar que la IA del hospital no os cuenta cuentos. Y antes de que nadie los analice, hay una ley que protege los datos de las personas: tendréis que decidir qué se hace con cada columna de los pacientes.", gl: "Un proxecto de datos comeza sempre recibindo datos doutros. Catro hospitais enviaron os seus ficheiros e Brais, de Admisións, déixavos na caixa de entrada. Hai que cargalos ben, decidir que facer cun ficheiro reenviado e comprobar que a IA do hospital non vos conta contos. E antes de que ninguén os analice, hai unha lei que protexe os datos das persoas: teredes que decidir que se fai con cada columna dos pacientes." }
+    learn: { es: "Ingesta de datos (formatos, separadores, codificaciones y fechas), duplicados y reenvíos, y cómo verificar lo que dice una IA. Y protección de datos (RGPD): eliminar, pseudonimizar, generalizar o mantener cada columna.", gl: "Inxesta de datos (formatos, separadores, codificacións e datas), duplicados e reenvíos, e como verificar o que di unha IA. E protección de datos (RXPD): eliminar, pseudonimizar, xeneralizar ou manter cada columna." }
+  R3:
+    context: { es: "Ya tenéis datos limpios y protegidos. Ahora hay que construir el modelo que calcula los reingresos. Aquí aprenderéis algo muy importante en la vida real: la definición de un indicador cambia el número, así que antes de programar hay que ponerse de acuerdo en qué se está midiendo.", gl: "Xa tedes datos limpos e protexidos. Agora hai que construír o modelo que calcula os reingresos. Aquí aprenderedes algo moi importante na vida real: a definición dun indicador cambia o número, así que antes de programar hai que poñerse de acordo en que se está medindo." }
+    learn: { es: "Reglas de negocio, modelado dimensional (esquema en estrella) y funciones de ventana en SQL.", gl: "Regras de negocio, modelado dimensional (esquema en estrela) e funcións de ventá en SQL." }
+  R4:
+    context: { es: "La cifra que habéis calculado es provisional: algo huele raro en los datos. Alguien ha tocado los registros, o el sistema ha fallado. Hay que investigar como detectives: encontrar los patrones, hablar con las personas que conocen el sistema y decidir qué se hace con cada tipo de dato sucio.", gl: "A cifra que calculastes é provisional: algo cheira raro nos datos. Alguén tocou os rexistros, ou o sistema fallou. Hai que investigar como detectives: atopar os patróns, falar coas persoas que coñecen o sistema e decidir que se fai con cada tipo de dato sucio." }
+    learn: { es: "Calidad de datos, causa raíz, entrevistas a quien conoce el sistema y decisiones sobre datos erróneos (corregir, excluir o escalar).", gl: "Calidade de datos, causa raíz, entrevistas a quen coñece o sistema e decisións sobre datos erróneos (corrixir, excluír ou escalar)." }
+  R5:
+    context: { es: "Ya tenéis el número bueno. Falta lo más difícil: que la Comisión lo entienda y no se lleve una impresión equivocada. Un gráfico mal hecho puede mentir sin que nadie lo note. Definiréis el indicador, construiréis un cuadro de mando y lo pasaréis por un crítico (con IA) antes de enseñarlo.", gl: "Xa tedes o número bo. Falta o máis difícil: que a Comisión o entenda e non se leve unha impresión equivocada. Un gráfico mal feito pode mentir sen que ninguén o note. Definiredes o indicador, construiredes un cadro de mando e pasarédelo por un crítico (con IA) antes de amosalo." }
+    learn: { es: "Definir un KPI con sentido (denominadores, volumen mínimo) y visualizar con honestidad.", gl: "Definir un KPI con sentido (denominadores, volume mínimo) e visualizar con honestidade." }
+
+  R6:
+    context: { es: "Bonus: ya sabéis medir los reingresos del pasado. ¿Y si pudiéramos avisar a la enfermería de qué pacientes tienen más riesgo ANTES de que se vayan? Entrenaréis un modelo, evitaréis una trampa clásica, elegiréis cuántas llamadas se pueden hacer y revisaréis que sea justo con todos.", gl: "Bonus: xa sabedes medir os reingresos do pasado. E se puidésemos avisar á enfermaría de que pacientes teñen máis risco ANTES de que marchen? Adestraredes un modelo, evitaredes unha trampa clásica, elixiredes cantas chamadas se poden facer e revisaredes que sexa xusto con todos." }
+    learn: { es: "Machine learning aplicado: entrenar y evaluar un modelo, fuga de datos, umbrales con restricciones reales y equidad.", gl: "Machine learning aplicado: adestrar e avaliar un modelo, fuga de datos, limiares con restricións reais e equidade." }
+  FINAL:
+    context: { es: "Todo el trabajo se resume en esto: defenderlo ante la Comisión. Tres personas (la directora médica, el gerente y la enfermera jefa) os harán dos preguntas cada una. No buscan respuestas perfectas: buscan claridad, honestidad con los límites y propuestas útiles.", gl: "Todo o traballo resúmese nisto: defendelo ante a Comisión. Tres persoas (a directora médica, o xerente e a enfermeira xefa) farávos dúas preguntas cada unha. Non buscan respostas perfectas: buscan claridade, honestidade cos límites e propostas útiles." }
+    learn: { es: "Comunicar resultados de datos a quien decide: claridad, evidencia, límites y acción.", gl: "Comunicar resultados de datos a quen decide: claridade, evidencia, límites e acción." }
+
+locks:
+  p0_tutorial:
+    goal: { es: "Aprender a manejar la pantalla con un candado de práctica. Todavía no hay datos que analizar.", gl: "Aprender a manexar a pantalla cun cadeado de práctica. Aínda non hai datos que analizar." }
+    steps:
+      - { es: "Lee la misión: ahí está la pista del código.", gl: "Le a misión: aí está a pista do código." }
+      - { es: "Escribe el código en «Vuestra respuesta» y pulsa «Probar».", gl: "Escribe o código en «A vosa resposta» e preme «Probar»." }
+      - { es: "¿Atascados? Pregunta a Lumi, a la derecha, o pulsa «Dame una pista».", gl: "Atascados? Pregúntalle a Lumi, á dereita, ou preme «Dame unha pista»." }
+    why: { es: "En cualquier trabajo con datos primero se entiende el entorno y quién sabe qué dentro del equipo; nadie tiene toda la información.", gl: "En calquera traballo con datos primeiro enténdese o contorno e quen sabe que dentro do equipo; ninguén ten toda a información." }
+    job: { es: "Todos los puestos de datos empiezan igual: entender el encargo y las herramientas antes de tocar nada.", gl: "Todos os postos de datos comezan igual: entender o encargo e as ferramentas antes de tocar nada." }
+    terms: [ia]
+  r1a_bandeja:
+    goal: { es: "Cargar los 8 ficheros que han enviado los hospitales. Cada fichero llega con su propio formato y hay que descubrir cuál es antes de leerlo.", gl: "Cargar os 8 ficheiros que enviaron os hospitais. Cada ficheiro chega co seu propio formato e hai que descubrir cal é antes de lelo." }
+    steps:
+      - { es: "Elige un fichero de la lista. Debajo ves sus primeras filas.", gl: "Elixe un ficheiro da lista. Debaixo ves as súas primeiras filas." }
+      - { es: "Cambia Separador, Codificación y Formato de fecha hasta que no salgan avisos ni filas en rojo.", gl: "Cambia Separador, Codificación e Formato de data ata que non saian avisos nin filas en vermello." }
+      - { es: "Pulsa «Cargar este fichero». Repite hasta que los 8 tengan ✔.", gl: "Preme «Cargar este ficheiro». Repite ata que os 8 teñan ✔." }
+      - { es: "Pulsa «Validar carga». Ojo: encounters_H4.csv trae 17 líneas rotas de verdad; esas se rechazan siempre y está bien.", gl: "Preme «Validar carga». Ollo: encounters_H4.csv trae 17 liñas rotas de verdade; esas rexéitanse sempre e está ben." }
+    why: { es: "Casi todos los proyectos empiezan recibiendo ficheros de otras personas, y casi nunca vienen exactamente como dicen. Si cargas mal un dato, el error viaja a todos los pasos siguientes y es carísimo de arreglar. Por eso se comprueba en cuanto entra (calidad en origen).", gl: "Case todos os proxectos comezan recibindo ficheiros doutras persoas, e case nunca veñen exactamente como din. Se cargas mal un dato, o erro viaxa a todos os pasos seguintes e é carísimo de arranxar. Por iso se comproba en canto entra (calidade en orixe)." }
+    job: { es: "Ingeniería de datos (data engineer): construye los procesos que traen los datos a un sitio fiable. Se llega desde FP de Informática (DAM/DAW/ASIR), o Grados en Informática, Ciencia de Datos o Telecomunicaciones.", gl: "Enxeñaría de datos (data engineer): constrúe os procesos que traen os datos a un sitio fiable. Chégase desde FP de Informática (DAM/DAW/ASIR), ou Graos en Informática, Ciencia de Datos ou Telecomunicacións." }
+    terms: [csv, delimitador, codificacion, formato_fecha, fila_rechazada, ingesta]
+  r1b_reenvio:
+    goal: { es: "Averiguar cuántas visitas (encuentros) DISTINTAS hay de verdad. El hospital H2 envió su fichero dos veces, y al juntar todo hay visitas repetidas que inflan la cuenta. El número de visitas distintas es el código que abre el candado.", gl: "Descubrir cantas visitas (encontros) DISTINTAS hai de verdade. O hospital H2 enviou o seu ficheiro dúas veces, e ao xuntar todo hai visitas repetidas que inflan a conta. O número de visitas distintas é o código que abre o cadeado." }
+    steps:
+      - { es: "Elegid una opción en «Decide». No cambia el número, pero sí los medidores.", gl: "Elixide unha opción en «Decide». Non cambia o número, pero si os medidores." }
+      - { es: "En el Laboratorio: tabla encounters → «Contar cuántas filas hay» → «Hacer la pregunta».", gl: "No Laboratorio: táboa encounters → «Contar cantas filas hai» → «Facer a pregunta»." }
+      - { es: "Ahora: «Contar valores DISTINTOS» en la columna encounter_id. Si sale otro número, hay repetidas.", gl: "Agora: «Contar valores DISTINTOS» na columna encounter_id. Se sae outro número, hai repetidas." }
+      - { es: "Escribid el número de valores distintos y pulsad «Probar».", gl: "Escribide o número de valores distintos e premede «Probar»." }
+    why: { es: "En la vida real los datos se reenvían, se corrigen y se duplican constantemente. Un proceso fiable debe dar siempre el mismo resultado aunque llegue el mismo dato dos veces (a eso se le llama idempotencia).", gl: "Na vida real os datos reenvíanse, corríxense e duplícanse constantemente. Un proceso fiable debe dar sempre o mesmo resultado aínda que chegue o mesmo dato dúas veces (a iso chámaselle idempotencia)." }
+    job: { es: "Ingeniería de datos y analytics engineering: diseñan procesos que no se rompen cuando los datos llegan repetidos o tarde.", gl: "Enxeñaría de datos e analytics engineering: deseñan procesos que non se rompen cando os datos chegan repetidos ou tarde." }
+    terms: [duplicado, clave, deduplicar]
+  r1c_ada:
+    goal: { es: "Ada, la analista con IA del hospital, os presenta un perfil de los datos con 6 afirmaciones. Dos son falsas. Vuestro trabajo es descubrir cuáles con pruebas, no por intuición.", gl: "Ada, a analista con IA do hospital, preséntavos un perfil dos datos con 6 afirmacións. Dúas son falsas. O voso traballo é descubrir cales con probas, non por intuición." }
+    steps:
+      - { es: "En cada afirmación, pulsad «🔬 Comprobar»: el Laboratorio se prepara con la tabla adecuada.", gl: "En cada afirmación, premede «🔬 Comprobar»: o Laboratorio prepárase coa táboa axeitada." }
+      - { es: "Elegid la columna (y, si hace falta, una condición) y pulsad «Hacer la pregunta».", gl: "Elixide a columna (e, se fai falta, unha condición) e premede «Facer a pregunta»." }
+      - { es: "¿El resultado coincide con lo que dice Ada? Si no, es falsa.", gl: "O resultado coincide co que di Ada? Se non, é falsa." }
+      - { es: "Marcad solo las dos falsas y pulsad «Entregar auditoría».", gl: "Marcade só as dúas falsas e premede «Entregar auditoría»." }
+    why: { es: "Una IA puede decir cosas falsas con total seguridad. Quien trabaja con IA tiene que saber comprobar sus resultados con los datos, igual que se comprueba el trabajo de un compañero nuevo.", gl: "Unha IA pode dicir cousas falsas con total seguridade. Quen traballa con IA ten que saber comprobar os seus resultados cos datos, igual que se comproba o traballo dun compañeiro novo." }
+    job: { es: "Gobierno del dato y calidad: personas que se aseguran de que los datos (y lo que se dice de ellos) son fiables.", gl: "Goberno do dato e calidade: persoas que se aseguran de que os datos (e o que se di deles) son fiables." }
+    terms: [afirmacion, nulo, ssn, ia]
+  r2a_radar:
+    goal: { es: "Decidir qué se hace con cada columna de la tabla de pacientes antes de que nadie la use. El objetivo: usar solo lo necesario y proteger lo que identifica a una persona.", gl: "Decidir que se fai con cada columna da táboa de pacientes antes de que ninguén a use. O obxectivo: usar só o necesario e protexer o que identifica a unha persoa." }
+    steps:
+      - { es: "Abrid docs/guia-privacidad.md (a la izquierda): explica cada columna.", gl: "Abride docs/guia-privacidad.md (á esquerda): explica cada columna." }
+      - { es: "Llevad cada columna a su cajón, arrastrando o con su menú.", gl: "Levade cada columna ao seu caixón, arrastrando ou co seu menú." }
+      - { es: "Regla: identifica y no hace falta → eliminar. Hace falta para unir fichas → pseudonimizar. Útil pero muy exacta → generalizar. Inofensiva → mantener.", gl: "Regra: identifica e non fai falta → eliminar. Fai falta para unir fichas → pseudonimizar. Útil pero moi exacta → xeneralizar. Inofensiva → manter." }
+      - { es: "Pulsad «Aplicar decisiones». Lo que esté mal se marca en rojo.", gl: "Premede «Aplicar decisións». O que estea mal márcase en vermello." }
+    why: { es: "Los datos de salud son de los más sensibles que existen. Proteger a las personas no es un trámite: es una obligación legal (RGPD) y lo primero que se pregunta en cualquier proyecto sanitario.", gl: "Os datos de saúde son dos máis sensibles que existen. Protexer ás persoas non é un trámite: é unha obrigación legal (RXPD) e o primeiro que se pregunta en calquera proxecto sanitario." }
+    job: { es: "Gobierno del dato y privacidad (data governance, delegado/a de protección de datos): se estudia en Derecho, Informática o cursos especializados.", gl: "Goberno do dato e privacidade (data governance, delegado/a de protección de datos): estúdase en Dereito, Informática ou cursos especializados." }
+    terms: [rgpd, identificativo, pseudonimizar, generalizar, hash]
+  r3a_protocolo:
+    goal: { es: "Antes de programar el cálculo de reingresos hay que acordar exactamente qué se mide. La Comisión tiene un documento oficial (el Protocolo v3); sus respuestas definen las reglas del modelo.", gl: "Antes de programar o cálculo de reingresos hai que acordar exactamente que se mide. A Comisión ten un documento oficial (o Protocolo v3); as súas respostas definen as regras do modelo." }
+    steps:
+      - { es: "Leed el protocolo (el papel de abajo). Las 4 respuestas están ahí.", gl: "Lede o protocolo (o papel de abaixo). As 4 respostas están aí." }
+      - { es: "Elegid una opción en cada pregunta.", gl: "Elixide unha opción en cada pregunta." }
+      - { es: "Pulsad «Configurar el modelo». Si algo no cuadra, se marca qué.", gl: "Premede «Configurar o modelo». Se algo non cadra, márcase que." }
+    why: { es: "Si dos personas definen «reingreso» de forma distinta, obtienen números distintos y las dos creen tener razón. En la vida real, ponerse de acuerdo en la definición es la mitad del trabajo.", gl: "Se dúas persoas definen «reingreso» de forma distinta, obteñen números distintos e as dúas cren ter razón. Na vida real, poñerse de acordo na definición é a metade do traballo." }
+    job: { es: "Análisis de negocio y analytics: traducen preguntas de la dirección en definiciones precisas que se pueden programar.", gl: "Análise de negocio e analytics: traducen preguntas da dirección en definicións precisas que se poden programar." }
+    terms: [reingreso, episodio, kpi]
+  r3b_estrella:
+    goal: { es: "Dibujar el plano del modelo: qué tablas hay, cuáles son hechos y cuáles dimensiones, y cómo se conectan. Es el mapa que seguirá todo el equipo.", gl: "Debuxar o plano do modelo: que táboas hai, cales son feitos e cales dimensións, e como se conectan. É o mapa que seguirá todo o equipo." }
+    steps:
+      - { es: "En cada tabla, elegid «Hecho» o «Dimensión».", gl: "En cada táboa, elixide «Feito» ou «Dimensión»." }
+      - { es: "Unid cada hecho con sus dimensiones: con «Desde / Hasta» o arrastrando del punto de abajo del hecho al de arriba de la dimensión.", gl: "Unide cada feito coas súas dimensións: con «Desde / Ata» ou arrastrando do punto de abaixo do feito ao de arriba da dimensión." }
+      - { es: "Las dimensiones nunca se unen entre sí. Pulsad «Comprobar esquema».", gl: "As dimensións nunca se unen entre si. Premede «Comprobar esquema»." }
+    why: { es: "El esquema en estrella es la forma estándar de organizar datos para analizarlos rápido y sin liarse. Casi todos los cuadros de mando que ves en una empresa se apoyan en uno.", gl: "O esquema en estrela é a forma estándar de organizar datos para analizalos rápido e sen liarse. Case todos os cadros de mando que ves nunha empresa apóianse nun." }
+    job: { es: "Analytics engineering y modelado de datos: diseñar el esquema es el primer paso de cualquier almacén de datos.", gl: "Analytics engineering e modelado de datos: deseñar o esquema é o primeiro paso de calquera almacén de datos." }
+    terms: [estrella, hecho, clave]
+  r3c_modelo:
+    goal: { es: "Programar el modelo que calcula los episodios de ingreso y marca los reingresos a 30 días, siguiendo exactamente el protocolo que acabáis de configurar.", gl: "Programar o modelo que calcula os episodios de ingreso e marca os reingresos a 30 días, seguindo exactamente o protocolo que acabades de configurar." }
+    steps:
+      - { es: "Rellenad las 3 piezas. Vuestro protocolo está al lado para guiaros.", gl: "Enchede as 3 pezas. O voso protocolo está ao lado para guiarvos." }
+      - { es: "Pulsad «▶ Calcular». Un aviso amarillo es normal: lo investigaréis en la sala siguiente.", gl: "Premede «▶ Calcular». Un aviso amarelo é normal: investigarédelo na sala seguinte." }
+      - { es: "Pulsad «Episodios marcados como reingreso» y copiad la cifra de reingresos.", gl: "Premede «Episodios marcados como reingreso» e copiade a cifra de reingresos." }
+    why: { es: "Esto es el corazón del proyecto: convertir una definición escrita en código. Aquí se ve por qué el protocolo importa: cambiar un solo hueco cambia la cifra que verá la Comisión.", gl: "Isto é o corazón do proxecto: converter unha definición escrita en código. Aquí vese por que o protocolo importa: cambiar un só oco cambia a cifra que verá a Comisión." }
+    job: { es: "Analytics engineer y analista de datos: dominan SQL, incluidas funciones de ventana como lag().", gl: "Analytics engineer e analista de datos: dominan SQL, incluídas funcións de ventá como lag()." }
+    terms: [modelo, ventana, episodio, reingreso, test]
+  r4a_pruebas:
+    goal: { es: "La cifra es provisional porque hay datos raros. Tres detectores han encontrado registros sospechosos. Hay que averiguar qué tipo de problema es cada uno.", gl: "A cifra é provisional porque hai datos raros. Tres detectores atoparon rexistros sospeitosos. Hai que averiguar que tipo de problema é cada un." }
+    steps:
+      - { es: "Leed las tres tarjetas: cuántos registros, desde cuándo y en cuántos centros.", gl: "Lede as tres tarxetas: cantos rexistros, desde cando e en cantos centros." }
+      - { es: "Error al teclear: sale en cualquier sitio. Fallo de migración: tiene fecha y lugar concretos. Fallecimiento tardío: deja visitas después de morir.", gl: "Erro ao teclear: sae en calquera sitio. Fallo de migración: ten data e lugar concretos. Falecemento tardío: deixa visitas despois de morrer." }
+      - { es: "Elegid una causa en cada tarjeta y pulsad «Clavar en el tablero».", gl: "Elixide unha causa en cada tarxeta e premede «Cravar no taboleiro»." }
+    why: { es: "Antes de arreglar un dato hay que entender por qué está mal. Si arreglas el síntoma sin conocer la causa, el problema vuelve.", gl: "Antes de arranxar un dato hai que entender por que está mal. Se arranxas o síntoma sen coñecer a causa, o problema volve." }
+    job: { es: "Calidad de datos y análisis: investigar anomalías es trabajo de detective con SQL.", gl: "Calidade de datos e análise: investigar anomalías é traballo de detective con SQL." }
+    terms: [anomalia, causa_raiz]
+  r4b_entrevistas:
+    goal: { es: "Hablad con las dos personas que conocen cómo funciona el sistema por dentro: Brais (Admisiones) y Noa (Informática). Son personajes con IA, así que preguntad bien: obtendréis la información que necesitáis si hacéis las preguntas adecuadas.", gl: "Falade coas dúas persoas que coñecen como funciona o sistema por dentro: Brais (Admisións) e Noa (Informática). Son personaxes con IA, así que preguntade ben: obteredes a información que precisades se facedes as preguntas axeitadas." }
+    steps:
+      - { es: "Elegid con quién hablar en las pestañas (entre paréntesis, las preguntas que os quedan).", gl: "Elixide con quen falar nas lapelas (entre parénteses, as preguntas que vos quedan)." }
+      - { es: "Noa responde a preguntas concretas: decid de qué centro y de qué momento habláis.", gl: "Noa responde a preguntas concretas: dicide de que centro e de que momento falades." }
+      - { es: "Brais se abre si os interesáis por su trabajo: preguntad con amabilidad por los turnos o por cómo llegan los registros.", gl: "Brais ábrese se vos interesades polo seu traballo: preguntade con amabilidade polas quendas ou por como chegan os rexistros." }
+      - { es: "Las pistas aparecen debajo. Con 2, pasáis de nivel.", gl: "As pistas aparecen debaixo. Con 2, pasades de nivel." }
+    why: { es: "Los datos no lo cuentan todo: muchas veces la explicación está en la cabeza de las personas que usan o mantienen el sistema. Saber preguntar es una habilidad profesional clave.", gl: "Os datos non o contan todo: moitas veces a explicación está na cabeza das persoas que usan ou manteñen o sistema. Saber preguntar é unha habilidade profesional clave." }
+    job: { es: "Cualquier perfil de datos: analistas y consultores pasan buena parte del tiempo entrevistando a quien conoce el negocio.", gl: "Calquera perfil de datos: analistas e consultores pasan boa parte do tempo entrevistando a quen coñece o negocio." }
+    terms: [ia, causa_raiz]
+  r4c_veredicto:
+    goal: { es: "Ya sabéis qué le pasa a cada grupo de datos raros. Ahora hay que decidir qué hacer con cada uno: corregirlo con una regla, excluirlo y documentarlo, o avisar al hospital para que lo revise.", gl: "Xa sabedes que lle pasa a cada grupo de datos raros. Agora hai que decidir que facer con cada un: corrixilo cunha regra, excluílo e documentalo, ou avisar ao hospital para que o revise." }
+    steps:
+      - { es: "En cada tarjeta, elegid un tratamiento.", gl: "En cada tarxeta, elixide un tratamento." }
+      - { es: "Preguntaos: ¿se puede arreglar sin inventar? ¿Es mejor quitarlo y apuntar por qué? ¿Solo el hospital puede aclararlo?", gl: "Preguntádevos: pódese arranxar sen inventar? É mellor quitalo e apuntar por que? Só o hospital pode aclaralo?" }
+      - { es: "Un grupo ya lo arregla la regla de fusión del protocolo. Pulsad «Dictar veredicto».", gl: "Un grupo xa o arranxa a regra de fusión do protocolo. Premede «Ditar veredicto»." }
+    why: { es: "En datos sanitarios inventar un valor es peligroso. La regla de oro: si dudas de un dato clínico, no lo inventes; lo apartas, lo explicas y lo comunicas a quien puede confirmarlo.", gl: "En datos sanitarios inventar un valor é perigoso. A regra de ouro: se dubidas dun dato clínico, non o inventes; apártalo, explícalo e comunícalo a quen pode confirmalo." }
+    job: { es: "Gobierno del dato y calidad: definen qué se hace con los datos erróneos y dejan constancia.", gl: "Goberno do dato e calidade: definen que se fai cos datos erróneos e deixan constancia." }
+    terms: [anomalia, causa_raiz]
+  r4d_codigo:
+    goal: { es: "Con las reglas decididas, el modelo pasa a ser «limpio». Hay que contar cuántos registros se han excluido en total para poder documentarlo.", gl: "Coas regras decididas, o modelo pasa a ser «limpo». Hai que contar cantos rexistros se excluíron en total para poder documentalo." }
+    steps:
+      - { es: "Mirad las tarjetas: cada una dice cuántos registros tiene.", gl: "Mirade as tarxetas: cada unha di cantos rexistros ten." }
+      - { es: "Sumad solo los grupos que se excluyen: estancias negativas + encuentros después del fallecimiento.", gl: "Sumade só os grupos que se exclúen: estadías negativas + encontros despois do falecemento." }
+      - { es: "Escribid el total y pulsad «Probar».", gl: "Escribide o total e premede «Probar»." }
+    why: { es: "Un informe serio dice no solo la cifra final sino cuántos datos se han dejado fuera y por qué. Eso es transparencia.", gl: "Un informe serio di non só a cifra final senón cantos datos se deixaron fóra e por que. Iso é transparencia." }
+    job: { es: "Analistas y gobierno del dato: la documentación de exclusiones es parte del trabajo.", gl: "Analistas e goberno do dato: a documentación de exclusións é parte do traballo." }
+    terms: [anomalia]
+  r5a_kpi:
+    goal: { es: "Definir el indicador que verá la Comisión: cómo se calcula la tasa, desde cuántas altas se compara un centro con otro y qué hacer con un centro minúsculo (la Clínica Illas Cíes tiene 3 ingresos y un 100 % de reingresos).", gl: "Definir o indicador que verá a Comisión: como se calcula a taxa, desde cantas altas se compara un centro con outro e que facer cun centro minúsculo (a Clínica Illas Cíes ten 3 ingresos e un 100 % de reingresos)." }
+    steps:
+      - { es: "Tasa = cuántos de cuántos. Elegid entre qué se divide.", gl: "Taxa = cantos de cantos. Elixide entre que se divide." }
+      - { es: "Con muy pocos casos una tasa engaña: elegid un mínimo de altas.", gl: "Con moi poucos casos unha taxa engana: elixide un mínimo de altas." }
+      - { es: "Para el centro pequeño, elegid lo que ni engaña ni esconde. Pulsad «Fijar el indicador».", gl: "Para o centro pequeno, elixide o que nin engana nin agocha. Premede «Fixar o indicador»." }
+    why: { es: "Un porcentaje sin su denominador no significa nada: un 100 % de 3 casos no es una emergencia. Definir bien el indicador es lo que evita que se tomen decisiones equivocadas.", gl: "Unha porcentaxe sen o seu denominador non significa nada: un 100 % de 3 casos non é unha emerxencia. Definir ben o indicador é o que evita que se tomen decisións equivocadas." }
+    job: { es: "Análisis de datos y BI: diseñar indicadores con sentido es una de las partes más valoradas del trabajo.", gl: "Análise de datos e BI: deseñar indicadores con sentido é unha das partes máis valoradas do traballo." }
+    terms: [kpi, denominador, volumen_minimo, reingreso]
+  r5b_dashboard:
+    goal: { es: "Construir el cuadro de mando (dashboard) que se enseñará a la Comisión. Elegid entre 3 y 4 gráficos de la paleta y configuradlos para que respondan a preguntas concretas.", gl: "Construír o cadro de mando (dashboard) que se amosará á Comisión. Elixide entre 3 e 4 gráficos da paleta e configurádeos para que respondan a preguntas concretas." }
+    steps:
+      - { es: "Pulsad los botones de arriba para añadir 3 o 4 gráficos.", gl: "Premede os botóns de arriba para engadir 3 ou 4 gráficos." }
+      - { es: "Pulsad cada gráfico y ponedle un título.", gl: "Premede cada gráfico e poñédelle un título." }
+      - { es: "Pulsad «Pasar al crítico».", gl: "Premede «Pasar ao crítico»." }
+    why: { es: "Un buen gráfico no es el más bonito sino el más honesto y fácil de entender. Los detalles (el eje, el número de casos, el título) cambian lo que cree quien lo mira.", gl: "Un bo gráfico non é o máis bonito senón o máis honesto e doado de entender. Os detalles (o eixe, o número de casos, o título) cambian o que cre quen o mira." }
+    job: { es: "Analista de BI / visualización de datos (Power BI, Tableau, Metabase…): diseña cuadros de mando que ayudan a decidir.", gl: "Analista de BI / visualización de datos (Power BI, Tableau, Metabase…): deseña cadros de mando que axudan a decidir." }
+    terms: [kpi, eje_cero, denominador]
+  r5c_critico:
+    goal: { es: "El Crítico de visualización (una IA) ha revisado vuestro dashboard y señala lo que se puede mejorar. Hay que resolver los problemas importantes antes de enseñarlo.", gl: "O Crítico de visualización (unha IA) revisou o voso dashboard e sinala o que se pode mellorar. Hai que resolver os problemas importantes antes de amosalo." }
+    steps:
+      - { es: "Leed la lista del crítico: 🔴 grave, 🟡 aviso, 🔵 sugerencia.", gl: "Lede a lista do crítico: 🔴 grave, 🟡 aviso, 🔵 suxestión." }
+      - { es: "Pulsad el gráfico que señala y cambiad sus opciones.", gl: "Premede o gráfico que sinala e cambiade as súas opcións." }
+      - { es: "Pulsad «Pedir nueva revisión». Con 1 hallazgo o ninguno, «Entregar dashboard revisado».", gl: "Premede «Pedir nova revisión». Con 1 achado ou ningún, «Entregar dashboard revisado»." }
+    why: { es: "Antes de publicar algo, otra persona (o una IA) lo revisa. Revisar y corregir es parte normal del trabajo, no un fracaso.", gl: "Antes de publicar algo, outra persoa (ou unha IA) revísao. Revisar e corrixir é parte normal do traballo, non un fracaso." }
+    job: { es: "Visualización y comunicación de datos: contar bien lo que dicen los datos es tan importante como calcularlo.", gl: "Visualización e comunicación de datos: contar ben o que din os datos é tan importante como calculalo." }
+    terms: [eje_cero, denominador, volumen_minimo, ia]
+  r5d_codigo:
+    goal: { es: "Último dato antes de la Comisión: con el modelo limpio y solo los centros comparables (30 o más altas), ¿qué centro tiene la mayor tasa de reingresos?", gl: "Último dato antes da Comisión: co modelo limpo e só os centros comparables (30 ou máis altas), que centro ten a maior taxa de reingresos?" }
+    steps:
+      - { es: "Pulsad «Solo centros con 30 o más altas».", gl: "Premede «Só centros con 30 ou máis altas»." }
+      - { es: "La tabla sale ordenada de mayor a menor tasa: mirad la primera fila.", gl: "A táboa sae ordenada de maior a menor taxa: mirade a primeira fila." }
+      - { es: "Escribid el nombre corto (sin «Hospital» ni la letra final) y pulsad «Probar».", gl: "Escribide o nome curto (sen «Hospital» nin a letra final) e premede «Probar»." }
+    why: { es: "Es la respuesta que la Comisión os pedirá. Fijaos en cómo cambia la conclusión según se aplique o no el volumen mínimo: así se toman buenas o malas decisiones.", gl: "É a resposta que a Comisión vos pedirá. Fixádevos en como cambia a conclusión segundo se aplique ou non o volume mínimo: así se toman boas ou malas decisións." }
+    job: { es: "Análisis de datos: responder con una cifra fiable a una pregunta directa.", gl: "Análise de datos: responder cunha cifra fiable a unha pregunta directa." }
+    terms: [volumen_minimo, reingreso, kpi]
+  r6a_entrenar:
+    goal: { es: "Entrenar un modelo que prediga qué pacientes reingresarán en 30 días y entregar uno que rinda bien SIN usar información del futuro.", gl: "Adestrar un modelo que prediga que pacientes reingresarán en 30 días e entregar un que renda ben SEN usar información do futuro." }
+    steps:
+      - { es: "Marcad las variables que usará el modelo.", gl: "Marcade as variables que usará o modelo." }
+      - { es: "Pulsad «Entrenar» y mirad el AUC (0,5 = adivinar al azar; 1 = acertar siempre).", gl: "Premede «Adestrar» e mirade o AUC (0,5 = adiviñar ao chou; 1 = acertar sempre)." }
+      - { es: "¿Demasiado bueno? Revisad si alguna variable cuenta el futuro.", gl: "Demasiado bo? Revisade se algunha variable conta o futuro." }
+      - { es: "Con un modelo bueno y honesto, pulsad «Entregar modelo».", gl: "Cun modelo bo e honesto, premede «Entregar modelo»." }
+    why: { es: "Un modelo con trampa parece genial y fracasa el día que se usa de verdad. Distinguir un resultado bueno de uno demasiado bueno es una de las habilidades más valiosas de quien trabaja con datos.", gl: "Un modelo con trampa parece xenial e fracasa o día que se usa de verdade. Distinguir un resultado bo dun demasiado bo é unha das habilidades máis valiosas de quen traballa con datos." }
+    job: { es: "Ciencia de datos (data scientist): se llega con Grados en Ciencia de Datos, Matemáticas, Estadística o Informática, o itinerarios de FP con especialización en IA y big data.", gl: "Ciencia de datos (data scientist): chégase con Graos en Ciencia de Datos, Matemáticas, Estatística ou Informática, ou itinerarios de FP con especialización en IA e big data." }
+    terms: [modelo_predictivo, auc, fuga_datos, sensibilidad]
+  r6b_umbral:
+    goal: { es: "Elegir el umbral del modelo para que la enfermería llame a no más de 40 pacientes por semana y aun así detecte una buena parte de los reingresos.", gl: "Elixir o limiar do modelo para que a enfermaría chame a non máis de 40 pacientes por semana e aínda así detecte unha boa parte dos reingresos." }
+    steps:
+      - { es: "Moved el deslizador del umbral.", gl: "Movede o desprazador do limiar." }
+      - { es: "«Llamadas por semana» tiene que quedar en 40 o menos.", gl: "«Chamadas por semana» ten que quedar en 40 ou menos." }
+      - { es: "«Reingresos detectados» tiene que ser al menos 30 %. Después, «Entregar umbral».", gl: "«Reingresos detectados» ten que ser polo menos 30 %. Despois, «Entregar limiar»." }
+    why: { es: "En la vida real un modelo no decide en el vacío: hay límites de personal, tiempo y dinero. Elegir el umbral es una decisión que mezcla técnica y realidad.", gl: "Na vida real un modelo non decide no baleiro: hai límites de persoal, tempo e diñeiro. Elixir o limiar é unha decisión que mestura técnica e realidade." }
+    job: { es: "Ciencia de datos aplicada a la salud: traducir un modelo en una decisión que el hospital pueda ejecutar.", gl: "Ciencia de datos aplicada á saúde: traducir un modelo nunha decisión que o hospital poida executar." }
+    terms: [umbral, sensibilidad, falsa_alarma]
+  r6c_equidad:
+    goal: { es: "Comprobar si el modelo funciona igual de bien con todos los grupos y decidir si se usa, con qué condiciones o si no se usa.", gl: "Comprobar se o modelo funciona igual de ben con todos os grupos e decidir se se usa, con que condicións ou se non se usa." }
+    steps:
+      - { es: "Mirad las barras: las rojas son grupos donde el modelo detecta menos.", gl: "Mirade as barras: as vermellas son grupos onde o modelo detecta menos." }
+      - { es: "Elegid: desplegar, desplegar con revisión humana o no desplegar.", gl: "Elixide: despregar, despregar con revisión humana ou non despregar." }
+      - { es: "Escribid una frase (40 letras o más) con los grupos y qué haríais. Pulsad «Entregar decisión».", gl: "Escribide unha frase (40 letras ou máis) cos grupos e que fariades. Premede «Entregar decisión»." }
+    why: { es: "Un modelo que falla más con un grupo puede perjudicarlo sin que nadie lo note. Revisar la equidad antes de usarlo es parte del trabajo, no un extra.", gl: "Un modelo que falla máis cun grupo pode prexudicalo sen que ninguén o note. Revisar a equidade antes de usalo é parte do traballo, non un extra." }
+    job: { es: "IA responsable y gobierno del dato: personas que vigilan que los algoritmos sean justos y estén bien documentados.", gl: "IA responsable e goberno do dato: persoas que vixían que os algoritmos sexan xustos e estean ben documentados." }
+    terms: [equidad, sensibilidad, modelo_predictivo]
+  f_comision:
+    goal: { es: "Defender vuestro trabajo ante la Comisión: seis preguntas, de tres personas distintas, sobre lo que habéis hecho y decidido.", gl: "Defender o voso traballo ante a Comisión: seis preguntas, de tres persoas distintas, sobre o que fixestes e decidistes." }
+    steps:
+      - { es: "Leed la pregunta y fijaos en quién la hace.", gl: "Lede a pregunta e fixádevos en quen a fai." }
+      - { es: "Responded en 2 o 3 frases: una cifra, un límite de los datos y una propuesta.", gl: "Respondede en 2 ou 3 frases: unha cifra, un límite dos datos e unha proposta." }
+      - { es: "Adjuntad hasta 3 tarjetas de evidencia y pulsad «Responder».", gl: "Anexade ata 3 tarxetas de evidencia e premede «Responder»." }
+    why: { es: "Un buen análisis que nadie entiende no sirve. Saber explicarlo a quien decide, con claridad y honestidad, es tan importante como calcularlo.", gl: "Unha boa análise que ninguén entende non serve. Saber explicala a quen decide, con claridade e honestidade, é tan importante como calculala." }
+    job: { es: "Cualquier perfil de datos: analistas, consultores y científicos de datos pasan mucho tiempo explicando resultados a personas que no son técnicas.", gl: "Calquera perfil de datos: analistas, consultores e científicos de datos pasan moito tempo explicando resultados a persoas que non son técnicas." }
+    terms: [comision, kpi]

@@ -1,0 +1,19 @@
+id: r5a_kpi
+room: R5
+type: decision
+title: { es: "KPI con sentido", gl: "KPI con sentido" }
+docs_needed: [doc_analyst_requests]
+story:
+  es: "Definid el indicador que verá la Comisión: cómo se calcula la tasa, desde cuántas altas se publica la de un centro y qué hacer con la Clínica Illas Cíes (3 ingresos y un 100 % de reingresos)."
+  gl: "Definide o indicador que verá a Comisión: como se calcula a taxa, desde cantas altas se publica a dun centro e que facer coa Clínica Illas Cíes (3 ingresos e un 100 % de reingresos)."
+tools: [kpi_form]
+answer: { source: "build_answers.public.json#r5a_kpi", normalize: report }
+points: 100
+time_target_min: 8
+hints:
+  - { es: "Una tasa compara reingresos con altas, no con pacientes.", gl: "Unha taxa compara reingresos con altas, non con pacientes." }
+  - { es: "10 altas son muy pocas para comparar; 1.000 dejaría fuera a casi todos los centros.", gl: "10 altas son moi poucas para comparar; 1.000 deixaría fóra case todos os centros." }
+  - { es: "Tasa: reingresos a 30 días / altas. Mínimo: 30 altas. Al centro pequeño, ni ocultarlo ni enseñarlo como si nada.", gl: "Taxa: reingresos a 30 días / altas. Mínimo: 30 altas. Ao centro pequeno, nin agochalo nin amosalo coma se nada." }
+solution:
+  es: "Tasa: «Reingresos a 30 días / altas del periodo». Mínimo: «30 altas». Clínica Illas Cíes: «Mostrarla con un aviso de pocos casos»."
+  gl: "Taxa: «Reingresos a 30 días / altas do período». Mínimo: «30 altas». Clínica Illas Cíes: «Amosala cun aviso de poucos casos»."

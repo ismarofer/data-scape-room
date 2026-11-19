@@ -1,0 +1,19 @@
+id: r2a_radar
+room: R1
+type: decision
+title: { es: "Radar RGPD", gl: "Radar RGPD" }
+docs_needed: [doc_de_privacy, doc_ds_bias]
+story:
+  es: "Antes de usar los datos de pacientes hay que protegerlos: lo exige la ley (el RGPD). Decidid qué hacer con cada columna: eliminarla, pseudonimizarla (cambiarla por un código), mantenerla o generalizarla (hacerla menos exacta)."
+  gl: "Antes de usar os datos de pacientes hai que protexelos: esíxeo a lei (o RXPD). Decidide que facer con cada columna: eliminala, pseudonimizala (cambiala por un código), mantela ou xeneralizala (facela menos exacta)."
+tools: [privacy_radar]
+validator: { type: privacy_rubric, rubric: privacy_rubric.yaml }
+points: 130
+time_target_min: 8
+hints:
+  - { es: "Pensad en cada columna: ¿con ella alguien podría saber quién es la persona? El nombre, la dirección y los documentos, sí.", gl: "Pensade en cada columna: con ela alguén podería saber quen é a persoa? O nome, o enderezo e os documentos, si." }
+  - { es: "El ssn identifica a la persona, pero hace falta para unir fichas repetidas: ni se mantiene ni se elimina. La fecha de nacimiento y el código postal son útiles, pero demasiado exactos.", gl: "O ssn identifica a persoa, pero fai falta para unir fichas repetidas: nin se mantén nin se elimina. A data de nacemento e o código postal son útiles, pero demasiado exactos." }
+  - { es: "ssn → pseudonimizar. birthdate y postal_code → generalizar. Nombre, apellidos, dirección, pasaporte y carné de conducir → eliminar. patient_id, gender y deathdate → mantener.", gl: "ssn → pseudonimizar. birthdate e postal_code → xeneralizar. Nome, apelidos, enderezo, pasaporte e carné de conducir → eliminar. patient_id, gender e deathdate → manter." }
+solution:
+  es: "Mantener: patient_id, deathdate, state, county y gender. Pseudonimizar: ssn. Generalizar: birthdate, postal_code y city. Eliminar: drivers, passport, prefix, first_name, last_name, marital, birthplace, address, lat y lon. Después, «Aplicar decisiones»."
+  gl: "Manter: patient_id, deathdate, state, county e gender. Pseudonimizar: ssn. Xeneralizar: birthdate, postal_code e city. Eliminar: drivers, passport, prefix, first_name, last_name, marital, birthplace, address, lat e lon. Despois, «Aplicar decisións»."

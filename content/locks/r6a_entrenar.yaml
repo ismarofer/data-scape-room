@@ -1,0 +1,22 @@
+id: r6a_entrenar
+room: R6
+type: model
+title: { es: "Entrenar el modelo", gl: "Adestrar o modelo" }
+docs_needed: [doc_ds_ml, doc_ds_bias]
+story:
+  es: "La enfermería quiere saber, ANTES del alta, quién volverá a ingresar. Elegid con qué datos aprende el modelo y entrenadlo. Ojo: solo vale lo que se sabe en el momento del alta."
+  gl: "A enfermaría quere saber, ANTES da alta, quen volverá ingresar. Elixide con que datos aprende o modelo e adestrádeo. Ollo: só vale o que se sabe no momento da alta."
+tools: [ml_train]
+answer_hint:
+  es: "Marcad variables, pulsad «Entrenar» y, cuando el modelo sea bueno y honesto, «Entregar modelo»."
+  gl: "Marcade variables, premede «Adestrar» e, cando o modelo sexa bo e honesto, «Entregar modelo»."
+validator: { type: ml_train, min_auc: 0.65, min_features: 2 }
+points: 120
+time_target_min: 8
+hints:
+  - { es: "Si un resultado es demasiado bueno para ser verdad, desconfiad.", gl: "Se un resultado é demasiado bo para ser verdade, desconfiade." }
+  - { es: "¿El hospital sabe, el día del alta, cuántos días faltan para el siguiente ingreso?", gl: "O hospital sabe, o día da alta, cantos días faltan para o seguinte ingreso?" }
+  - { es: "Quitad «Días hasta el siguiente ingreso» y dejad las otras seis.", gl: "Quitade «Días ata o seguinte ingreso» e deixade as outras seis." }
+solution:
+  es: "Marcad las 6 variables que se conocen al alta: edad, nº de condiciones, duración de la estancia, ingresos previos, centro y sexo. NO marquéis «Días hasta el siguiente ingreso» (cuenta el futuro). Entrenad (AUC ≈ 0,70) y pulsad «Entregar modelo»."
+  gl: "Marcade as 6 variables que se coñecen á alta: idade, nº de condicións, duración da estadía, ingresos previos, centro e sexo. NON marquedes «Días ata o seguinte ingreso» (conta o futuro). Adestrade (AUC ≈ 0,70) e premede «Entregar modelo»."

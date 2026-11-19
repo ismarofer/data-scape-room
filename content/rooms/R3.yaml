@@ -1,0 +1,14 @@
+id: R3
+title: { es: "El plano del hospital", gl: "O plano do hospital" }
+number: "2"
+stage: { es: "Modelado", gl: "Modelado" }
+icon: "🏗️"
+intro:
+  es: "Con los datos ya cargados, toca construir el cálculo de reingresos. Primero hay que ponerse de acuerdo en qué se mide: si cambia la definición, cambia el número."
+  gl: "Cos datos xa cargados, toca construír o cálculo de reingresos. Primeiro hai que poñerse de acordo en que se mide: se cambia a definición, cambia o número."
+briefing:
+  - { es: "Leer el protocolo: qué es exactamente un reingreso.", gl: "Ler o protocolo: que é exactamente un reingreso." }
+  - { es: "Dibujar el plano de las tablas (esquema en estrella).", gl: "Debuxar o plano das táboas (esquema en estrela)." }
+  - { es: "Montar el cálculo y sacar la primera cifra de reingresos.", gl: "Montar o cálculo e sacar a primeira cifra de reingresos." }
+target_minutes: 30
+locks: [r3a_protocolo, r3b_estrella, r3c_modelo]

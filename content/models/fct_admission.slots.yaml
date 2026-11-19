@@ -1,0 +1,7 @@
+window:
+  label: { es: "¿Cuántos días después del alta cuenta un reingreso?", gl: "Cantos días despois da alta conta un reingreso?" }
+  options:
+    - { id: between_2_30, plain: { es: "Entre 2 y 30 días", gl: "Entre 2 e 30 días" }, sql: "between 2 and 30", correct: true, explain: { es: "Entre 2 y 30 días naturales desde el alta anterior.", gl: "Entre 2 e 30 días naturais desde a alta anterior." } }
+    - { id: lte_30, plain: { es: "30 días o menos (incluye 0 y 1)", gl: "30 días ou menos (inclúe 0 e 1)" }, sql: "<= 30", explain: { es: "Cuenta también huecos de 0 o 1 día (que ya son el mismo episodio) y negativos.", gl: "Conta tamén ocos de 0 ou 1 día (que xa son o mesmo episodio) e negativos." } }
+    - { id: between_0_14, plain: { es: "Entre 0 y 14 días", gl: "Entre 0 e 14 días" }, sql: "between 0 and 14", explain: { es: "Ventana de solo dos semanas.", gl: "Ventá de só dúas semanas." } }
+    - { id: between_2_90, plain: { es: "Entre 2 y 90 días", gl: "Entre 2 e 90 días" }, sql: "between 2 and 90", explain: { es: "Ventana de tres meses: demasiado larga.", gl: "Ventá de tres meses: demasiado longa." } }

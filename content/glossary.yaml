@@ -1,0 +1,127 @@
+csv:
+  term: { es: "CSV", gl: "CSV" }
+  def: { es: "Fichero de texto que guarda una tabla: cada línea es una fila y un símbolo especial (el separador) marca dónde acaba cada columna.", gl: "Ficheiro de texto que garda unha táboa: cada liña é unha fila e un símbolo especial (o separador) marca onde acaba cada columna." }
+delimitador:
+  term: { es: "Separador (delimitador)", gl: "Separador (delimitador)" }
+  def: { es: "El símbolo que separa las columnas dentro de una línea: coma, punto y coma, tabulador… Si eliges el equivocado, toda la fila se lee como una sola columna.", gl: "O símbolo que separa as columnas dentro dunha liña: coma, punto e coma, tabulador… Se elixes o equivocado, toda a fila le se como unha soa columna." }
+codificacion:
+  term: { es: "Codificación", gl: "Codificación" }
+  def: { es: "La forma en que un ordenador guarda las letras como números. Si se lee con la codificación equivocada, las tildes y la ñ salen como símbolos raros (Ã³, �).", gl: "A forma en que un ordenador garda as letras como números. Se se le coa codificación equivocada, os acentos e o ñ saen como símbolos raros (Ã³, �)." }
+formato_fecha:
+  term: { es: "Formato de fecha", gl: "Formato de data" }
+  def: { es: "Cómo se escribe una fecha. 2023-01-31 (año-mes-día) y 31/01/2023 (día/mes/año) son la misma fecha, pero un programa necesita saber cuál es cuál.", gl: "Como se escribe unha data. 2023-01-31 (ano-mes-día) e 31/01/2023 (día/mes/ano) son a mesma data, pero un programa precisa saber cal é cal." }
+fila_rechazada:
+  term: { es: "Fila rechazada", gl: "Fila rexeitada" }
+  def: { es: "Una fila que no encaja con las reglas que has elegido (le faltan columnas, su fecha no se entiende…). No se carga y se marca en rojo.", gl: "Unha fila que non encaixa coas regras que elixiches (fáltanlle columnas, a súa data non se entende…). Non se carga e márcase en vermello." }
+ingesta:
+  term: { es: "Ingesta", gl: "Inxesta" }
+  def: { es: "El paso de traer los datos desde su origen a nuestro sistema. Es el primer paso de cualquier proyecto de datos.", gl: "O paso de traer os datos desde a súa orixe ao noso sistema. É o primeiro paso de calquera proxecto de datos." }
+duplicado:
+  term: { es: "Duplicado / reenvío", gl: "Duplicado / reenvío" }
+  def: { es: "Cuando una misma fila llega dos veces (por ejemplo, un hospital reenvía un fichero ya enviado). Si no se trata, se cuenta dos veces y las cifras salen infladas.", gl: "Cando unha mesma fila chega dúas veces (por exemplo, un hospital reenvía un ficheiro xa enviado). Se non se trata, cóntase dúas veces e as cifras saen infladas." }
+clave:
+  term: { es: "Clave (identificador)", gl: "Clave (identificador)" }
+  def: { es: "La columna que identifica cada fila de forma única, como el DNI identifica a una persona. En los encuentros es encounter_id.", gl: "A columna que identifica cada fila de forma única, como o DNI identifica a unha persoa. Nos encontros é encounter_id." }
+afirmacion:
+  term: { es: "Verificar a la IA", gl: "Verificar a IA" }
+  def: { es: "Una IA puede sonar muy segura y equivocarse. Antes de fiarte de una cifra, compruébala con los datos: cuenta, mira los nulos, los distintos…", gl: "Unha IA pode soar moi segura e equivocarse. Antes de fiarte dunha cifra, compróbaa cos datos: conta, mira os nulos, os distintos…" }
+nulo:
+  term: { es: "Nulo (vacío)", gl: "Nulo (baleiro)" }
+  def: { es: "Una casilla sin valor. Por ejemplo, un ingreso todavía en curso no tiene fecha de alta.", gl: "Unha cela sen valor. Por exemplo, un ingreso aínda en curso non ten data de alta." }
+rgpd:
+  term: { es: "RGPD", gl: "RXPD" }
+  def: { es: "La ley europea que protege los datos personales. Obliga a usar solo los datos necesarios (minimización) y a protegerlos.", gl: "A lei europea que protexe os datos persoais. Obriga a usar só os datos necesarios (minimización) e a protexelos." }
+identificativo:
+  term: { es: "Dato identificativo", gl: "Dato identificativo" }
+  def: { es: "Un dato que permite reconocer a una persona, solo o combinado con otros: nombre, DNI/SSN, dirección, carnet, pasaporte… o incluso fecha de nacimiento + código postal + sexo.", gl: "Un dato que permite recoñecer a unha persoa, só ou combinado con outros: nome, DNI/SSN, enderezo, carné, pasaporte… ou mesmo data de nacemento + código postal + sexo." }
+pseudonimizar:
+  term: { es: "Pseudonimizar", gl: "Pseudonimizar" }
+  def: { es: "Sustituir un dato identificativo por un código inventado (un hash con sal) que siempre es el mismo para la misma persona. Sirve para unir fichas sin enseñar quién es.", gl: "Substituír un dato identificativo por un código inventado (un hash con sal) que sempre é o mesmo para a mesma persoa. Serve para unir fichas sen amosar quen é." }
+generalizar:
+  term: { es: "Generalizar", gl: "Xeneralizar" }
+  def: { es: "Dar el dato menos exacto: en vez de la fecha de nacimiento, el tramo de edad; en vez del código postal, el área sanitaria.", gl: "Dar o dato menos exacto: en vez da data de nacemento, o tramo de idade; en vez do código postal, a área sanitaria." }
+hash:
+  term: { es: "Hash con sal", gl: "Hash con sal" }
+  def: { es: "Una función que convierte un dato en un código ilegible que no se puede deshacer. La sal es un texto secreto que se añade antes para que nadie pueda adivinarlo probando.", gl: "Unha función que converte un dato nun código ilexible que non se pode desfacer. A sal é un texto secreto que se engade antes para que ninguén poida adiviñalo probando." }
+staging:
+  term: { es: "Staging (capa de limpieza)", gl: "Staging (capa de limpeza)" }
+  def: { es: "La capa donde los datos en bruto se ordenan: se convierten a su tipo correcto (fechas, números), se renombran y se limpian, antes de usarlos para medir.", gl: "A capa onde os datos en bruto se ordenan: convértense ao seu tipo correcto (datas, números), renomeanse e límpanse, antes de usalos para medir." }
+modelo:
+  term: { es: "Modelo (dbt)", gl: "Modelo (dbt)" }
+  def: { es: "Una consulta SQL guardada que construye una tabla a partir de otras. dbt es la herramienta que ejecuta los modelos en orden y comprueba que funcionan.", gl: "Unha consulta SQL gardada que constrúe unha táboa a partir doutras. dbt é a ferramenta que executa os modelos en orde e comproba que funcionan." }
+test:
+  term: { es: "Test de datos", gl: "Test de datos" }
+  def: { es: "Una comprobación automática sobre una tabla: que una columna no tenga vacíos (not_null), que no se repita (unique), que todo apunte a algo que existe (relationships)… Verde = pasa, rojo = falla.", gl: "Unha comprobación automática sobre unha táboa: que unha columna non teña baleiros (not_null), que non se repita (unique), que todo apunte a algo que existe (relationships)… Verde = pasa, vermello = falla." }
+casting:
+  term: { es: "Convertir tipos (cast)", gl: "Converter tipos (cast)" }
+  def: { es: "Pasar un texto al tipo que le corresponde. Un 31/01/2023 es solo texto hasta que lo conviertes en fecha; entonces puedes restar fechas u ordenarlas.", gl: "Pasar un texto ao tipo que lle corresponde. Un 31/01/2023 é só texto ata que o converte en data; entón podes restar datas ou ordenalas." }
+deduplicar:
+  term: { es: "Deduplicar", gl: "Deduplicar" }
+  def: { es: "Quedarse con una sola fila por cada identificador. Normalmente, con la versión más reciente.", gl: "Quedar cunha soa fila por cada identificador. Normalmente, coa versión máis recente." }
+ssn:
+  term: { es: "SSN", gl: "SSN" }
+  def: { es: "Número de identificación de una persona (en estos datos ficticios). Dos fichas con el mismo SSN son la misma persona.", gl: "Número de identificación dunha persoa (nestes datos ficticios). Dúas fichas co mesmo SSN son a mesma persoa." }
+gemelo:
+  term: { es: "Gemelos falsos", gl: "Xemelos falsos" }
+  def: { es: "Personas distintas con el mismo nombre y fecha de nacimiento. Si las unes por el nombre, mezclas historias clínicas que no son de la misma persona.", gl: "Persoas distintas co mesmo nome e data de nacemento. Se as unes polo nome, mestura historias clínicas que non son da mesma persoa." }
+episodio:
+  term: { es: "Episodio", gl: "Episodio" }
+  def: { es: "Una estancia en el hospital vista como un solo bloque. Si te trasladan de planta y el hueco es de un día o menos, cuenta como un solo episodio.", gl: "Unha estadía no hospital vista como un só bloque. Se te trasladan de planta e o oco é dun día ou menos, conta como un só episodio." }
+reingreso:
+  term: { es: "Reingreso a 30 días", gl: "Reingreso a 30 días" }
+  def: { es: "Cuando alguien vuelve a ingresar entre 2 y 30 días después de recibir el alta. Si es muy frecuente puede indicar que el alta fue demasiado pronto o faltó seguimiento.", gl: "Cando alguén volve ingresar entre 2 e 30 días despois de recibir a alta. Se é moi frecuente pode indicar que a alta foi demasiado pronto ou faltou seguimento." }
+ventana:
+  term: { es: "Función de ventana", gl: "Función de ventá" }
+  def: { es: "Una herramienta de SQL que mira la fila anterior o siguiente sin juntar filas. lag(), por ejemplo, te da el valor de la fila de antes dentro de cada paciente.", gl: "Unha ferramenta de SQL que mira a fila anterior ou seguinte sen xuntar filas. lag(), por exemplo, dáche o valor da fila de antes dentro de cada paciente." }
+estrella:
+  term: { es: "Esquema en estrella", gl: "Esquema en estrela" }
+  def: { es: "Forma de organizar los datos para analizar: una tabla central de hechos (lo que ocurre) rodeada de tablas de dimensiones (lo que lo describe: quién, dónde, cuándo).", gl: "Forma de organizar os datos para analizar: unha táboa central de feitos (o que ocorre) arredada de táboas de dimensións (o que o describe: quen, onde, cando)." }
+hecho:
+  term: { es: "Hecho / dimensión", gl: "Feito / dimensión" }
+  def: { es: "Un hecho es algo que ocurre y se mide (un ingreso). Una dimensión lo describe (el paciente, el hospital, la fecha). Los hechos se unen a las dimensiones; las dimensiones no se unen entre sí.", gl: "Un feito é algo que ocorre e se mide (un ingreso). Unha dimensión descríbeo (o paciente, o hospital, a data). Os feitos únense ás dimensións; as dimensións non se unen entre si." }
+anomalia:
+  term: { es: "Anomalía", gl: "Anomalía" }
+  def: { es: "Un dato que no tiene sentido (alta antes del ingreso, ingresos de alguien ya fallecido). Antes de corregirlo hay que entender su causa.", gl: "Un dato que non ten sentido (alta antes do ingreso, ingresos de alguén xa falecido). Antes de corrixilo hai que entender a súa causa." }
+causa_raiz:
+  term: { es: "Causa raíz", gl: "Causa raíz" }
+  def: { es: "El origen real de un problema (un error al teclear, una migración que salió mal…). Se arregla el origen, no solo el síntoma.", gl: "A orixe real dun problema (un erro ao teclear, unha migración que saíu mal…). Arránxase a orixe, non só o síntoma." }
+kpi:
+  term: { es: "KPI (indicador)", gl: "KPI (indicador)" }
+  def: { es: "Un número que resume algo importante para decidir. Si el KPI está mal definido, las decisiones salen mal aunque los cálculos sean perfectos.", gl: "Un número que resume algo importante para decidir. Se o KPI está mal definido, as decisións saen mal aínda que os cálculos sexan perfectos." }
+denominador:
+  term: { es: "Denominador", gl: "Denominador" }
+  def: { es: "El número entre el que divides. En una tasa de reingresos, las altas: sin saber cuántas altas hay, 3 reingresos pueden ser mucho o poquísimo.", gl: "O número entre o que dividides. Nunha taxa de reingresos, as altas: sen saber cantas altas hai, 3 reingresos poden ser moito ou moi pouco." }
+volumen_minimo:
+  term: { es: "Volumen mínimo", gl: "Volume mínimo" }
+  def: { es: "Un mínimo de casos para publicar una tasa. Con 3 casos, un 100 % no significa nada; con 600, sí.", gl: "Un mínimo de casos para publicar unha taxa. Con 3 casos, un 100 % non significa nada; con 600, si." }
+eje_cero:
+  term: { es: "Eje que empieza en cero", gl: "Eixe que empeza en cero" }
+  def: { es: "En un gráfico de barras, si el eje no empieza en cero, una diferencia pequeña parece enorme. Es la trampa visual más común.", gl: "Nun gráfico de barras, se o eixe non empeza en cero, unha diferenza pequena parece enorme. É a trampa visual máis común." }
+ia:
+  term: { es: "Personaje con IA", gl: "Personaxe con IA" }
+  def: { es: "Un personaje cuyas respuestas genera una inteligencia artificial. Puede equivocarse o inventarse cosas: es un ayudante, no un jefe. No le escribas datos personales.", gl: "Un personaxe cuxas respostas xera unha intelixencia artificial. Pode equivocarse ou inventarse cousas: é un axudante, non un xefe. Non lle escribas datos persoais." }
+modelo_predictivo:
+  term: { es: "Modelo predictivo", gl: "Modelo predictivo" }
+  def: { es: "Un programa que aprende de casos pasados para estimar qué pasará con casos nuevos (por ejemplo, la probabilidad de que un paciente reingrese).", gl: "Un programa que aprende de casos pasados para estimar que pasará con casos novos (por exemplo, a probabilidade de que un paciente reingrese)." }
+auc:
+  term: { es: "AUC", gl: "AUC" }
+  def: { es: "Un número entre 0,5 (como tirar una moneda) y 1 (perfecto) que dice cómo de bien un modelo ordena a los pacientes de menos a más riesgo.", gl: "Un número entre 0,5 (como tirar unha moeda) e 1 (perfecto) que di como de ben un modelo ordena os pacientes de menos a máis risco." }
+fuga_datos:
+  term: { es: "Fuga de datos", gl: "Fuga de datos" }
+  def: { es: "Cuando una variable del modelo contiene información del futuro (algo que no se sabría en el momento de predecir). El modelo parece perfecto pero no sirve en la vida real.", gl: "Cando unha variable do modelo contén información do futuro (algo que non se saberían no momento de predicir). O modelo parece perfecto pero non serve na vida real." }
+umbral:
+  term: { es: "Umbral", gl: "Limiar" }
+  def: { es: "La probabilidad a partir de la cual se activa un aviso. Umbral bajo = más avisos (y más falsas alarmas); umbral alto = menos avisos (y se escapan casos).", gl: "A probabilidade a partir da cal se activa un aviso. Limiar baixo = máis avisos (e máis falsas alarmas); limiar alto = menos avisos (e escápanse casos)." }
+sensibilidad:
+  term: { es: "Sensibilidad", gl: "Sensibilidade" }
+  def: { es: "De los casos que SÍ ocurrieron (reingresos reales), qué proporción detectó el modelo.", gl: "Dos casos que SI ocorreron (reingresos reais), que proporción detectou o modelo." }
+falsa_alarma:
+  term: { es: "Falsa alarma", gl: "Falsa alarma" }
+  def: { es: "Un paciente que el modelo marca como riesgo y que finalmente no reingresa.", gl: "Un paciente que o modelo marca como risco e que finalmente non reingresa." }
+equidad:
+  term: { es: "Equidad", gl: "Equidade" }
+  def: { es: "Que el modelo funcione igual de bien con todos los grupos (sexo, edad…). Si falla más con un grupo, hay un sesgo.", gl: "Que o modelo funcione igual de ben con todos os grupos (sexo, idade…). Se falla máis cun grupo, hai un sesgo." }
+comision:
+  term: { es: "Comisión de Calidad Asistencial", gl: "Comisión de Calidade Asistencial" }
+  def: { es: "El grupo de personas del hospital que decide con vuestro informe. Valoran que seáis claros, honestos con los límites y que propongáis acciones.", gl: "O grupo de persoas do hospital que decide co voso informe. Valoran que sexades claros, honestos cos límites e que propoñades accións." }
+

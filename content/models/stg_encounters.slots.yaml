@@ -1,0 +1,42 @@
+date_cast:
+  label: { es: "Convertir fechas", gl: "Converter datas" }
+  options:
+    - id: plain_cast
+      sql: "cast({col} as timestamp)"
+      explain: { es: "Convierte directamente: falla si algún formato no es el estándar.", gl: "Converte directamente: falla se algún formato non é o estándar." }
+    - id: try_cast
+      sql: "try_cast({col} as timestamp)"
+      explain: { es: "Convierte lo que puede y deja vacío lo demás, sin avisar.", gl: "Converte o que pode e deixa baleiro o demais, sen avisar." }
+    - id: iso_only
+      sql: "try_strptime({col}, '%Y-%m-%d %H:%M:%S')"
+      explain: { es: "Solo entiende el formato año-mes-día.", gl: "Só entende o formato ano-mes-día." }
+    - id: both_formats
+      sql: "coalesce(try_strptime({col}, '%Y-%m-%d %H:%M:%S'), try_strptime({col}, '%d/%m/%Y %H:%M'))"
+      correct: true
+      explain: { es: "Prueba el formato estándar y, si no encaja, el día/mes/año de H3.", gl: "Proba o formato estándar e, se non encaixa, o día/mes/ano de H3." }
+class_norm:
+  label: { es: "Tipo de encuentro", gl: "Tipo de encontro" }
+  options:
+    - id: as_is
+      sql: "encounter_class"
+      explain: { es: "Lo deja como llega: hay mayúsculas y minúsculas mezcladas.", gl: "Déixao como chega: hai maiúsculas e minúsculas mesturadas." }
+    - id: upper
+      sql: "upper(encounter_class)"
+      explain: { es: "Todo en mayúsculas: homogéneo, pero no es el valor que espera el modelo.", gl: "Todo en maiúsculas: homoxéneo, pero non é o valor que espera o modelo." }
+    - id: lower_trim
+      sql: "lower(trim(encounter_class))"
+      correct: true
+      explain: { es: "Minúsculas y sin espacios: el estándar del modelo.", gl: "Minúsculas e sen espazos: o estándar do modelo." }
+dedupe:
+  label: { es: "Duplicados", gl: "Duplicados" }
+  options:
+    - id: keep_all
+      sql: "1 = 1"
+      explain: { es: "Se queda con todas las filas, también las repetidas.", gl: "Queda con todas as filas, tamén as repetidas." }
+    - id: latest
+      sql: "rn = 1"
+      correct: true
+      explain: { es: "Una fila por encuentro: la versión cargada más recientemente.", gl: "Unha fila por encontro: a versión cargada máis recentemente." }
+    - id: oldest
+      sql: "rn > 1"
+      explain: { es: "Se queda solo con las versiones antiguas.", gl: "Queda só coas versións antigas." }

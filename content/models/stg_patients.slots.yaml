@@ -1,0 +1,16 @@
+patient_key:
+  label: { es: "Clave de paciente", gl: "Clave de paciente" }
+  options:
+    - id: raw_ssn
+      sql: "ssn"
+      explain: { es: "Usa el SSN tal cual: sigue siendo un dato identificativo.", gl: "Usa o SSN tal cal: segue sendo un dato identificativo." }
+    - id: by_name
+      sql: "md5(first_name || last_name)"
+      explain: { es: "Une por nombre: dos personas distintas pueden llamarse igual.", gl: "Une por nome: dúas persoas distintas poden chamarse igual." }
+    - id: by_id
+      sql: "patient_id"
+      explain: { es: "Es el identificador de cada ficha, pero un mismo paciente puede tener varias.", gl: "É o identificador de cada ficha, pero un mesmo paciente pode ter varias." }
+    - id: hash_ssn
+      sql: "substr(sha256('ca-salt:' || ssn), 1, 16)"
+      correct: true
+      explain: { es: "Seudónimo estable derivado del SSN con sal: sirve para unir sin mostrar el dato.", gl: "Pseudónimo estable derivado do SSN con sal: serve para unir sen amosar o dato." }

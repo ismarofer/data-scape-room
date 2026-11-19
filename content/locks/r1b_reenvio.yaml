@@ -1,0 +1,46 @@
+id: r1b_reenvio
+room: R1
+type: code
+title: { es: "El reenvío", gl: "O reenvío" }
+docs_needed: [doc_de_specs, doc_ds_analysis]
+story:
+  es: "El hospital H2 ha mandado su fichero dos veces y, al juntarlo todo, hay visitas repetidas. Decidid qué hacer con ellas y averiguad cuántas visitas DISTINTAS hay: ese número es el código."
+  gl: "O hospital H2 mandou o seu ficheiro dúas veces e, ao xuntalo todo, hai visitas repetidas. Decidide que facer con elas e descubride cantas visitas DISTINTAS hai: ese número é o código."
+tools: [query_lab]
+decision:
+  id: d_r1b_dedupe
+  options:
+    - id: union_all
+      label: { es: "Cargar todo y seguir", gl: "Cargar todo e seguir" }
+      explain: { es: "Rápido, pero cuenta dos veces los encuentros de H2.", gl: "Rápido, pero conta dúas veces os encontros de H2." }
+      effects: { quality: -10, trust: -5 }
+      ledger_tag: duplicates_ignored
+    - id: union_distinct_row
+      label: { es: "Quitar filas idénticas", gl: "Quitar filas idénticas" }
+      explain: { es: "Quita copias exactas, pero deja la versión vieja y la nueva de las filas corregidas.", gl: "Quita copias exactas, pero deixa a versión vella e a nova das filas corrixidas." }
+      effects: { quality: -3 }
+      ledger_tag: partial_dedupe
+    - id: latest_by_id
+      label: { es: "Quedarse con la última versión de cada encuentro", gl: "Quedar coa última versión de cada encontro" }
+      explain: { es: "Una fila por identificador, la más reciente.", gl: "Unha fila por identificador, a máis recente." }
+      effects: { quality: 10, trust: 5 }
+      ledger_tag: correct_dedupe
+      correct: true
+    - id: only_resend
+      label: { es: "Usar solo el reenvío", gl: "Usar só o reenvío" }
+      explain: { es: "Funciona para H2, pero se pierde la trazabilidad de lo que había antes.", gl: "Funciona para H2, pero perdese a trazabilidade do que había antes." }
+      effects: { quality: 2, trust: -3 }
+      ledger_tag: lost_traceability
+answer_hint:
+  es: "Un número: cuántas visitas (encuentros) distintas hay. Solo cifras, sin puntos."
+  gl: "Un número: cantas visitas (encontros) distintas hai. Só cifras, sen puntos."
+answer: { source: "answers.public.json#r1b_unique_encounters", normalize: digits_only }
+points: 120
+time_target_min: 10
+hints:
+  - { es: "Cada visita tiene un código único: la columna encounter_id. Si una visita sale dos veces, su código se repite.", gl: "Cada visita ten un código único: a columna encounter_id. Se unha visita sae dúas veces, o seu código repítese." }
+  - { es: "En el Laboratorio elegid la tabla encounters y la pregunta «Contar cuántos valores DISTINTOS hay en una columna».", gl: "No Laboratorio elixide a táboa encounters e a pregunta «Contar cantos valores DISTINTOS hai nunha columna»." }
+  - { es: "Tabla encounters · «valores DISTINTOS» · columna encounter_id. Copiad ese número tal cual, sin puntos.", gl: "Táboa encounters · «valores DISTINTOS» · columna encounter_id. Copiade ese número tal cal, sen puntos." }
+solution:
+  es: "En el Laboratorio: tabla encounters, «Contar cuántos valores DISTINTOS hay en una columna», columna encounter_id. Sale {answer}: escribid {answer}. La mejor decisión es «Quedarse con la última versión de cada encuentro»."
+  gl: "No Laboratorio: táboa encounters, «Contar cantos valores DISTINTOS hai nunha columna», columna encounter_id. Sae {answer}: escribide {answer}. A mellor decisión é «Quedar coa última versión de cada encontro»."

@@ -1,0 +1,18 @@
+id: brais
+name: Brais
+role: { es: "Admisiones", gl: "Admisións" }
+persona: { es: "Hablador y cercano. Sabe cómo se registran los ingresos y se abre si le preguntan por su trabajo.", gl: "Falador e achegado. Sabe como se rexistran os ingresos e ábrese se lle preguntan polo seu traballo." }
+max_questions: 6
+greeting: { es: "¡Ey! Pasad, pasad. ¿Café? Decidme qué necesitáis de Admisiones.", gl: "Ei! Pasade, pasade. Café? Dicídeme que precisades de Admisións." }
+facts:
+  - id: C2
+    text: { es: "En el turno de noche las altas se registran a mano y a veces con la hora local equivocada, así que algunas fechas de alta salen desplazadas.", gl: "No turno de noite as altas rexístranse a man e ás veces coa hora local equivocada, así que algunhas datas de alta saen desprazadas." }
+    reveal_all: [["noche", "noite", "turno", "quenda", "nocturn", "madrugad"], ["cómo es", "como es", "como é", "cómo lo", "como o", "cansad", "duro", "dura", "complicad", "difícil", "dificil", "debe", "imagino", "imaxino", "ayud", "axud", "gracias", "grazas", "interes", "cuéntame", "cuentame", "cuéntanos", "cuentanos", "cóntame", "contame", "cóntanos", "contanos", "por favor", "porfa"]]
+  - id: C3
+    text: { es: "El registro de defunciones llega con semanas de retraso, por eso hay pacientes con ingresos registrados después de fallecer.", gl: "O rexistro de defuncións chega con semanas de atraso, por iso hai pacientes con ingresos rexistrados despois de falecer." }
+    reveal_all: [["defunci", "fallec", "falec", "muert", "morte", "óbito", "obito"], ["cómo es", "como es", "como é", "cómo", "como", "retraso", "atraso", "tarda", "llega", "chega", "cuándo", "cuando", "cando", "semanas", "ayud", "axud", "gracias", "grazas", "interes", "cuéntame", "cuentame", "cóntame", "contame"]]
+fallback:
+  - { es: "Uf, eso depende de cada día... ¿Cómo es trabajar aquí? Ya me entendéis, pregunta mejor.", gl: "Uf, iso depende de cada día... Como é traballar aquí? Xa me entendedes, pregunta mellor." }
+  - { es: "Admisiones es un hormiguero. Si me contáis qué necesitáis entender, os cuento más.", gl: "Admisións é un formigueiro. Se me contades que precisades entender, cóntovos máis." }
+  - { es: "Mmm, no sé muy bien por dónde vais. ¿Os interesan los turnos o los registros?", gl: "Mmm, non sei moi ben por onde ides. Interésanvos os turnos ou os rexistros?" }
+off_topic: { es: "Jajaja, eso no es lo mío. Yo de lo que sé es de ingresos y altas.", gl: "Jajaja, iso non é o meu. Eu do que sei é de ingresos e altas." }

@@ -1,0 +1,45 @@
+{
+ "description": "Entrega de ficheros del hospital (datos ficticios).",
+ "files": {
+  "encounters_H1.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "encounters_H2.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "encounters_H3.csv": {
+   "delimiter": ";",
+   "encoding": "UTF-8",
+   "date_format": "dd/MM/yyyy HH:mm"
+  },
+  "encounters_H4.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "encounters_H2_reenvio.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "patients.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": null
+  },
+  "organizations.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": null
+  },
+  "conditions.csv": {
+   "delimiter": ",",
+   "encoding": "UTF-8",
+   "date_format": null
+  }
+ }
+}

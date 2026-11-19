@@ -1,0 +1,19 @@
+id: r1a_bandeja
+room: R1
+type: build
+title: { es: "La bandeja de entrada", gl: "A caixa de entrada" }
+docs_needed: [doc_de_specs]
+story:
+  es: "Cuatro hospitales han enviado 8 ficheros y cada uno viene «a su manera». Tenéis que leerlos bien: que se vean las columnas, los acentos y las fechas. Ojo: la hoja de especificaciones tiene un error."
+  gl: "Catro hospitais enviaron 8 ficheiros e cada un vén «á súa maneira». Tedes que lelos ben: que se vexan as columnas, os acentos e as datas. Ollo: a folla de especificacións ten un erro."
+tools: [load_wizard]
+answer: { source: "build_answers.public.json#r1a_bandeja", normalize: report }
+points: 150
+time_target_min: 10
+hints:
+  - { es: "Casi todos se leen bien con coma y UTF-8. Los de encuentros (encounters) tienen fechas: elegid el formato de fecha que veis en la tabla.", gl: "Case todos se len ben con coma e UTF-8. Os de encontros (encounters) teñen datas: elixide o formato de data que vedes na táboa." }
+  - { es: "Mirad encounters_H3.csv: si veis una sola columna gigante, el separador no es la coma; si veis símbolos raros (Ã³), la codificación no es UTF-8.", gl: "Mirade encounters_H3.csv: se vedes unha soa columna xigante, o separador non é a coma; se vedes símbolos raros (Ã³), a codificación non é UTF-8." }
+  - { es: "encounters_H3.csv va con punto y coma, Latin-1 y fecha 31/01/2023 14:05. Los demás ficheros de encuentros: coma, UTF-8 y fecha 2023-01-31 14:05:00.", gl: "encounters_H3.csv vai con punto e coma, Latin-1 e data 31/01/2023 14:05. Os demais ficheiros de encontros: coma, UTF-8 e data 2023-01-31 14:05:00." }
+solution:
+  es: "patients, organizations y conditions: coma, UTF-8 y «Sin fechas». encounters_H1, H2, H2_reenvio y H4: coma, UTF-8 y fecha 2023-01-31 14:05:00 (H4 tendrá 17 filas rechazadas: es lo correcto). encounters_H3: punto y coma, Latin-1 y fecha 31/01/2023 14:05. Cargad los 8 y pulsad «Validar carga»."
+  gl: "patients, organizations e conditions: coma, UTF-8 e «Sen datas». encounters_H1, H2, H2_reenvio e H4: coma, UTF-8 e data 2023-01-31 14:05:00 (H4 terá 17 filas rexeitadas: é o correcto). encounters_H3: punto e coma, Latin-1 e data 31/01/2023 14:05. Cargade os 8 e premede «Validar carga»."

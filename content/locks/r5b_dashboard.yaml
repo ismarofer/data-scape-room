@@ -1,0 +1,19 @@
+id: r5b_dashboard
+room: R5
+type: chart
+title: { es: "Constructor de dashboard", gl: "Construtor de dashboard" }
+docs_needed: [doc_analyst_style]
+story:
+  es: "Cread el cuadro de mando (dashboard) para la Comisión: entre 3 y 4 gráficos, cada uno con su título. En el siguiente nivel lo revisa un crítico."
+  gl: "Creade o cadro de mando (dashboard) para a Comisión: entre 3 e 4 gráficos, cada un co seu título. No seguinte nivel revísao un crítico."
+tools: [dashboard_builder]
+validator: { type: chart_rules, mode: build }
+points: 120
+time_target_min: 10
+hints:
+  - { es: "Basta con 3 gráficos con título, por ejemplo: barras por centro, línea mensual y barras por edad.", gl: "Abonda con 3 gráficos con título, por exemplo: barras por centro, liña mensual e barras por idade." }
+  - { es: "Pulsad cada gráfico para seleccionarlo y escribid su título en la caja «Título».", gl: "Premede cada gráfico para seleccionalo e escribide o seu título na caixa «Título»." }
+  - { es: "Añadid «Barras por centro», «Línea mensual» y «Barras por tramo de edad», poned un título a cada uno y pulsad «Pasar al crítico».", gl: "Engadide «Barras por centro», «Liña mensual» e «Barras por tramo de idade», poñede un título a cada un e premede «Pasar ao crítico»." }
+solution:
+  es: "Añadid «Barras por centro», «Línea mensual» y «Barras por tramo de edad», escribid un título en cada uno y pulsad «Pasar al crítico»."
+  gl: "Engadide «Barras por centro», «Liña mensual» e «Barras por tramo de idade», escribide un título en cada un e premede «Pasar ao crítico»."

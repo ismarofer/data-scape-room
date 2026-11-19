@@ -1,0 +1,19 @@
+id: r4b_entrevistas
+room: R4
+type: interview
+title: { es: "Entrevistas", gl: "Entrevistas" }
+docs_needed: [doc_ds_analysis]
+story:
+  es: "Hablad con Noa (Informática) y con Brais (Admisiones): saben por qué los datos están raros. Son personajes con IA. Necesitáis 2 de sus 3 pistas y tenéis 6 preguntas con cada uno."
+  gl: "Falade con Noa (Informática) e con Brais (Admisións): saben por que os datos están raros. Son personaxes con IA. Precisades 2 das súas 3 pistas e tedes 6 preguntas con cada un."
+tools: [npc_chat]
+validator: { type: interview, required_clues: 2, clues: [C1, C2, C3] }
+points: 120
+time_target_min: 9
+hints:
+  - { es: "Mirad las tarjetas del nivel anterior: ¿qué centro y qué fechas eran raros?", gl: "Mirade as tarxetas do nivel anterior: que centro e que datas eran raros?" }
+  - { es: "A Noa: nombrad el centro H3 y la migración. A Brais: preguntadle con amabilidad por el turno de noche o por las defunciones.", gl: "A Noa: nomeade o centro H3 e a migración. A Brais: preguntádelle con amabilidade polo turno de noite ou polas defuncións." }
+  - { es: "Por ejemplo, a Noa: «¿Qué pasó en el centro H3 con la migración de marzo de 2019?». A Brais: «Imagino que el turno de noche es duro: ¿cómo registráis las altas?».", gl: "Por exemplo, a Noa: «Que pasou no centro H3 coa migración de marzo de 2019?». A Brais: «Imaxino que o turno de noite é duro: como rexistrades as altas?»." }
+solution:
+  es: "Preguntad a Noa: «¿Qué ocurrió en el centro H3 con la migración de marzo de 2019?». Y a Brais: «Imagino que el turno de noche es duro: ¿cómo es registrar las altas de madrugada?» o «¿Cómo y cuándo os llegan los registros de defunciones?»."
+  gl: "Preguntade a Noa: «Que ocorreu no centro H3 coa migración de marzo de 2019?». E a Brais: «Imaxino que o turno de noite é duro: como é rexistrar as altas de madrugada?» ou «Como e cando vos chegan os rexistros de defuncións?»."

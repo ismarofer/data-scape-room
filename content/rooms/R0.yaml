@@ -1,0 +1,14 @@
+id: R0
+title: { es: "Prólogo", gl: "Prólogo" }
+number: "0"
+stage: { es: "Tutorial", gl: "Titorial" }
+icon: "🎓"
+intro:
+  es: "Son las 10:00 en el Hospital Costa Atlántica. A las 13:00 se reúne la Comisión de Calidad: los reingresos han subido y nadie se fía de los números. Sois el equipo de datos. (Datos 100 % ficticios.)"
+  gl: "Son as 10:00 no Hospital Costa Atlántica. Ás 13:00 reúnese a Comisión de Calidade: os reingresos subiron e ninguén se fía dos números. Sodes o equipo de datos. (Datos 100 % ficticios.)"
+briefing:
+  - { es: "Conocer la pantalla: niveles a la izquierda, trabajo en el centro y Lumi, vuestra ayudante, a la derecha.", gl: "Coñecer a pantalla: niveis á esquerda, traballo no centro e Lumi, a vosa axudante, á dereita." }
+  - { es: "Abrir vuestro primer candado escribiendo un código.", gl: "Abrir o voso primeiro cadeado escribindo un código." }
+  - { es: "Aprender a pedir ayuda a Lumi cuando os atasquéis.", gl: "Aprender a pedir axuda a Lumi cando vos atasquedes." }
+target_minutes: 10
+locks: [p0_tutorial]

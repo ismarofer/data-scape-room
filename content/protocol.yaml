@@ -1,0 +1,39 @@
+title: { es: "Protocolo de Calidad Asistencial v3", gl: "Protocolo de Calidade Asistencial v3" }
+body:
+  es: |
+    1. DEFINICIÓN. Se considera reingreso el ingreso hospitalario de una persona que ocurre entre 2 y 30 días naturales después del alta del episodio anterior.
+    2. EPISODIOS. Dos ingresos de la misma persona separados por un día o menos se consideran un único episodio (traslados internos y altas-reingresos administrativos).
+    3. ÁMBITO. Solo cuentan los ingresos hospitalarios (clase inpatient). Las urgencias y las consultas no son ingresos.
+    4. EXCLUSIONES. Una persona fallecida no puede reingresar: los registros posteriores al fallecimiento se excluyen y se comunican al hospital.
+    5. INDICADOR. Tasa = reingresos a 30 días / altas del periodo.
+  gl: |
+    1. DEFINICIÓN. Considérase reingreso o ingreso hospitalario dunha persoa que ocorre entre 2 e 30 días naturais despois da alta do episodio anterior.
+    2. EPISODIOS. Dous ingresos da mesma persoa separados por un día ou menos considéranse un único episodio (traslados internos e altas-reingresos administrativos).
+    3. ÁMBITO. Só contan os ingresos hospitalarios (clase inpatient). As urxencias e as consultas non son ingresos.
+    4. EXCLUSIÓNS. Unha persoa falecida non pode reingresar: os rexistros posteriores ao falecemento exclúense e comunícanse ao hospital.
+    5. INDICADOR. Taxa = reingresos a 30 días / altas do período.
+questions:
+  - id: q1
+    label: { es: "Ventana de reingreso", gl: "Ventá de reingreso" }
+    options:
+      - { id: d7, label: { es: "7 días naturales", gl: "7 días naturais" } }
+      - { id: d14, label: { es: "14 días naturales", gl: "14 días naturais" } }
+      - { id: d30, label: { es: "30 días naturales", gl: "30 días naturais" } }
+      - { id: d90, label: { es: "90 días naturales", gl: "90 días naturais" } }
+  - id: q2
+    label: { es: "¿Se fusionan ingresos separados por un día o menos?", gl: "Fusiónanse ingresos separados por un día ou menos?" }
+    options:
+      - { id: merge, label: { es: "Sí, forman un solo episodio", gl: "Si, forman un só episodio" } }
+      - { id: separate, label: { es: "No, cada ingreso es un episodio", gl: "Non, cada ingreso é un episodio" } }
+  - id: q3
+    label: { es: "¿Qué clases de encuentro cuentan como ingreso?", gl: "Que clases de encontro contan como ingreso?" }
+    options:
+      - { id: all, label: { es: "Todos los encuentros", gl: "Todos os encontros" } }
+      - { id: inpatient, label: { es: "Solo inpatient", gl: "Só inpatient" } }
+      - { id: inp_emerg, label: { es: "Inpatient y urgencias", gl: "Inpatient e urxencias" } }
+  - id: q4
+    label: { es: "Exclusiones", gl: "Exclusións" }
+    options:
+      - { id: none, label: { es: "Ninguna", gl: "Ningunha" } }
+      - { id: deceased, label: { es: "Registros posteriores al fallecimiento", gl: "Rexistros posteriores ao falecemento" } }
+      - { id: short, label: { es: "Estancias de menos de un día", gl: "Estadías de menos dun día" } }

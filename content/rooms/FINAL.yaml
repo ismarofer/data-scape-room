@@ -1,0 +1,14 @@
+id: FINAL
+title: { es: "La Comisión", gl: "A Comisión" }
+number: "F"
+stage: { es: "Presentación", gl: "Presentación" }
+icon: "🏛️"
+intro:
+  es: "Son las 13:00. Defended vuestro trabajo ante la Comisión de Calidad Asistencial."
+  gl: "Son as 13:00. Defendede o voso traballo ante a Comisión de Calidade Asistencial."
+briefing:
+  - { es: "Responder 6 preguntas de tres personas de la Comisión.", gl: "Responder 6 preguntas de tres persoas da Comisión." }
+  - { es: "Apoyaros en cifras y en las decisiones que habéis tomado.", gl: "Apoiarvos en cifras e nas decisións que tomastes." }
+  - { es: "Ver el resultado, vuestro informe y las insignias.", gl: "Ver o resultado, o voso informe e as insignias." }
+target_minutes: 20
+locks: [f_comision]

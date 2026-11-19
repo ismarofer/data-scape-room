@@ -1,0 +1,20 @@
+id: p0_tutorial
+room: R0
+type: code
+title: { es: "El primer candado", gl: "O primeiro cadeado" }
+story:
+  es: "Práctica. El código es el nombre del océano que baña la costa del hospital. Escríbelo abajo y pulsa «Probar»."
+  gl: "Práctica. O código é o nome do océano que baña a costa do hospital. Escríbeo abaixo e preme «Probar»."
+answer_hint:
+  es: "Una sola palabra. Da igual si usas mayúsculas o tildes."
+  gl: "Unha soa palabra. Tanto ten se usas maiúsculas ou tiles."
+answer: { source: "answers.public.json#p0_tutorial", normalize: text }
+points: 20
+time_target_min: 2
+hints:
+  - { es: "El hospital se llama «Hospital Costa …». Lo pone en la pantalla de bienvenida de esta sala.", gl: "O hospital chámase «Hospital Costa …». Pono na pantalla de benvida desta sala." }
+  - { es: "Es el océano que está al oeste de Galicia.", gl: "É o océano que está ao oeste de Galicia." }
+  - { es: "Empieza por ATL y tiene 8 letras.", gl: "Empeza por ATL e ten 8 letras." }
+solution:
+  es: "Escribid {answer} (el océano Atlántico) y pulsad «Probar»."
+  gl: "Escribide {answer} (o océano Atlántico) e premede «Probar»."

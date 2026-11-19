@@ -1,0 +1,19 @@
+id: r5c_critico
+room: R5
+type: verify_ai
+title: { es: "Revisión del crítico", gl: "Revisión do crítico" }
+docs_needed: [doc_analyst_style]
+story:
+  es: "El crítico (una IA) ha revisado vuestros gráficos y señala problemas. Arreglad los gráficos hasta que quede como mucho uno y entregad."
+  gl: "O crítico (unha IA) revisou os vosos gráficos e sinala problemas. Arranxade os gráficos ata que quede como moito un e entregade."
+tools: [dashboard_builder, critic_panel]
+validator: { type: chart_rules, mode: review, max_findings: 1 }
+points: 110
+time_target_min: 7
+hints:
+  - { es: "En cada gráfico: el eje empieza en cero, se ve el número de casos (n) y solo salen centros con 30 altas o más.", gl: "En cada gráfico: o eixe empeza en cero, vese o número de casos (n) e só saen centros con 30 altas ou máis." }
+  - { es: "Colores «Uno + énfasis», sin doble eje ni 3D, y los centros ordenados de mayor a menor.", gl: "Cores «Un + énfase», sen dobre eixe nin 3D, e os centros ordenados de maior a menor." }
+  - { es: "El título debe decir la conclusión, con 6 palabras o más y un verbo. Por ejemplo: «Un centro supera claramente al resto en reingresos».", gl: "O título debe dicir a conclusión, con 6 palabras ou máis e un verbo. Por exemplo: «Un centro supera claramente ao resto en reingresos»." }
+solution:
+  es: "En los 3 gráficos: marcad «El eje empieza en cero», «Mostrar n» y «Solo centros con ≥ 30 altas»; colores «Uno + énfasis»; sin doble eje ni 3D; en el de centros, orden «De mayor a menor». Títulos con conclusión: «Un centro supera con claridad al resto en reingresos a 30 días», «La tasa mensual de reingresos sube y baja alrededor del 10 %» y «Los mayores de 80 años reingresan más que cualquier otro grupo»."
+  gl: "Nos 3 gráficos: marcade «O eixe empeza en cero», «Amosar n» e «Só centros con ≥ 30 altas»; cores «Un + énfase»; sen dobre eixe nin 3D; no de centros, orde «De maior a menor». Títulos con conclusión: «Un centro supera con claridade ao resto en reingresos a 30 días», «A taxa mensual de reingresos sobe e baixa arredor do 10 %» e «Os maiores de 80 anos reingresan máis ca calquera outro grupo»."

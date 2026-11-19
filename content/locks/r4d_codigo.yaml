@@ -1,0 +1,22 @@
+id: r4d_codigo
+room: R4
+type: code
+title: { es: "Registros excluidos", gl: "Rexistros excluídos" }
+docs_needed: [doc_ds_analysis]
+story:
+  es: "Con vuestras reglas, algunos registros salen del cálculo. El informe tiene que decir cuántos: ese total es el código."
+  gl: "Coas vosas regras, algúns rexistros saen do cálculo. O informe ten que dicir cantos: ese total é o código."
+tools: [evidence_counts]
+answer_hint:
+  es: "Un número: estancias negativas + encuentros posteriores al fallecimiento. Solo cifras."
+  gl: "Un número: estadías negativas + encontros posteriores ao falecemento. Só cifras."
+answer: { source: "answers.public.json#r4c_excluded", normalize: digits_only }
+points: 90
+time_target_min: 5
+hints:
+  - { es: "La fragmentación no se excluye (ya la arregla la fusión de episodios): no la sumes.", gl: "A fragmentación non se exclúe (xa a arranxa a fusión de episodios): non a sumes." }
+  - { es: "Sumad el número «registros» de dos tarjetas.", gl: "Sumade o número «registros» de dúas tarxetas." }
+  - { es: "Sumad «registros» de las tarjetas ⏪ Estancias negativas y 🕯 Encuentros posteriores al fallecimiento.", gl: "Sumade «registros» das tarxetas ⏪ Estadías negativas e 🕯 Encontros posteriores ao falecemento." }
+solution:
+  es: "Estancias negativas + encuentros posteriores al fallecimiento = {answer}. Escribid {answer}."
+  gl: "Estadías negativas + encontros posteriores ao falecemento = {answer}. Escribide {answer}."

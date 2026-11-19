@@ -1,0 +1,44 @@
+[
+ {
+  "id": "c1",
+  "text": {
+   "es": "Hay 9 centros",
+   "gl": "Hai 9 centros"
+  }
+ },
+ {
+  "id": "c2",
+  "text": {
+   "es": "Ningún ingreso tiene la fecha de alta vacía",
+   "gl": "Ningún ingreso ten a data de alta baleira"
+  }
+ },
+ {
+  "id": "c3",
+  "text": {
+   "es": "Hay 9015 pacientes únicos",
+   "gl": "Hai 9015 pacientes únicos"
+  }
+ },
+ {
+  "id": "c4",
+  "text": {
+   "es": "Los datos cubren de 2017 a 2023",
+   "gl": "Os datos cobren de 2017 a 2023"
+  }
+ },
+ {
+  "id": "c5",
+  "text": {
+   "es": "Hay 6055 encuentros de tipo inpatient",
+   "gl": "Hai 6055 encontros de tipo inpatient"
+  }
+ },
+ {
+  "id": "c6",
+  "text": {
+   "es": "Todos los encuentros pertenecen a un paciente conocido",
+   "gl": "Todos os encontros pertencen a un paciente coñecido"
+  }
+ }
+]

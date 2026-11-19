@@ -1,0 +1,43 @@
+# Qué es cada fichero de datos que envían los hospitales (se enseña en el cargador y al abrir el fichero en el explorador).
+patients.csv:
+  what:
+    es: "PACIENTES. Una fila por persona: la ficha del paciente. Aquí están los datos personales (ficticios), por eso, antes de usarlos, habrá que protegerlos (nivel «Radar RGPD»)."
+    gl: "PACIENTES. Unha fila por persoa: a ficha do paciente. Aquí están os datos persoais (ficticios), por iso, antes de usalos, haberá que protexelos (nivel «Radar RGPD»)."
+  cols:
+    - { name: patient_id, es: "código único de la ficha del paciente", gl: "código único da ficha do paciente" }
+    - { name: ssn, es: "número de identificación de la persona", gl: "número de identificación da persoa" }
+    - { name: first_name / last_name, es: "nombre y apellidos", gl: "nome e apelidos" }
+    - { name: birthdate / deathdate, es: "fecha de nacimiento y de fallecimiento (si ha fallecido)", gl: "data de nacemento e de falecemento (se faleceu)" }
+    - { name: address / city / postal_code, es: "dónde vive", gl: "onde vive" }
+organizations.csv:
+  what:
+    es: "CENTROS. Una fila por hospital o clínica: cómo se llama, en qué ciudad está y qué envío de datos (H1, H2…) es el suyo. Sirve para saber en qué centro ocurrió cada ingreso."
+    gl: "CENTROS. Unha fila por hospital ou clínica: como se chama, en que cidade está e que envío de datos (H1, H2…) é o seu. Serve para saber en que centro ocorreu cada ingreso."
+  cols:
+    - { name: organization_id, es: "código del centro (ORG01, ORG02…)", gl: "código do centro (ORG01, ORG02…)" }
+    - { name: name, es: "nombre del centro", gl: "nome do centro" }
+    - { name: feed, es: "qué envío de datos es el suyo", gl: "que envío de datos é o seu" }
+conditions.csv:
+  what:
+    es: "DIAGNÓSTICOS. Una fila por cada enfermedad o problema de salud que se le diagnostica a un paciente durante una visita (por ejemplo, «Faringitis estreptocócica»)."
+    gl: "DIAGNÓSTICOS. Unha fila por cada enfermidade ou problema de saúde que se lle diagnostica a un paciente durante unha visita (por exemplo, «Faringite estreptocócica»)."
+  cols:
+    - { name: patient_id, es: "a qué paciente", gl: "a que paciente" }
+    - { name: encounter_id, es: "en qué visita (encuentro) se diagnosticó", gl: "en que visita (encontro) se diagnosticou" }
+    - { name: start / stop, es: "desde cuándo hasta cuándo", gl: "desde cando ata cando" }
+    - { name: description, es: "el diagnóstico en palabras", gl: "o diagnóstico en palabras" }
+encounters:
+  what:
+    es: "ENCUENTROS. Un «encuentro» es cada vez que un paciente pasa por el hospital: una consulta, urgencias, un ingreso… Cada hospital envía su fichero de encuentros con su propio formato. Una fila = una visita."
+    gl: "ENCONTROS. Un «encontro» é cada vez que un paciente pasa polo hospital: unha consulta, urxencias, un ingreso… Cada hospital envía o seu ficheiro de encontros co seu propio formato. Unha fila = unha visita."
+  cols:
+    - { name: encounter_id, es: "código único de la visita (no debería repetirse)", gl: "código único da visita (non debería repetirse)" }
+    - { name: patient_id, es: "quién fue (enlaza con patients.csv)", gl: "quen foi (enlaza con patients.csv)" }
+    - { name: organization_id, es: "a qué centro fue (enlaza con organizations.csv)", gl: "a que centro foi (enlaza con organizations.csv)" }
+    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó la visita", gl: "cando comezou e cando rematou a visita" }
+    - { name: encounter_class, es: "tipo de visita (consulta, urgencias, ingreso…)", gl: "tipo de visita (consulta, urxencias, ingreso…)" }
+    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital", gl: "cando se cargou esta fila no sistema do hospital" }
+encounters_H2_reenvio.csv:
+  what:
+    es: "ENCUENTROS · REENVÍO DE H2. El hospital H2 ha vuelto a mandar su fichero entero, y algunas filas vienen corregidas (por ejemplo, la fecha de alta). Por eso hay visitas que ahora salen dos veces: la versión vieja y la nueva."
+    gl: "ENCONTROS · REENVÍO DE H2. O hospital H2 volveu mandar o seu ficheiro enteiro, e algunhas filas veñen corrixidas (por exemplo, a data de alta). Por iso hai visitas que agora saen dúas veces: a versión vella e a nova."

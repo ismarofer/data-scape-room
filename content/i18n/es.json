@@ -1,0 +1,25 @@
+{
+ "app": {
+  "title": "Código Alta",
+  "disclaimer": "Datos 100 % ficticios. Ninguna persona ni centro real."
+ },
+ "join": {
+  "team": "Alias del equipo",
+  "go": "Entrar",
+  "help": "Escribe el nombre de tu equipo y entra. Si otra persona de tu equipo entra desde otro portátil con el mismo nombre, veréis el mismo proyecto y el mismo progreso."
+ },
+ "lock": {
+  "try": "Probar",
+  "hint": "Pedir pista",
+  "code": "Vuestra respuesta",
+  "correct": "¡Candado abierto!",
+  "wrong": "Ese código no abre este candado. Revisa tus datos.",
+  "done": "Hecho"
+ },
+ "meters": {
+  "trust": "Confianza",
+  "compliance": "Cumplimiento",
+  "quality": "Calidad de datos",
+  "ai": "Créditos de IA"
+ }
+}

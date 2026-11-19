@@ -1,0 +1,29 @@
+{
+  "name": "codigo-alta",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,web \"npm run dev -w @codigo-alta/server\" \"npm run dev -w @codigo-alta/web\"",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "content:validate": "tsx scripts/content-validate.ts",
+    "build:answers": "tsx scripts/gen-build-answers.ts",
+    "start:offline": "npm run build -w @codigo-alta/web && npm run start -w @codigo-alta/server",
+    "purge": "tsx scripts/purge.ts",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.10.0",
+    "concurrently": "^9.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.8",
+    "yaml": "^2.6.1",
+    "zod": "^3.24.1"
+  }
+}

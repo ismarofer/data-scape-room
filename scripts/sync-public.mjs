@@ -1,0 +1,24 @@
+// Copies self-hosted runtime assets into apps/web/public: DuckDB-WASM bundles and the delivered data files.
+import fs from "node:fs";
+import path from "node:path";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const require = createRequire(import.meta.url);
+const duckDist = path.dirname(require.resolve("@duckdb/duckdb-wasm/dist/duckdb-browser.cjs"));
+const pub = path.join(root, "apps/web/public");
+fs.mkdirSync(path.join(pub, "duckdb"), { recursive: true });
+for (const f of ["duckdb-mvp.wasm", "duckdb-eh.wasm", "duckdb-browser-mvp.worker.js", "duckdb-browser-eh.worker.js"]) fs.copyFileSync(path.join(duckDist, f), path.join(pub, "duckdb", f));
+const raw = path.join(root, "data/dist/raw");
+fs.mkdirSync(path.join(pub, "data/raw"), { recursive: true });
+if (fs.existsSync(raw)) for (const f of fs.readdirSync(raw)) fs.copyFileSync(path.join(raw, f), path.join(pub, "data/raw", f));
+const pq = path.join(root, "data/dist/parquet");
+fs.mkdirSync(path.join(pub, "data/parquet"), { recursive: true });
+if (fs.existsSync(pq)) for (const f of fs.readdirSync(pq)) fs.copyFileSync(path.join(pq, f), path.join(pub, "data/parquet", f));
+const canon = path.join(root, "data/dist/canon");
+fs.mkdirSync(path.join(pub, "data/canon"), { recursive: true });
+if (fs.existsSync(canon)) for (const f of fs.readdirSync(canon)) fs.copyFileSync(path.join(canon, f), path.join(pub, "data/canon", f));
+const ml = path.join(root, "data/dist/ml");
+fs.mkdirSync(path.join(pub, "data/ml"), { recursive: true });
+if (fs.existsSync(ml)) for (const f of fs.readdirSync(ml)) fs.copyFileSync(path.join(ml, f), path.join(pub, "data/ml", f));
+console.log("public assets synced");

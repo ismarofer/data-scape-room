@@ -1,0 +1,14 @@
+id: R6
+title: { es: "¿Podemos anticiparnos?", gl: "Podemos anticiparnos?" }
+number: "5"
+stage: { es: "Predicción (bonus)", gl: "Predición (bonus)" }
+icon: "🤖"
+intro:
+  es: "Sala bonus (se puede saltar): un modelo que avise ANTES del alta de qué pacientes pueden volver a ingresar."
+  gl: "Sala bonus (pódese saltar): un modelo que avise ANTES da alta de que pacientes poden volver ingresar."
+briefing:
+  - { es: "Entrenar un modelo que prediga reingresos.", gl: "Adestrar un modelo que prediga reingresos." }
+  - { es: "Evitar la trampa clásica: usar datos del futuro.", gl: "Evitar a trampa clásica: usar datos do futuro." }
+  - { es: "Elegir cuántas llamadas puede hacer la enfermería y comprobar que el modelo es justo con todos.", gl: "Elixir cantas chamadas pode facer a enfermaría e comprobar que o modelo é xusto con todos." }
+target_minutes: 20
+locks: [r6a_entrenar, r6b_umbral, r6c_equidad]

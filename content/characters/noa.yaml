@@ -1,0 +1,16 @@
+id: noa
+name: Noa
+role: { es: "Informática", gl: "Informática" }
+persona: { es: "Seca, técnica y directa. Sabe lo de la migración, pero no suelta datos si la pregunta es vaga.", gl: "Seca, técnica e directa. Sabe o da migración, pero non solta datos se a pregunta é vaga." }
+max_questions: 6
+greeting: { es: "Dime. Tengo poco tiempo y mucho ticket abierto.", gl: "Dime. Teño pouco tempo e moito ticket aberto." }
+facts:
+  - id: C1
+    text: { es: "El 14 de marzo de 2019, en la migración del sistema del centro H3, se duplicaron las marcas de alta: aparecen altas y reingresos del mismo día repetidos.", gl: "O 14 de marzo de 2019, na migración do sistema do centro H3, duplicáronse as marcas de alta: aparecen altas e reingresos do mesmo día repetidos." }
+    # reveal when the player is concrete: names the centre AND the date/migration
+    reveal_all: [["h3", "miño", "mino", "centro 3", "tercer centro", "terceiro centro"], ["migraci", "marzo", "2019", "14/03", "14 de marzo", "cambio de sistema", "sistema novo", "sistema nuevo"]]
+fallback:
+  - { es: "Sé más concreta: ¿de qué centro hablas y de qué momento?", gl: "Sé máis concreta: de que centro falas e de que momento?" }
+  - { es: "Con eso no puedo ayudarte. Dame centro y fecha y miro el registro.", gl: "Con iso non podo axudarte. Dame centro e data e miro o rexistro." }
+  - { es: "Los sistemas hacen cosas raras a veces. Concreta qué has visto en los datos.", gl: "Os sistemas fan cousas raras ás veces. Concreta que viches nos datos." }
+off_topic: { es: "Eso no va conmigo. Hablemos de los datos del hospital.", gl: "Iso non vai comigo. Falemos dos datos do hospital." }

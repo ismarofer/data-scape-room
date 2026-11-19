@@ -1,0 +1,12 @@
+class_filter:
+  label: { es: "¿Qué cuenta como ingreso?", gl: "Que conta como ingreso?" }
+  options:
+    - { id: inpatient, plain: { es: "Solo los ingresos (inpatient)", gl: "Só os ingresos (inpatient)" }, sql: "e.encounter_class = 'inpatient'", correct: true, explain: { es: "Solo los ingresos hospitalarios, como dice el protocolo.", gl: "Só os ingresos hospitalarios, como di o protocolo." } }
+    - { id: inp_emerg, plain: { es: "Ingresos y urgencias", gl: "Ingresos e urxencias" }, sql: "e.encounter_class in ('inpatient', 'emergency')", explain: { es: "Cuenta también las urgencias: no es un ingreso.", gl: "Conta tamén as urxencias: non é un ingreso." } }
+    - { id: everything, plain: { es: "Cualquier visita", gl: "Calquera visita" }, sql: "true", explain: { es: "Cuenta cualquier encuentro, también consultas.", gl: "Conta calquera encontro, tamén consultas." } }
+new_episode:
+  label: { es: "¿Cuándo empieza un episodio nuevo?", gl: "Cando empeza un episodio novo?" }
+  options:
+    - { id: gap_1d, plain: { es: "Episodio nuevo si pasa más de 1 día desde el alta anterior", gl: "Episodio novo se pasa máis de 1 día desde a alta anterior" }, sql: "prev_stop is null or start_ts > prev_stop + interval 1 day", correct: true, explain: { es: "Si el hueco es de un día o menos, es el mismo episodio.", gl: "Se o oco é dun día ou menos, é o mesmo episodio." } }
+    - { id: any_gap, plain: { es: "Episodio nuevo con cualquier hueco, aunque sea de minutos", gl: "Episodio novo con calquera oco, aínda que sexa de minutos" }, sql: "prev_stop is null or start_ts > prev_stop", explain: { es: "Cualquier hueco crea un episodio nuevo: no fusiona traslados.", gl: "Calquera oco crea un episodio novo: non fusiona traslados." } }
+    - { id: gap_7d, plain: { es: "Episodio nuevo solo si pasan más de 7 días", gl: "Episodio novo só se pasan máis de 7 días" }, sql: "prev_stop is null or start_ts > prev_stop + interval 7 day", explain: { es: "Fusiona demasiado: hasta siete días de hueco.", gl: "Fusiona demasiado: ata sete días de oco." } }

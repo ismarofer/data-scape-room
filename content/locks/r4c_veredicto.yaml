@@ -1,0 +1,19 @@
+id: r4c_veredicto
+room: R4
+type: decision
+title: { es: "Veredicto", gl: "Veredicto" }
+docs_needed: [doc_ds_analysis]
+story:
+  es: "Ya sabéis la causa de cada grupo raro. Ahora decidid qué hacer con cada uno. Regla de oro: un dato clínico nunca se inventa."
+  gl: "Xa sabedes a causa de cada grupo raro. Agora decidide que facer con cada un. Regra de ouro: un dato clínico nunca se inventa."
+tools: [verdict_form]
+answer: { source: "build_answers.public.json#r4c_veredicto", normalize: report }
+points: 110
+time_target_min: 5
+hints:
+  - { es: "Ninguno se arregla inventando datos. Pensad: ¿se quita y se apunta por qué, o hay que avisar al hospital?", gl: "Ningún se arranxa inventando datos. Pensade: quítase e apúntase por que, ou hai que avisar ao hospital?" }
+  - { es: "La fragmentación ya la resuelve la regla de fusionar episodios: basta con documentarla. Lo que tiene que ver con fallecimientos lo tiene que revisar el hospital.", gl: "A fragmentación xa a resolve a regra de fusionar episodios: abonda con documentala. O que ten que ver con falecementos tense que revisar o hospital." }
+  - { es: "Altas y reingresos del mismo día → documentar. Encuentros tras el fallecimiento → excluir y escalar. Os queda decidir las estancias negativas.", gl: "Altas e reingresos do mesmo día → documentar. Encontros tras o falecemento → excluír e escalar. Quédavos decidir as estadías negativas." }
+solution:
+  es: "Altas y reingresos del mismo día → «Ya cubierto por la fusión de episodios: documentar». Estancias negativas → «Excluir y documentar». Encuentros posteriores al fallecimiento → «Excluir y escalar al hospital»."
+  gl: "Altas e reingresos do mesmo día → «Xa cuberto pola fusión de episodios: documentar». Estadías negativas → «Excluír e documentar». Encontros posteriores ao falecemento → «Excluír e escalar ao hospital»."

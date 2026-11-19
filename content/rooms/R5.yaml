@@ -1,0 +1,14 @@
+id: R5
+title: { es: "Que lo entienda la comisión", gl: "Que o entenda a comisión" }
+number: "4"
+stage: { es: "Visualización", gl: "Visualización" }
+icon: "📊"
+intro:
+  es: "Ya tenéis la cifra buena. Falta contarla sin engañar: un indicador bien definido y gráficos honestos."
+  gl: "Xa tedes a cifra boa. Falta contala sen enganar: un indicador ben definido e gráficos honestos."
+briefing:
+  - { es: "Definir un indicador que no engañe.", gl: "Definir un indicador que non engane." }
+  - { es: "Montar un cuadro de mando con 3 o 4 gráficos.", gl: "Montar un cadro de mando con 3 ou 4 gráficos." }
+  - { es: "Pasar la revisión del crítico y encontrar el centro con más reingresos.", gl: "Pasar a revisión do crítico e atopar o centro con máis reingresos." }
+target_minutes: 25
+locks: [r5a_kpi, r5b_dashboard, r5c_critico, r5d_codigo]

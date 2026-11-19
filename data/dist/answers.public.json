@@ -1,0 +1,32 @@
+{
+ "r1b_unique_encounters": {
+  "sha256_salted": "a715617b3afb6cd16ff54fbc3d22d44db383889c1ae26748eea1975019e6030b",
+  "aliases": []
+ },
+ "r2c_unique_patients": {
+  "sha256_salted": "2d0ac71296a42879ebbfe8e026e3cc1e29180298e727d7abbeba2fa2de79ce53",
+  "aliases": []
+ },
+ "r3c_readmissions_base": {
+  "sha256_salted": "a2ee3babf47bb338009707b815e557293758ecae9d90b0e7dbaa3d9b7a195eaa",
+  "aliases": []
+ },
+ "r4c_excluded": {
+  "sha256_salted": "eaedd59c877690c35bb38f061b63dde9930c4eb923c993c22418440f89add372",
+  "aliases": []
+ },
+ "r5c_top_center": {
+  "sha256_salted": "7248a74e386244d33a4762e8f5c01861b83ca6869bafe7a70ed2063c445d7513",
+  "aliases": [
+   "3ba8bf764356be7fb00e07d5f216b8521129513ff4a929dc835a125f22bf5673"
+  ]
+ },
+ "p0_tutorial": {
+  "sha256_salted": "d41db51cff656d450b302232279d06738c970ca9e561778e6a2e02eeabf231c3",
+  "aliases": []
+ },
+ "r1c_claims": {
+  "sha256_salted": "6556890c22169a86ef774fc9130872e7e34d431eef78c3f87c952bda5864cf24",
+  "aliases": []
+ }
+}

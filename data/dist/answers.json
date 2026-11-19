@@ -1,0 +1,129 @@
+{
+ "r1b_unique_encounters": {
+  "value": 59484,
+  "normalized": "59484",
+  "sha256_salted": "a715617b3afb6cd16ff54fbc3d22d44db383889c1ae26748eea1975019e6030b",
+  "aliases": []
+ },
+ "r2c_unique_patients": {
+  "value": 9003,
+  "normalized": "9003",
+  "sha256_salted": "2d0ac71296a42879ebbfe8e026e3cc1e29180298e727d7abbeba2fa2de79ce53",
+  "aliases": []
+ },
+ "r3c_readmissions_base": {
+  "value": 481,
+  "normalized": "481",
+  "sha256_salted": "a2ee3babf47bb338009707b815e557293758ecae9d90b0e7dbaa3d9b7a195eaa",
+  "aliases": []
+ },
+ "r4c_excluded": {
+  "value": 35,
+  "normalized": "35",
+  "sha256_salted": "eaedd59c877690c35bb38f061b63dde9930c4eb923c993c22418440f89add372",
+  "aliases": []
+ },
+ "r5c_top_center": {
+  "value": "Illa Verde",
+  "normalized": "ILLAVERDE",
+  "sha256_salted": "7248a74e386244d33a4762e8f5c01861b83ca6869bafe7a70ed2063c445d7513",
+  "aliases": [
+   {
+    "normalized": "HOSPITALILLAVERDE-F",
+    "sha256_salted": "3ba8bf764356be7fb00e07d5f216b8521129513ff4a929dc835a125f22bf5673"
+   }
+  ]
+ },
+ "p0_tutorial": {
+  "value": "ATLANTICO",
+  "normalized": "ATLANTICO",
+  "sha256_salted": "d41db51cff656d450b302232279d06738c970ca9e561778e6a2e02eeabf231c3",
+  "aliases": []
+ },
+ "r1c_claims": {
+  "value": [
+   {
+    "id": "c1",
+    "text": "Hay 9 centros",
+    "claimed": 9,
+    "actual": 9,
+    "true": true
+   },
+   {
+    "id": "c2",
+    "text": "Ningún ingreso tiene la fecha de alta vacía",
+    "claimed": 0,
+    "actual": 6,
+    "true": false
+   },
+   {
+    "id": "c3",
+    "text": "Hay 9015 pacientes únicos",
+    "claimed": 9015,
+    "actual": 9003,
+    "true": false
+   },
+   {
+    "id": "c4",
+    "text": "Los datos cubren de 2017 a 2023",
+    "claimed": "2017-2023",
+    "actual": "2017-2023",
+    "true": true
+   },
+   {
+    "id": "c5",
+    "text": "Hay 6055 encuentros de tipo inpatient",
+    "claimed": 6055,
+    "actual": 6055,
+    "true": true
+   },
+   {
+    "id": "c6",
+    "text": "Todos los encuentros pertenecen a un paciente conocido",
+    "claimed": 0,
+    "actual": 0,
+    "true": true
+   }
+  ],
+  "normalized": "c2c3",
+  "sha256_salted": "6556890c22169a86ef774fc9130872e7e34d431eef78c3f87c952bda5864cf24"
+ },
+ "r1a_files": {
+  "value": {
+   "encounters_H1.csv": {
+    "rows_loaded": 19260,
+    "rows_rejected": 0
+   },
+   "encounters_H2.csv": {
+    "rows_loaded": 12461,
+    "rows_rejected": 0
+   },
+   "encounters_H3.csv": {
+    "rows_loaded": 8367,
+    "rows_rejected": 0
+   },
+   "encounters_H4.csv": {
+    "rows_loaded": 19396,
+    "rows_rejected": 17
+   },
+   "encounters_H2_reenvio.csv": {
+    "rows_loaded": 12461,
+    "rows_rejected": 0
+   },
+   "patients.csv": {
+    "rows_loaded": 9015,
+    "rows_rejected": 0
+   },
+   "organizations.csv": {
+    "rows_loaded": 9,
+    "rows_rejected": 0
+   },
+   "conditions.csv": {
+    "rows_loaded": 61132,
+    "rows_rejected": 0
+   }
+  },
+  "normalized": "",
+  "sha256_salted": ""
+ }
+}

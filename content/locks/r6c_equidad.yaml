@@ -1,0 +1,22 @@
+id: r6c_equidad
+room: R6
+type: decision
+title: { es: "Equidad y decisión", gl: "Equidade e decisión" }
+docs_needed: [doc_ds_bias, doc_ds_ml]
+story:
+  es: "Antes de usar el modelo, comprobad si acierta igual con todos: mujeres y hombres, jóvenes y mayores. Decidid si se usa y explicad por qué en una frase."
+  gl: "Antes de usar o modelo, comprobade se acerta igual con todos: mulleres e homes, novos e maiores. Decidide se se usa e explicade por que nunha frase."
+tools: [ml_equity]
+answer_hint:
+  es: "Elegid una opción y escribid una frase (40 letras o más) que nombre los grupos que habéis visto y qué haríais."
+  gl: "Elixide unha opción e escribide unha frase (40 letras ou máis) que nomee os grupos que vistes e que fariades."
+validator: { type: ml_equity, min_chars: 40 }
+points: 110
+time_target_min: 6
+hints:
+  - { es: "¿Hay algún grupo con la barra mucho más baja que los demás?", gl: "Hai algún grupo coa barra moito máis baixa ca os demais?" }
+  - { es: "Si el modelo falla más con un grupo, no debería decidir él solo.", gl: "Se o modelo falla máis cun grupo, non debería decidir el só." }
+  - { es: "Elegid «Desplegar con revisión humana» y nombrad en la frase el grupo con menos aciertos (por ejemplo, las mujeres) y que una persona revisará.", gl: "Elixide «Despregar con revisión humana» e nomeade na frase o grupo con menos acertos (por exemplo, as mulleres) e que unha persoa revisará." }
+solution:
+  es: "Elegid «Desplegar con revisión humana» y escribid, por ejemplo: «El modelo detecta menos reingresos en mujeres que en hombres, así que una persona revisará los avisos antes de llamar»."
+  gl: "Elixide «Despregar con revisión humana» e escribide, por exemplo: «O modelo detecta menos reingresos en mulleres ca en homes, así que unha persoa revisará os avisos antes de chamar»."

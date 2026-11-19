@@ -1,0 +1,22 @@
+id: r6b_umbral
+room: R6
+type: decision
+title: { es: "Umbral con presupuesto", gl: "Limiar con orzamento" }
+docs_needed: [doc_ds_ml]
+story:
+  es: "La enfermería puede llamar como mucho a 40 pacientes por semana. Elegid el umbral: desde qué probabilidad de reingreso se llama a un paciente."
+  gl: "A enfermaría pode chamar como moito a 40 pacientes por semana. Elixide o limiar: desde que probabilidade de reingreso se chama a un paciente."
+tools: [ml_threshold]
+answer_hint:
+  es: "Moved el deslizador hasta tener 40 llamadas o menos y al menos un 30 % de reingresos detectados. Después, «Entregar umbral»."
+  gl: "Movede o desprazador ata ter 40 chamadas ou menos e polo menos un 30 % de reingresos detectados. Despois, «Entregar limiar»."
+validator: { type: ml_threshold, capacity: 40, min_sensitivity: 0.3 }
+points: 100
+time_target_min: 6
+hints:
+  - { es: "Umbral bajo = muchas llamadas. Umbral alto = se escapan casos.", gl: "Limiar baixo = moitas chamadas. Limiar alto = escápanse casos." }
+  - { es: "Subid el umbral poco a poco hasta bajar de 40 llamadas, sin pasaros.", gl: "Subide o limiar pouco a pouco ata baixar de 40 chamadas, sen pasarvos." }
+  - { es: "Probad entre el 15 % y el 17 %.", gl: "Probade entre o 15 % e o 17 %." }
+solution:
+  es: "Poned el umbral en el 16 % (vale entre el 15 % y el 17 %): unas 34 llamadas por semana y un 35 % de reingresos detectados. Pulsad «Entregar umbral»."
+  gl: "Poñede o limiar no 16 % (vale entre o 15 % e o 17 %): unhas 34 chamadas por semana e un 35 % de reingresos detectados. Premede «Entregar limiar»."

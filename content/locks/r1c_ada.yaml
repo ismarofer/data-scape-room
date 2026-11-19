@@ -1,0 +1,22 @@
+id: r1c_ada
+room: R1
+type: verify_ai
+title: { es: "Auditoría de Ada", gl: "Auditoría de Ada" }
+docs_needed: [doc_ds_ai]
+story:
+  es: "Ada, la IA del hospital, dice 6 cosas sobre los datos. Dos son falsas. Comprobadlas con el Laboratorio y marcad solo las falsas: cada marca equivocada resta 10 puntos."
+  gl: "Ada, a IA do hospital, di 6 cousas sobre os datos. Dúas son falsas. Comprobádeas co Laboratorio e marcade só as falsas: cada marca equivocada resta 10 puntos."
+tools: [verify_panel, query_lab]
+validator:
+  type: verify_claims
+  answer_key: r1c_claims
+  false_positive_penalty: 10
+points: 130
+time_target_min: 10
+hints:
+  - { es: "Fijaos sobre todo en dos: la de los pacientes únicos y la de las fechas de alta vacías.", gl: "Fixádevos sobre todo en dúas: a dos pacientes únicos e a das datas de alta baleiras." }
+  - { es: "Una persona puede tener varias fichas: contad personas con la columna ssn, no con patient_id. Para las altas vacías, añadid dos condiciones: encounter_class es igual a inpatient y stop_ts está vacía.", gl: "Unha persoa pode ter varias fichas: contade persoas coa columna ssn, non con patient_id. Para as altas baleiras, engadide dúas condicións: encounter_class é igual a inpatient e stop_ts está baleira." }
+  - { es: "Una falsa habla de fechas de alta vacías y la otra de pacientes únicos. Si el Laboratorio da un número distinto del de Ada, esa es falsa.", gl: "Unha falsa fala de datas de alta baleiras e a outra de pacientes únicos. Se o Laboratorio dá un número distinto do de Ada, esa é falsa." }
+solution:
+  es: "Son falsas la 2 y la 3. La 2: sí hay ingresos (inpatient) con la fecha de alta (stop_ts) vacía. La 3: hay 9 015 fichas, pero menos ssn distintos (9 003 personas). Marcad solo la 2 y la 3 y entregad."
+  gl: "Son falsas a 2 e a 3. A 2: si hai ingresos (inpatient) coa data de alta (stop_ts) baleira. A 3: hai 9 015 fichas, pero menos ssn distintos (9 003 persoas). Marcade só a 2 e a 3 e entregade."

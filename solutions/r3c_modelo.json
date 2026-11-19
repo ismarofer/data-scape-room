@@ -1,0 +1,1 @@
+{"decision":null,"code":"481","choices":{"fct_admission":{"window":"between_2_30"},"int_admission_episodes":{"class_filter":"inpatient","new_episode":"gap_1d"},"stg_encounters":{"date_cast":"both_formats","class_norm":"lower_trim","dedupe":"latest"},"stg_patients":{"patient_key":"hash_ssn"}}}
