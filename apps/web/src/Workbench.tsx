@@ -12,7 +12,9 @@ import { FileViewer, kindOf, RAW_FILES } from "./FileViewer";
 import { Tour } from "./Tour";
 import { RoomBriefing } from "./Briefing";
 import { MeterChip, Toasts, useMeterFeedback } from "./Feedback";
-import { setView } from "./workContext";
+import { onUi, setCurrentLock, setView } from "./workContext";
+import { QueryLab } from "./QueryLab";
+import { restoreWork } from "./raw";
 
 const store = {
   read: (k: string) => { try { return localStorage.getItem(k) ?? ""; } catch { return ""; } },
@@ -79,12 +81,17 @@ export function Workbench({ teamId, lang, setLang, t, onExit }: Props) {
   useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); }, []);
   // when the team reaches a new level, bring the game tab to the front
   const currentId = s?.currentLockId ?? null;
-  useEffect(() => { setActive("current"); }, [currentId]);
+  useEffect(() => { setActive("current"); setCurrentLock(currentId); }, [currentId]);
   const fb = useMeterFeedback(s, lang);
+  // after a page reload the in-browser database is empty: rebuild the team's tables (loaded files and calculated models)
+  const inboxDone = !!s?.locks.some((l) => l.id === "r1a_bandeja" && l.status === "done");
+  const refreshDb = db.refresh;
+  useEffect(() => { if (inboxDone && project) restoreWork(teamId, project).then(refreshDb); }, [inboxDone, project, teamId, refreshDb]);
   // Lumi is told what the player is looking at
-  useEffect(() => { setView(active === "current" ? "el nivel actual" : active.startsWith("db:") ? `la tabla ${active.slice(3)} de la base de datos` : active.startsWith("lvl:") ? `el nivel ya superado ${active.slice(4)}` : `el fichero ${active.slice(5)}`); }, [active]);
+  useEffect(() => { setView(active === "current" ? "el nivel actual" : active === "lab" ? "el Laboratorio de preguntas" : active.startsWith("db:") ? `la tabla ${active.slice(3)} de la base de datos` : active.startsWith("lvl:") ? `el nivel ya superado ${active.slice(4)}` : `el fichero ${active.slice(5)}`); }, [active]);
 
   const open = useCallback((id: string) => { setTabs((x) => (x.includes(id) ? x : [...x, id])); setActive(id); }, []);
+  useEffect(() => onUi((e) => { if (e.type === "doc:open") open(`file:${e.path}`); if (e.type === "lab:open") open("lab"); }), [open]);
   const close = (id: string) => {
     const i = tabs.indexOf(id);
     setTabs(tabs.filter((x) => x !== id));
@@ -127,6 +134,7 @@ export function Workbench({ teamId, lang, setLang, t, onExit }: Props) {
     if (id === "current") return `▶ ${lock ? lock.title : gl ? "Final" : "Final"}`;
     if (id.startsWith("lvl:")) return `✔ ${levelTitle(id.slice(4))}`;
     if (id.startsWith("db:")) return `▤ ${id.slice(3)}`;
+    if (id === "lab") return `🔬 ${gl ? "Laboratorio de preguntas" : "Laboratorio de preguntas"}`;
     const p = id.slice(5);
     return `${FILE_ICON[kindOf(p)]} ${base(p)}`;
   };
@@ -214,6 +222,7 @@ export function Workbench({ teamId, lang, setLang, t, onExit }: Props) {
           <div className="section" data-tour="db" ref={(el) => { secRefs.current[2] = el; }}>
             <button className="secthead" aria-expanded={!closed.includes("dbsec")} onClick={() => toggle("dbsec")}>{closed.includes("dbsec") ? "▸" : "▾"} BASE DE DATOS</button>
             <div className="sectbody">
+            {!closed.includes("dbsec") && <button className={`node file labnode ${active === "lab" ? "sel" : ""}`} onClick={() => open("lab")}><span className="ico" aria-hidden="true">🔬</span><span className="nm">{gl ? "Laboratorio de preguntas" : "Laboratorio de preguntas"}</span></button>}
             {!closed.includes("dbsec") && <DbTree tables={db.tables} started={db.started} lang={lang} active={active} closed={closed} toggle={toggle} onOpen={(full) => open(`db:${full}`)} />}
             </div>
           </div>
@@ -245,7 +254,7 @@ export function Workbench({ teamId, lang, setLang, t, onExit }: Props) {
             </section>
             {tabs.filter((id) => id !== "current").map((id) => (
               <section key={id} className="pane" role="tabpanel" aria-label={tabLabel(id)} hidden={active !== id}>
-                {id.startsWith("lvl:")
+                {id === "lab" ? <div className="viewpad"><QueryLab teamId={teamId} lang={lang} /></div> : id.startsWith("lvl:")
                   ? (() => { const l = s.locks.find((x) => x.id === id.slice(4)); return l ? <LevelDesk key={l.id + l.status} s={s} lock={l} teamId={teamId} lang={lang} t={t} project={project} sheet={sheet} serverNow={serverNow} refresh={refresh} /> : null; })()
                   : id.startsWith("db:") ? (active === id && <DbTableView full={id.slice(3)} lang={lang} />) : active === id && <FileViewer path={id.slice(5)} lang={lang} project={project} docs={s.docs} />}
               </section>
@@ -262,8 +271,8 @@ export function Workbench({ teamId, lang, setLang, t, onExit }: Props) {
 
       <footer className="status" aria-label={gl ? "Estado" : "Estado"} data-tour="status">
         <div className="timer" role="timer" aria-live="off" title={gl ? "Tempo ata a Comisión (13:00)" : "Tiempo hasta la Comisión (13:00)"}>⏱ {fmt(remaining)}</div>
-        <MeterChip k="score" label={gl ? "Puntos" : "Puntos"} value={s.score} delta={fb.flash.score} bar={false} />
-        {(["trust", "compliance", "quality"] as const).map((k) => <MeterChip key={k} k={k} label={t(`meters.${k}`)} value={s.meters[k]} delta={fb.flash[k]} />)}
+        <MeterChip k="trust" label={gl ? "Confianza da Comisión" : "Confianza de la Comisión"} value={s.meters.trust} delta={fb.flash.trust} />
+        <button className="ghost labbtn" onClick={() => open("lab")} title={gl ? "Facer preguntas ás táboas sen escribir SQL" : "Hacer preguntas a las tablas sin escribir SQL"}>🔬 {gl ? "Laboratorio" : "Laboratorio"}</button>
         <span className="statushelp" data-tour="statushelp">
           <MetersLegend lang={lang} />
           <GlossaryPanel entries={s.glossary} lang={lang} />

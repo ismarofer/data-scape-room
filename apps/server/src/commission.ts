@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
 import { z } from "zod";
-import { tr, type Lang, type LTextT } from "@codigo-alta/shared";
+import { chartTitle, parseCsv, tr, type Lang, type LTextT } from "@codigo-alta/shared";
 import { Engine, GameError } from "./engine.js";
 import type { AiService } from "./ai/service.js";
 import { fill } from "./ai/characters.js";
@@ -10,15 +10,32 @@ import { inputProblem, scrubOutput } from "./ai/moderation.js";
 
 interface Persona { id: string; name: string; role: LTextT; focus: LTextT }
 interface CommissionCfg {
-  turns: number; personas: Persona[]; order: string[]; questions: Record<string, LTextT>;
+  turns: number; personas: Persona[]; order: string[]; questions: Record<string, LTextT>; tips?: LTextT[];
   endings: Record<string, { title: LTextT; text: LTextT }>; badges: Record<string, { es: string; gl: string; why: LTextT }>;
 }
 export const loadCommission = (contentDir: string): CommissionCfg => YAML.parse(fs.readFileSync(path.join(contentDir, "commission.yaml"), "utf8"));
 
-export interface EvidenceCard { id: string; title: string; text: string }
+/** A summary card: what the team did and decided, in a few words, to answer the Commission (27-nov: shown, not attached). */
+export interface EvidenceCard { id: string; icon?: string; title: string; text: string }
+/** Figures of the clean final model (data/dist/canon/fct_admission_clean.csv), the same for every team. */
+interface CanonStats { n: number; r: number; years: string; centers: { name: string; n: number; r: number }[]; ages: { band: string; n: number; r: number }[] }
+export function loadCanonStats(file: string): CanonStats | undefined {
+  if (!fs.existsSync(file)) return undefined;
+  const [head, ...rows] = parseCsv(fs.readFileSync(file, "utf8"), ",");
+  const ix = (c: string) => head.cells.indexOf(c);
+  const iO = ix("organization_name"), iR = ix("is_readmission_30d"), iA = ix("age_band"), iY = ix("admit_year");
+  const by = (i: number) => { const m = new Map<string, { n: number; r: number }>(); for (const row of rows) { if (row.cells.length < head.cells.length) continue; const k = row.cells[i], g = m.get(k) ?? { n: 0, r: 0 }; g.n++; if (row.cells[iR] === "true") g.r++; m.set(k, g); } return m; };
+  const valid = rows.filter((x) => x.cells.length >= head.cells.length);
+  const yrs = valid.map((x) => Number(x.cells[iY])).filter(Number.isFinite);
+  return {
+    n: valid.length, r: valid.filter((x) => x.cells[iR] === "true").length, years: `${Math.min(...yrs)}-${Math.max(...yrs)}`,
+    centers: [...by(iO)].map(([name, g]) => ({ name, ...g })), ages: [...by(iA)].filter(([b]) => b !== "n/d").map(([band, g]) => ({ band, ...g })),
+  };
+}
+const pct = (r: number, n: number, lang: Lang) => (n ? (100 * r / n).toLocaleString(lang === "gl" ? "gl" : "es", { maximumFractionDigits: 1, minimumFractionDigits: 1 }) : "–");
 export interface CommissionView {
   total: number; turn: number; done: boolean;
-  question?: { persona: { id: string; name: string; role: string }; text: string };
+  question?: { persona: { id: string; name: string; role: string }; text: string; tip?: string };
   evidence: EvidenceCard[];
   history: { persona: string; question: string; answer: string; evidence: string[]; hint?: string }[];
   result?: CommissionResult;
@@ -37,8 +54,8 @@ const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n
 
 /** Facts that are TRUE about the case (the evaluator checks the team's answer against them). */
 const GROUND_TRUTH = {
-  es: "El hospital tiene 9 centros. Hay 9 003 personas distintas (9 015 fichas: hay duplicadas). Hay ingresos sin fecha de alta. El reingreso se define a 2-30 días naturales tras el alta, solo ingresos inpatient. Hay registros posteriores al fallecimiento por retraso en el registro de defunciones, y una migración duplicó marcas en el centro H3. Un centro con 3 ingresos tiene 100 % de tasa por azar y no es comparable.",
-  gl: "O hospital ten 9 centros. Hai 9 003 persoas distintas (9 015 fichas: hai duplicadas). Hai ingresos sen data de alta. O reingreso defínese a 2-30 días naturais tras a alta, só ingresos inpatient. Hai rexistros posteriores ao falecemento por atraso no rexistro de defuncións, e unha migración duplicou marcas no centro H3. Un centro con 3 ingresos ten 100 % de taxa por azar e non é comparable.",
+  es: "Tasa de reingreso del modelo limpio: alrededor del 10 % (unos 10 de cada 100 altas). Centro con la tasa más alta (con un mínimo de altas): Illa Verde, ~18 %. La Clínica Illas Cíes tiene solo 3 altas. El hospital tiene 9 centros. Hay 9 003 personas distintas (9 015 fichas: hay duplicadas). Hay ingresos sin fecha de alta. El reingreso se define a 2-30 días naturales tras el alta, solo ingresos inpatient. Hay registros posteriores al fallecimiento por retraso en el registro de defunciones, y una migración duplicó marcas en el centro H3. Un centro con 3 ingresos tiene 100 % de tasa por azar y no es comparable.",
+  gl: "Taxa de reingreso do modelo limpo: arredor do 10 % (uns 10 de cada 100 altas). Centro coa taxa máis alta (cun mínimo de altas): Illa Verde, ~18 %. A Clínica Illas Cíes ten só 3 altas. O hospital ten 9 centros. Hai 9 003 persoas distintas (9 015 fichas: hai duplicadas). Hai ingresos sen data de alta. O reingreso defínese a 2-30 días naturais tras a alta, só ingresos inpatient. Hai rexistros posteriores ao falecemento por atraso no rexistro de defuncións, e unha migración duplicou marcas no centro H3. Un centro con 3 ingresos ten 100 % de taxa por azar e non é comparable.",
 };
 const FALSE_CLAIMS: { re: RegExp; es: string }[] = [
   { re: /9\.?\s?015\s+(pacientes|personas)\s+(unic|distint)/, es: "Hay 9 015 pacientes únicos (en realidad hay 9 003 personas distintas)." },
@@ -47,7 +64,10 @@ const FALSE_CLAIMS: { re: RegExp; es: string }[] = [
 ];
 
 export class Commission {
-  constructor(private e: Engine, private ai: AiService | undefined, private cfg: CommissionCfg, private prompts: Record<string, string>) {}
+  private stats?: CanonStats;
+  constructor(private e: Engine, private ai: AiService | undefined, private cfg: CommissionCfg, private prompts: Record<string, string>, canonCsv?: string) {
+    this.stats = canonCsv ? loadCanonStats(canonCsv) : undefined;
+  }
 
   private lockState(teamId: string) {
     const p = this.e.progress(teamId).f_comision;
@@ -55,21 +75,63 @@ export class Commission {
     return p;
   }
   private persona(id: string) { return this.cfg.personas.find((p) => p.id === id)!; }
+  /** The KPI minimum the team fixed is sensible: any value in the lock's range (content/locks/r5a_kpi.yaml). */
+  private minOk(v: string | undefined) {
+    const r = this.e.content.locks.get("r5a_kpi")?.numeric_ranges.find((x) => x.field === "min_n");
+    const n = Number(v);
+    return v === r?.canonical || (!!r && Number.isFinite(n) && n >= r.min && n <= r.max);
+  }
 
-  // ---------- evidence cards (what the team can attach) ----------
+  // ---------- summary cards: everything done and decided, very short, to answer from ----------
   evidence(teamId: string, lang: Lang): EvidenceCard[] {
     const prog = this.e.progress(teamId), led = this.e.ledger(teamId), gl = lang === "gl";
-    const done = (id: string) => prog[id]?.status === "done" && (prog[id].points > 0 || !prog[id].master);
+    const done = (id: string) => prog[id]?.status === "done";
+    const val = (k: string) => this.e.answerValue(k);
+    const num = (v: unknown) => (typeof v === "number" ? v.toLocaleString(gl ? "gl" : "es") : String(v ?? "?"));
     const out: EvidenceCard[] = [];
-    const dec = led.find((l) => l.lock_id === "r1b_reenvio");
-    if (dec) { const opt = this.e.content.locks.get("r1b_reenvio")?.decision?.options.find((o) => o.ledger_tag === dec.tag); out.push({ id: "ev_dedupe", title: gl ? "Decisión sobre o reenvío" : "Decisión sobre el reenvío", text: opt ? tr(opt.label, lang) : "" }); }
-    if (done("r1c_ada")) out.push({ id: "ev_ai", title: gl ? "Auditoría de Ada" : "Auditoría de Ada", text: gl ? "Comprobastes as afirmacións de Ada cos datos e detectastes as falsas." : "Comprobasteis las afirmaciones de Ada con los datos y detectasteis las falsas." });
-    if (done("r2a_radar")) out.push({ id: "ev_privacy", title: gl ? "Radar RXPD" : "Radar RGPD", text: gl ? "Clasificastes as 19 columnas de pacientes (eliminar, pseudonimizar, xeneralizar, manter)." : "Clasificasteis las 19 columnas de pacientes (eliminar, pseudonimizar, generalizar, mantener)." });
-    if (done("r4c_veredicto")) out.push({ id: "ev_verdict", title: gl ? "Veredicto das anomalías" : "Veredicto de las anomalías", text: gl ? "Decidistes como tratar cada grupo de anomalías e documentástelo." : "Decidisteis cómo tratar cada grupo de anomalías y lo documentasteis." });
-    if (done("r5a_kpi")) out.push({ id: "ev_kpi", title: gl ? "Indicador definido" : "Indicador definido", text: gl ? "Taxa sobre altas, con mínimo de altas e aviso para centros pequenos." : "Tasa sobre altas, con mínimo de altas y aviso para centros pequeños." });
-    if (done("r5c_critico")) out.push({ id: "ev_dash", title: gl ? "Dashboard revisado" : "Dashboard revisado", text: gl ? "O voso cadro de mando pasou a revisión do crítico." : "Vuestro cuadro de mando pasó la revisión del crítico." });
-    if (done("r6a_entrenar")) out.push({ id: "ev_ml", title: gl ? "Modelo sen fuga de datos" : "Modelo sin fuga de datos", text: gl ? "Adestrastes un modelo usando só o que se sabe no momento da alta." : "Entrenasteis un modelo usando solo lo que se sabe en el momento del alta." });
-    if (done("r6c_equidad")) out.push({ id: "ev_equity", title: gl ? "Revisión de equidade" : "Revisión de equidad", text: gl ? "Revistes a sensibilidade por sexo e idade antes de usar o modelo." : "Revisasteis la sensibilidad por sexo y edad antes de usar el modelo." });
+    const add = (id: string, icon: string, es: string, glT: string, textEs: string, textGl: string) => out.push({ id, icon, title: gl ? glT : es, text: gl ? textGl : textEs });
+    const r1b = led.find((l) => l.lock_id === "r1b_reenvio")?.tag;
+    if (done("r1a_bandeja")) add("ev_data", "📥", "Los datos", "Os datos",
+      `8 ficheros de 4 hospitales, cada uno con su formato. ${r1b === "correct_dedupe" ? `Del fichero que un hospital mandó dos veces os quedasteis con la versión nueva: ${num(val("r1b_unique_encounters"))} visitas sin repetir.` : r1b ? "Con el fichero que un hospital mandó dos veces os quedaron visitas repetidas o perdisteis el rastro." : ""} Ada (la IA) dijo dos cosas falsas y las pillasteis con los datos.`,
+      `8 ficheiros de 4 hospitais, cada un co seu formato. ${r1b === "correct_dedupe" ? `Do ficheiro que un hospital mandou dúas veces quedastes coa versión nova: ${num(val("r1b_unique_encounters"))} visitas sen repetir.` : r1b ? "Co ficheiro que un hospital mandou dúas veces quedáronvos visitas repetidas ou perdestes o rastro." : ""} Ada (a IA) dixo dúas cousas falsas e collíchedelas cos datos.`);
+    if (done("r2a_radar")) {
+      const bad = this.e.eventCount(teamId, "privacy_critical") > 0;
+      add("ev_privacy", "🔐", "Privacidad", "Privacidade",
+        `Nombre y dirección, fuera. El número de identificación, cambiado por un código. Fecha de nacimiento y código postal, en tramos.${bad ? " Hubo un momento en que un dato que identifica quedó a la vista; se corrigió." : ""}`,
+        `Nome e enderezo, fóra. O número de identificación, cambiado por un código. Data de nacemento e código postal, en tramos.${bad ? " Houbo un momento no que un dato que identifica quedou á vista; corrixiuse." : ""}`);
+    }
+    if (done("r3c_modelo")) add("ev_def", "📏", "Qué es un reingreso", "Que é un reingreso",
+      "Volver a ingresar entre 2 y 30 días después del alta, según el protocolo oficial. Solo cuentan los ingresos (no urgencias ni consultas).",
+      "Volver ingresar entre 2 e 30 días despois da alta, segundo o protocolo oficial. Só contan os ingresos (non urxencias nin consultas).");
+    if (done("r4c_veredicto")) add("ev_anom", "🔎", "Datos raros", "Datos raros",
+      `${num(val("r4c_excluded"))} registros apartados: visitas después de fallecer (se avisa al hospital) y altas anotadas antes del ingreso. Las altas repetidas del hospital H3 (un fallo al cambiar de sistema) ya se juntan solas.`,
+      `${num(val("r4c_excluded"))} rexistros apartados: visitas despois de falecer (avísase ao hospital) e altas anotadas antes do ingreso. As altas repetidas do hospital H3 (un fallo ao cambiar de sistema) xa se xuntan soas.`);
+    const s = this.stats;
+    if (done("r4d_codigo") && s) add("ev_rate", "📊", "La cifra", "A cifra",
+      `${pct(s.r, s.n, lang)} % de reingresos: ${num(s.r)} de ${num(s.n)} altas (${s.years}), ya sin los datos raros.`,
+      `${pct(s.r, s.n, lang)} % de reingresos: ${num(s.r)} de ${num(s.n)} altas (${s.years}), xa sen os datos raros.`);
+    if (done("r5a_kpi") && s) {
+      const kpi = Object.fromEntries((led.find((l) => l.lock_id === "r5a_kpi")?.choice ?? "").split(";").map((x) => x.split("=")));
+      const min = Number(String(this.e.kvGet(teamId, "kpi_min") ?? kpi.min_n ?? "30").replace(/^n/, "")) || 30;
+      const ok = s.centers.filter((c) => c.n >= min).sort((a, b) => b.r / b.n - a.r / a.n);
+      const small = s.centers.filter((c) => c.n < min);
+      const top = ok[0], low = ok[ok.length - 1];
+      if (top) add("ev_where", "🏥", "Dónde", "Onde",
+        `Más reingresos: ${top.name} (${pct(top.r, top.n, lang)} %, ${num(top.n)} altas). Menos: ${low.name} (${pct(low.r, low.n, lang)} %).${small.length ? ` ${small.map((c) => c.name).join(", ")}: solo ${small.map((c) => c.n).join(", ")} altas, no se puede comparar (vuestro mínimo: ${min}).` : ""}`,
+        `Máis reingresos: ${top.name} (${pct(top.r, top.n, lang)} %, ${num(top.n)} altas). Menos: ${low.name} (${pct(low.r, low.n, lang)} %).${small.length ? ` ${small.map((c) => c.name).join(", ")}: só ${small.map((c) => c.n).join(", ")} altas, non se pode comparar (o voso mínimo: ${min}).` : ""}`);
+      const ages = [...s.ages].sort((a, b) => b.r / b.n - a.r / a.n);
+      if (ages.length > 1) add("ev_age", "👥", "Por edad", "Por idade",
+        `Más reingresos entre ${ages[0].band} años (${pct(ages[0].r, ages[0].n, lang)} %); menos entre ${ages[ages.length - 1].band} (${pct(ages[ages.length - 1].r, ages[ages.length - 1].n, lang)} %).`,
+        `Máis reingresos entre ${ages[0].band} anos (${pct(ages[0].r, ages[0].n, lang)} %); menos entre ${ages[ages.length - 1].band} (${pct(ages[ages.length - 1].r, ages[ages.length - 1].n, lang)} %).`);
+    }
+    if (done("r5c_critico")) {
+      let charts: string[] = [];
+      try { charts = (JSON.parse(this.e.kvGet(teamId, "dash") ?? "{}").charts ?? []).map((c: any) => chartTitle(c, lang)); } catch { /* none */ }
+      add("ev_dash", "📈", "Vuestro dashboard", "O voso dashboard", `${charts.length ? charts.join(" · ") : "Revisado por el crítico"}.`, `${charts.length ? charts.join(" · ") : "Revisado polo crítico"}.`);
+    }
+    if (done("r6c_equidad") && prog.r6c_equidad.points > 0) add("ev_ml", "🤖", "Aviso de riesgo (bonus)", "Aviso de risco (bonus)",
+      "Un modelo que avisa al dar el alta de quién tiene más riesgo de volver. No acierta igual con todos los grupos: una persona revisa los avisos antes de llamar.",
+      "Un modelo que avisa ao dar a alta de quen ten máis risco de volver. Non acerta igual con todos os grupos: unha persoa revisa os avisos antes de chamar.");
     return out;
   }
 
@@ -83,19 +145,20 @@ export class Commission {
     const privacyCritical = this.e.eventCount(teamId, "privacy_critical") > 0;
     const mlUsed = prog.r6c_equidad?.status === "done" && prog.r6c_equidad.points > 0;
     const lines = [
+      "Resumen que el equipo tiene a la vista:", ...this.evidence(teamId, "es").map((c) => `- ${c.title}: ${c.text}`),
       `Decisión sobre ficheros reenviados: ${r1b ?? "sin registrar"}`, `Fallo grave de privacidad: ${privacyCritical ? "sí" : "no"}`,
       `Indicador: ${JSON.stringify(kpi)}`, `Llaves maestras usadas: ${masters}; pistas pedidas: ${hints}`,
-      `Medidores: confianza ${m.trust}, cumplimiento ${m.compliance}, calidad ${m.quality}`, `Laboratorio de riesgo (modelo predictivo) completado: ${mlUsed ? "sí" : "no"}`,
+      `Confianza de la Comisión: ${m.trust}/100`, `Laboratorio de riesgo (modelo predictivo) completado: ${mlUsed ? "sí" : "no"}`,
     ];
     return { r1b, kpi, masters, hints, privacyCritical, mlUsed, meters: m, text: lines.join("\n"), lang };
   }
-  private pickKey(personaId: string, idx: number, f: ReturnType<Commission["facts"]>): string {
-    if (idx === 0) return f.r1b === "duplicates_ignored" || f.r1b === "partial_dedupe" ? "v1_dup" : "v1_ok";
-    if (idx === 1) return f.privacyCritical ? "p1_priv_bad" : "p1_priv_ok";
-    if (idx === 2) return "l1_anom";
-    if (idx === 3) return f.kpi.min_n !== "n30" || ["show", "hide"].includes(f.kpi.small_center) ? "v2_small_bad" : "v2_small_ok";
-    if (idx === 4) return f.masters > 0 || f.hints >= 6 ? "p2_time" : "p2_cost";
-    return f.mlUsed ? "l2_ml" : "l2_action";
+  /** Five functional questions (what a non-technical client asks); the wording depends on what the team decided. */
+  private pickKey(_personaId: string, idx: number, f: ReturnType<Commission["facts"]>): string {
+    if (idx === 0) return "q_cifra";
+    if (idx === 1) return f.r1b === "duplicates_ignored" || f.r1b === "partial_dedupe" ? "q_fiar_dup" : "q_fiar_ok";
+    if (idx === 2) return "q_donde";
+    if (idx === 3) return f.privacyCritical ? "q_priv_bad" : "q_priv_ok";
+    return f.mlUsed ? "q_next_ml" : "q_next";
   }
   private rows(teamId: string) {
     return this.e.db.prepare("SELECT * FROM commission_turns WHERE team_id=? ORDER BY turn").all(teamId) as any[];
@@ -132,30 +195,31 @@ export class Commission {
       total: this.cfg.turns, turn: answered.length, done: lock.status === "done", evidence: ev,
       history: answered.map((r) => ({ persona: this.persona(r.persona).name, question: r.question, answer: r.answer, evidence: JSON.parse(r.evidence_json ?? "[]"), hint: (() => { try { return JSON.parse(r.scores_json).hint || undefined; } catch { return undefined; } })() })),
     };
-    if (cur) { const p = this.persona(cur.persona); view.question = { persona: { id: p.id, name: p.name, role: tr(p.role, lang) }, text: cur.question }; }
+    if (cur) { const p = this.persona(cur.persona), tip = this.cfg.tips?.[cur.turn]; view.question = { persona: { id: p.id, name: p.name, role: tr(p.role, lang) }, text: cur.question, tip: tip ? tr(tip, lang) : undefined }; }
     if (view.done) view.result = JSON.parse(String((this.e.db.prepare("SELECT payload_json FROM events_log WHERE team_id=? AND type='commission_result' ORDER BY id DESC LIMIT 1").get(teamId) as any)?.payload_json ?? "null")) ?? undefined;
     if (view.result) view.result = this.localizeResult(view.result, lang);
     return view;
   }
 
   // ---------- evaluation ----------
-  private scriptedEval(answer: string, evidenceCount: number): Evaluation {
+  private scriptedEval(answer: string): Evaluation {
     const t = plain(answer);
     const sentences = (answer.match(/[.!?]+/g) ?? []).length, words = answer.trim().split(/\s+/).length;
     const clarity = clamp((answer.length >= 60 ? 1 : 0) + (sentences >= 2 ? 1 : 0) + (words >= 15 ? 1 : 0), 0, 3);
-    const evidence = clamp((/\d/.test(answer) ? 1 : 0) + (evidenceCount >= 1 ? 1 : 0) + (evidenceCount >= 2 || /(dato|tabla|consulta|test|prueba|grafico|decision|auditor)/.test(t) ? 1 : 0), 0, 3);
+    const evidence = clamp((/\d/.test(answer) ? 1 : 0) + ((answer.match(/\d+/g) ?? []).length >= 2 || /%|de cada/.test(t) ? 1 : 0) + (/(dato|registro|hospital|centro|ficher|visita|paciente|nombre|codigo|alta|edad)/.test(t) ? 1 : 0), 0, 3);
     const hon = clamp((t.match(/(limit|provisional|no sabemos|incertidumbre|cautela|pocos casos|sintetic|no podemos asegurar|aproximad|margen|no estamos seguros|riesgo)/g) ?? []).length, 0, 3);
     const act = clamp((t.match(/(recomend|propon|propuesta|haria|siguiente paso|deberiam|plan |revisar|vigilar|accion|pediria|avisar|comprobar)/g) ?? []).length, 0, 3);
     const errors = FALSE_CLAIMS.filter((c) => c.re.test(t)).map((c) => c.es);
     const total = clarity + evidence + hon + act;
     const vote = errors.length ? -1 : total >= 8 ? 1 : total <= 3 ? -1 : 0;
-    const hint = errors.length ? "Cuidado: alguna afirmación no coincide con los datos reales." : hon === 0 ? "Probad a reconocer algún límite de vuestros datos." : act === 0 ? "Terminad con una propuesta de qué hacer." : evidence < 2 ? "Apoyaos en una cifra o adjuntad una tarjeta de evidencia." : "";
+    const hint = errors.length ? "Cuidado: alguna afirmación no coincide con los datos reales." : evidence < 2 ? "Apoyaos en una cifra de las tarjetas de abajo." : act === 0 ? "Terminad con una propuesta de qué hacer." : hon === 0 ? "Probad a decir algo que todavía no sabéis seguro." : "";
     return { scores: { clarity, evidence, honesty_about_limits: hon, actionability: act }, factual_errors: errors, followup_hint: hint, vote_signal: vote };
   }
-  private async evaluate(teamId: string, question: string, answer: string, evidenceTitles: string[], lang: Lang): Promise<Evaluation> {
-    const base = this.scriptedEval(answer, evidenceTitles.length);
+  private async evaluate(teamId: string, question: string, answer: string, lang: Lang): Promise<Evaluation> {
+    const base = this.scriptedEval(answer);
     if (!this.ai) return base;
-    const sys = fill(this.prompts.commission_eval ?? "", { lang: lang === "gl" ? "gallego" : "español", groundTruth: GROUND_TRUTH[lang], question, evidence: evidenceTitles.join("; ") || "(ninguna)" });
+    const summary = this.evidence(teamId, lang).map((c) => `${c.title}: ${c.text}`).join("\n") || "(ninguno)";
+    const sys = fill(this.prompts.commission_eval ?? "", { lang: lang === "gl" ? "gallego" : "español", groundTruth: GROUND_TRUTH[lang], question, evidence: summary });
     const out = await this.ai.askJson(teamId, sys, `<jugador>${answer}</jugador>`, EvalSchema, 2000);
     if (!out) return base;
     const sc = (n: number) => clamp(Math.round(n), 0, 3);
@@ -177,10 +241,10 @@ export class Commission {
     await this.ensureQuestion(teamId, lang);
     const cur = this.rows(teamId).find((r) => r.answer === null);
     if (!cur) throw new GameError(409, "no_question", "No hay pregunta pendiente");
-    const valid = this.evidence(teamId, lang), attached = valid.filter((c) => evidenceIds.includes(c.id)).slice(0, 3);
-    const ev = await this.evaluate(teamId, cur.question, clean, attached.map((c) => c.title), lang);
+    void evidenceIds; // older clients still send attached cards: the summary is now always visible
+    const ev = await this.evaluate(teamId, cur.question, clean, lang);
     this.e.db.prepare("UPDATE commission_turns SET answer=?, evidence_json=?, scores_json=?, vote=?, ts=? WHERE team_id=? AND turn=?")
-      .run(clean, JSON.stringify(attached.map((c) => c.id)), JSON.stringify({ ...ev.scores, errors: ev.factual_errors, hint: ev.followup_hint }), ev.vote_signal, this.e.now(), teamId, cur.turn);
+      .run(clean, "[]", JSON.stringify({ ...ev.scores, errors: ev.factual_errors, hint: ev.followup_hint }), ev.vote_signal, this.e.now(), teamId, cur.turn);
     this.e.logAi(teamId, "commission", "f_comision", "user", clean);
     if (cur.turn + 1 >= this.cfg.turns) await this.finalize(teamId, lang);
     else this.e.notifyTeam(teamId);
@@ -194,7 +258,7 @@ export class Commission {
     if (has("r1c_ada") && p.r1c_ada.attempts <= 1) out.push("ojo_halcon");
     if (has("r2a_radar") && this.e.eventCount(teamId, "privacy_critical") === 0) out.push("cero_fugas");
     if (has("r1c_ada")) out.push("auditor_ia");
-    if (has("r4a_pruebas") && has("r4c_veredicto")) out.push("detective");
+    if (has("r4b_entrevistas") && has("r4c_veredicto")) out.push("detective");
     if (!Object.values(p).some((x) => x.master)) out.push("sin_atajos");
     if (has("r3b_estrella") && p.r3b_estrella.attempts <= 1) out.push("esquema_estelar");
     if (has("r5c_critico") && p.r5c_critico.attempts <= 1) out.push("cartografo");
@@ -206,7 +270,7 @@ export class Commission {
     const strengths: string[] = [];
     if (!f.privacyCritical) strengths.push(gl ? "protexestes os datos persoais antes de analizalos" : "protegisteis los datos personales antes de analizarlos");
     if (f.r1b === "correct_dedupe") strengths.push(gl ? "resolvestes ben os ficheiros reenviados quedando coa última versión" : "resolvisteis bien los ficheros reenviados quedándoos con la última versión");
-    if (f.kpi.min_n === "n30") strengths.push(gl ? "definistes un indicador honesto cun mínimo de altas" : "definisteis un indicador honesto con un mínimo de altas");
+    if (this.minOk(f.kpi.min_n)) strengths.push(gl ? "definistes un indicador honesto cun mínimo de altas" : "definisteis un indicador honesto con un mínimo de altas");
     if (f.mlUsed) strengths.push(gl ? "revistes a equidade do modelo antes de usalo" : "revisasteis la equidad del modelo antes de usarlo");
     if (badgeIds.includes("sin_atajos")) strengths.push(gl ? "chegastes sen usar a chave mestra" : "llegasteis sin usar la llave maestra");
     for (const s of [gl ? "comprobastes o que dicía a IA cos datos" : "comprobasteis lo que decía la IA con los datos", gl ? "investigastes as anomalías en lugar de borralas sen máis" : "investigasteis las anomalías en lugar de borrarlas sin más", gl ? "traballastes en equipo cun método claro" : "trabajasteis en equipo con un método claro"]) if (strengths.length < 3) strengths.push(s);
@@ -224,10 +288,10 @@ export class Commission {
       const sum = rows.filter((r) => r.persona === p.id).reduce((a, r) => a + Number(r.vote ?? 0), 0);
       return { persona: p.id, vote: sum > 0 ? 1 : sum < 0 ? -1 : 0 };
     });
-    const sc = votes.reduce((a, v) => a + v.vote, 0) + (m.trust >= 70 ? 1 : m.trust < 40 ? -1 : 0) + (m.quality >= 60 ? 1 : m.quality < 35 ? -1 : 0) + (m.compliance < 50 ? -1 : 0);
+    const sc = votes.reduce((a, v) => a + v.vote, 0) + (m.trust >= 80 ? 2 : m.trust >= 60 ? 1 : m.trust < 35 ? -1 : 0);
     const ending = sc >= 3 ? "approved" : sc >= 0 ? "conditions" : "more_data";
     const badgeIds = this.badges(teamId);
-    this.e.addPoints(teamId, 10 * Math.min(10, badgeIds.length));
+    this.e.addPoints(teamId, 2 * Math.min(10, badgeIds.length));
     let report = "";
     if (this.ai) {
       const summary = `${this.facts(teamId, lang).text}\nVeredicto de la Comisión: ${ending}\nInsignias: ${badgeIds.join(", ") || "ninguna"}`;

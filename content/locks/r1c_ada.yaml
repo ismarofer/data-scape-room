@@ -4,19 +4,19 @@ type: verify_ai
 title: { es: "Auditoría de Ada", gl: "Auditoría de Ada" }
 docs_needed: [doc_ds_ai]
 story:
-  es: "Ada, la IA del hospital, dice 6 cosas sobre los datos. Dos son falsas. Comprobadlas con el Laboratorio y marcad solo las falsas: cada marca equivocada resta 10 puntos."
-  gl: "Ada, a IA do hospital, di 6 cousas sobre os datos. Dúas son falsas. Comprobádeas co Laboratorio e marcade só as falsas: cada marca equivocada resta 10 puntos."
+  es: "Ada, la IA del hospital, dice 6 cosas sobre los datos. Dos son falsas. Comprobadlas con el Laboratorio y marcad solo las falsas: cada marca equivocada baja la confianza de la Comisión."
+  gl: "Ada, a IA do hospital, di 6 cousas sobre os datos. Dúas son falsas. Comprobádeas co Laboratorio e marcade só as falsas: cada marca equivocada baixa a confianza da Comisión."
 tools: [verify_panel, query_lab]
 validator:
   type: verify_claims
   answer_key: r1c_claims
-  false_positive_penalty: 10
+  false_positive_penalty: 2
 points: 130
 time_target_min: 10
 hints:
-  - { es: "Fijaos sobre todo en dos: la de los pacientes únicos y la de las fechas de alta vacías.", gl: "Fixádevos sobre todo en dúas: a dos pacientes únicos e a das datas de alta baleiras." }
-  - { es: "Una persona puede tener varias fichas: contad personas con la columna ssn, no con patient_id. Para las altas vacías, añadid dos condiciones: encounter_class es igual a inpatient y stop_ts está vacía.", gl: "Unha persoa pode ter varias fichas: contade persoas coa columna ssn, non con patient_id. Para as altas baleiras, engadide dúas condicións: encounter_class é igual a inpatient e stop_ts está baleira." }
-  - { es: "Una falsa habla de fechas de alta vacías y la otra de pacientes únicos. Si el Laboratorio da un número distinto del de Ada, esa es falsa.", gl: "Unha falsa fala de datas de alta baleiras e a outra de pacientes únicos. Se o Laboratorio dá un número distinto do de Ada, esa é falsa." }
+  - { es: "Solo hay que marcar 2 de las 6 y cada marca equivocada resta: las dos falsas son la de los pacientes únicos y la de las fechas de alta vacías. Las otras cuatro son ciertas: no las toquéis.", gl: "Só hai que marcar 2 das 6 e cada marca equivocada resta: as dúas falsas son a dos pacientes únicos e a das datas de alta baleiras. As outras catro son certas: non as toquedes." }
+  - { es: "Pacientes únicos: una persona puede tener varias fichas, así que se cuentan ssn distintos, no patient_id. En el Laboratorio, tabla patients, «valores DISTINTOS», columna ssn: sale menos que lo que dice Ada, así que es falsa.", gl: "Pacientes únicos: unha persoa pode ter varias fichas, así que se contan ssn distintos, non patient_id. No Laboratorio, táboa patients, «valores DISTINTOS», columna ssn: sae menos do que di Ada, así que é falsa." }
+  - { es: "Altas vacías: tabla encounters, «Contar cuántas filas hay», condiciones encounter_class es igual a inpatient y stop_ts está vacía: sale más de 0, así que también es falsa. Son la 2 y la 3: marcad solo esas y entregad.", gl: "Altas baleiras: táboa encounters, «Contar cantas filas hai», condicións encounter_class é igual a inpatient e stop_ts está baleira: sae máis de 0, así que tamén é falsa. Son a 2 e a 3: marcade só esas e entregade." }
 solution:
   es: "Son falsas la 2 y la 3. La 2: sí hay ingresos (inpatient) con la fecha de alta (stop_ts) vacía. La 3: hay 9 015 fichas, pero menos ssn distintos (9 003 personas). Marcad solo la 2 y la 3 y entregad."
   gl: "Son falsas a 2 e a 3. A 2: si hai ingresos (inpatient) coa data de alta (stop_ts) baleira. A 3: hai 9 015 fichas, pero menos ssn distintos (9 003 persoas). Marcade só a 2 e a 3 e entregade."

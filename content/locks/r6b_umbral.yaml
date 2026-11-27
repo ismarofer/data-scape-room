@@ -12,11 +12,11 @@ answer_hint:
   gl: "Movede o desprazador ata ter 40 chamadas ou menos e polo menos un 30 % de reingresos detectados. Despois, «Entregar limiar»."
 validator: { type: ml_threshold, capacity: 40, min_sensitivity: 0.3 }
 points: 100
-time_target_min: 6
+time_target_min: 5
 hints:
-  - { es: "Umbral bajo = muchas llamadas. Umbral alto = se escapan casos.", gl: "Limiar baixo = moitas chamadas. Limiar alto = escápanse casos." }
-  - { es: "Subid el umbral poco a poco hasta bajar de 40 llamadas, sin pasaros.", gl: "Subide o limiar pouco a pouco ata baixar de 40 chamadas, sen pasarvos." }
-  - { es: "Probad entre el 15 % y el 17 %.", gl: "Probade entre o 15 % e o 17 %." }
+  - { es: "El umbral es la probabilidad desde la que se llama. Más bajo = más llamadas; más alto = se escapan reingresos. Buscad el umbral más bajo que deje las llamadas por debajo de 40 por semana.", gl: "O limiar é a probabilidade desde a que se chama. Máis baixo = máis chamadas; máis alto = escápanse reingresos. Buscade o limiar máis baixo que deixe as chamadas por debaixo de 40 por semana." }
+  - { es: "Subid el umbral poco a poco mirando «llamadas por semana» y parad en cuanto baje de 40: está entre el 14 % y el 18 %.", gl: "Subide o limiar pouco a pouco mirando «chamadas por semana» e parade en canto baixe de 40: está entre o 14 % e o 18 %." }
+  - { es: "Vale cualquier umbral entre el 15 % y el 17 %. Ponedlo ahí y «Entregar umbral».", gl: "Vale calquera limiar entre o 15 % e o 17 %. Poñédeo aí e «Entregar limiar»." }
 solution:
   es: "Poned el umbral en el 16 % (vale entre el 15 % y el 17 %): unas 34 llamadas por semana y un 35 % de reingresos detectados. Pulsad «Entregar umbral»."
   gl: "Poñede o limiar no 16 % (vale entre o 15 % e o 17 %): unhas 34 chamadas por semana e un 35 % de reingresos detectados. Premede «Entregar limiar»."

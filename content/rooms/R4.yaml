@@ -7,8 +7,8 @@ intro:
   es: "La primera cifra no es de fiar: hay registros raros. Toca investigar como detectives y decidir qué hacer con cada dato sucio."
   gl: "A primeira cifra non é de fiar: hai rexistros raros. Toca investigar como detectives e decidir que facer con cada dato sucio."
 briefing:
-  - { es: "Encontrar la causa de tres grupos de datos raros.", gl: "Atopar a causa de tres grupos de datos raros." }
-  - { es: "Entrevistar a Noa y a Brais (personajes con IA).", gl: "Entrevistar a Noa e a Brais (personaxes con IA)." }
+  - { es: "Entender tres problemas que han encontrado los detectores en los datos.", gl: "Entender tres problemas que atoparon os detectores nos datos." }
+  - { es: "Entrevistar a Noa y a Brais (personajes con IA) para averiguar por qué pasa cada uno.", gl: "Entrevistar a Noa e a Brais (personaxes con IA) para descubrir por que pasa cada un." }
   - { es: "Decidir qué hacer con cada dato sucio y contar cuántos se quitan.", gl: "Decidir que facer con cada dato sucio e contar cantos se quitan." }
-target_minutes: 25
-locks: [r4a_pruebas, r4b_entrevistas, r4c_veredicto, r4d_codigo]
+target_minutes: 16
+locks: [r4b_entrevistas, r4c_veredicto, r4d_codigo]

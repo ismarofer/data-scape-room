@@ -1,14 +1,4 @@
 {
- "r3a_protocolo": {
-  "report": "q1=d30;q2=merge;q3=inpatient;q4=deceased",
-  "sha256_salted": "24a9a63a05abd9f311ccea4d40494a613fe0043d059d4f0e4a48137d1a4653ee",
-  "items": [
-   "55b882fb341af9f62861a2fcd0a3203d493774c2d8f1ef03b4f5e605e416034c",
-   "c49ffa38872f0f6d5b3a85c4a4bd5fda46fd59b3e827707eba176b9f097357c3",
-   "3ab2be06f75b1e1732fdfce079dcb20f66eb875c5442bc0d317604d416103279",
-   "64811eb0467644e467b8377cb05a923ad016b317a299365c85e98883856a2866"
-  ]
- },
  "r3b_estrella": {
   "report": "types:dim_date=dim,dim_hospital=dim,dim_patient=dim,fct_admission=fact,fct_condition=fact|edges:fct_admission>dim_date,fct_admission>dim_hospital,fct_admission>dim_patient,fct_condition>dim_date,fct_condition>dim_patient",
   "sha256_salted": "36aa3a4d3d57598e3a48a6fee86f4b0f63195ceebaee5ddb1be5a8c74b680608",
@@ -23,15 +13,6 @@
    "a4b2d317fa78080c75e2d0451914cf3fc917a43c9851ae80f3c55d25277d678b",
    "ba49c66f34e262e7a8bdcb9a5bc8fe8fafb2b8822064368aae9757c8fb9674f0",
    "1459857a622dc5dae801b19eadb63e0dcb859026206db1e7b54abbd92c8ff008"
-  ]
- },
- "r4a_pruebas": {
-  "report": "frag_h3=migration;negative_stay=capture;post_mortem=late_death",
-  "sha256_salted": "f3b3d4ef916084b42d3616a995810c1da5bc05c343c0e319453ac49f5496a72a",
-  "items": [
-   "8d1f2ec949ccb468c0cbccfe8dc13ca259b9f6d23f05e215f7dcc2b257d71d98",
-   "34ecf1ae6826c796fb19a9b1ceec1833b052682f0f412106d3c09c1a652a60ac",
-   "78db2f29c61ea7178591162ccd7f49cf483a9e798e876a3ab3e44f82008171d8"
   ]
  },
  "r4c_veredicto": {
@@ -64,34 +45,6 @@
    "e3cae331643bcc0e6d6bae927b448bd8657ba6828d0f1a9c8bcbdb573b457e6b",
    "25e4ec71a40217d7741ee323bdb6391b276aeda0b6e95ac23b95b26ad13f3dc8",
    "f513f6b5b8189e95820b27ec9bdd499a389d721b37f43420ca21f9097a87f837"
-  ]
- },
- "r2b_staging": {
-  "report": "rows[stg_encounters=59484,stg_patients=9015]|failed[0]|slots[stg_encounters:class_norm=lower_trim+date_cast=both_formats+dedupe=latest;stg_patients:patient_key=hash_ssn]",
-  "choices": {
-   "fct_admission": {
-    "window": "between_2_30"
-   },
-   "int_admission_episodes": {
-    "class_filter": "inpatient",
-    "new_episode": "gap_1d"
-   },
-   "stg_encounters": {
-    "date_cast": "both_formats",
-    "class_norm": "lower_trim",
-    "dedupe": "latest"
-   },
-   "stg_patients": {
-    "patient_key": "hash_ssn"
-   }
-  },
-  "sha256_salted": "31e6f99b2cd9d5c3bd525476a87eedd2fcef80662ce11a75e6487dbe1e11dfa9",
-  "items": [
-   "d13380a364795929c2d24baecadda1e5805754775dfc74dc315ab3d30ec69836",
-   "aa80183bf7cc7404f6355afd59517f436444dd44f0f1b7bd0caa4095095023cb",
-   "46ff9700c25e53193e95a45ead7e25be24513a633dedbcd8fe4669bfb2cc3fac",
-   "a45e9b1beef8cf06de2d62a85896e9e0bb0c7f8478abbd35a293d2e7fec3a5ca",
-   "0a2b7865ae7f6b6dfc317f9511871421c7f079fe2c9b659e79b1bacd3a31af1e"
   ]
  }
 }

@@ -5,11 +5,11 @@ import type { Lang, TeamState } from "@codigo-alta/shared";
 let lastAction: { text: string; at: number } | null = null;
 export const noteAction = (text: string) => { lastAction = { text, at: Date.now() }; };
 
-type MeterKey = "trust" | "compliance" | "quality" | "score";
+type MeterKey = "trust";
 export interface Toast { id: number; kind: "up" | "down" | "win"; title: string; lines: string[] }
-export const METER_ICON: Record<MeterKey, string> = { trust: "🤝", compliance: "🛡", quality: "🧹", score: "🏆" };
+export const METER_ICON: Record<MeterKey, string> = { trust: "⭐" };
 const NAME: Record<MeterKey, { es: string; gl: string }> = {
-  trust: { es: "Confianza", gl: "Confianza" }, compliance: { es: "Cumplimiento", gl: "Cumprimento" }, quality: { es: "Calidad de datos", gl: "Calidade de datos" }, score: { es: "Puntos", gl: "Puntos" },
+  trust: { es: "Confianza de la Comisión", gl: "Confianza da Comisión" },
 };
 
 /**
@@ -23,7 +23,7 @@ export function useMeterFeedback(s: TeamState | null, lang: Lang) {
   const seq = useRef(0);
   useEffect(() => {
     if (!s) return;
-    const now = { m: { trust: s.meters.trust, compliance: s.meters.compliance, quality: s.meters.quality, score: s.score }, done: s.locks.filter((l) => l.status === "done").length, lock: s.currentLockId };
+    const now = { m: { trust: s.meters.trust }, done: s.locks.filter((l) => l.status === "done").length, lock: s.currentLockId };
     const p = prev.current;
     prev.current = now;
     if (!p) return;
@@ -38,7 +38,7 @@ export function useMeterFeedback(s: TeamState | null, lang: Lang) {
     const t: Toast = {
       id: ++seq.current,
       kind: solved ? "win" : deltas.every(([, d]) => d > 0) ? "up" : "down",
-      title: solved ? `🔓 ${gl ? "Nivel superado!" : "¡Nivel superado!"}${solvedTitle ? ` ${solvedTitle}` : ""}` : why || (gl ? "Cambiaron os vosos medidores" : "Han cambiado vuestros medidores"),
+      title: solved ? `🔓 ${gl ? "Nivel superado!" : "¡Nivel superado!"}${solvedTitle ? ` ${solvedTitle}` : ""}` : why || (gl ? "Cambiou a confianza da Comisión" : "Ha cambiado la confianza de la Comisión"),
       lines: solved && why && !why.startsWith("Entrega") ? [why, ...lines] : lines,
     };
     setToasts((x) => [...x.slice(-2), t]);

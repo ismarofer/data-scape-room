@@ -1,4 +1,4 @@
-# SPEC: "Código Alta" — Escape room de datos (sanidad, reingresos)
+# SPEC: "DataQuest" — Escape room de datos (sanidad, reingresos)
 
 > Documento para Claude Code. Léelo entero antes de escribir código. Construye por hitos (sección 16) y no te saltes los criterios de aceptación. Si algo es ambiguo o contradictorio, escribe una decisión en `docs/adr/NNN-titulo.md` y sigue; no inventes hechos sobre librerías o formatos: inspecciona la salida real (cabeceras de CSV generados, firmas del SDK, versiones) y fija versiones.
 > Idioma del producto: **español (es-ES)**. Código, identificadores y commits en inglés. Estructura i18n preparada para añadir gallego (`gl`) después.
@@ -266,7 +266,7 @@ Pantalla de pausa con cuenta atrás. Mini-reto físico opcional: "dibuja el esqu
 ### R4 Forense (25 min) — "Alguien ha tocado los datos"
 **Pedagogía:** calidad de datos, causa raíz, entrevistas, decisiones sobre datos sucios.
 
-**R4A Tablero de pruebas (`build`, todos, 8 min).** Tres "detectores" (tarjetas) listan registros sospechosos: (1) **estancias negativas** (23 encuentros con alta < ingreso), (2) **encuentros posteriores al fallecimiento** (9 pacientes), (3) **fragmentación en el centro H3 desde la migración del 2019-03-14** (altas y reingresos del mismo día duplicados). El equipo clasifica cada grupo en una causa probable (error de captura / error de migración / registro tardío de fallecimiento) y la clava en el tablero con hilo rojo.
+**R4A Tablero de pruebas (`build`, todos, 8 min). [Eliminado el 26-nov: ver specs/salas/03-calidad.md]** Tres "detectores" (tarjetas) listan registros sospechosos: (1) **estancias negativas** (23 encuentros con alta < ingreso), (2) **encuentros posteriores al fallecimiento** (9 pacientes), (3) **fragmentación en el centro H3 desde la migración del 2019-03-14** (altas y reingresos del mismo día duplicados). El equipo clasifica cada grupo en una causa probable (error de captura / error de migración / registro tardío de fallecimiento) y la clava en el tablero con hilo rojo.
 - Pistas: L1 "Hay tres patrones distintos, no uno" · L2 "Mira fechas y centros" · L3 "El tercer grupo solo ocurre en un centro y después de una fecha".
 
 **R4B Entrevistas (`interview`, todos, 9 min).** Chat con **Brais** y **Noa** (NPC con IA). Máx. 6 preguntas por NPC. Pistas a extraer (`clue_ids`):
@@ -657,7 +657,7 @@ senior_only: false
 - [ ] Encuesta de satisfacción (enlace del programa) configurada en el cierre
 
 ## Apéndice C. Decisiones abiertas (resolver con la persona responsable)
-1. ¿Nombre de la app y marca visual de la consultora? (por defecto "Código Alta", sin logos).
+1. ¿Nombre de la app y marca visual de la consultora? (decidido: "DataQuest" desde el 25-nov-2026, antes "Código Alta"; colores DXC).
 2. ¿Permiten cuentas corporativas de IA con menores supervisados? Si no, usar `scripted` o solo IA en pantalla del facilitador.
 3. ¿Se quiere incluir **gallego** en la primera versión? (estructura i18n ya prevista).
 4. ¿Qué herramienta de BI real quieren **enseñar** además del dashboard integrado (Power BI, Metabase, Evidence)? La app incluye su propio constructor; la integración externa queda fuera de alcance.

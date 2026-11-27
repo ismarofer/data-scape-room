@@ -43,7 +43,7 @@ interface TreeProps { tables: DbTable[]; started: boolean; lang: Lang; active: s
 const LAYERS: Record<string, { icon: string; order: number; es: string; gl: string; descEs: string; descGl: string }> = {
   raw: { icon: "🥉", order: 0, es: "Bronce · tal cual llegan", gl: "Bronce · tal cal chegan", descEs: "Los ficheros cargados, sin tocar", descGl: "Os ficheiros cargados, sen tocar" },
   staging: { icon: "🥈", order: 1, es: "Plata · datos limpios", gl: "Prata · datos limpos", descEs: "Fechas de verdad, sin repetidos y sin datos personales", descGl: "Datas de verdade, sen repetidos e sen datos persoais" },
-  marts: { icon: "🥇", order: 2, es: "Oro · vuestro cálculo", gl: "Ouro · o voso cálculo", descEs: "Las tablas que calculáis vosotros (episodios, reingresos)", descGl: "As táboas que calculades vós (episodios, reingresos)" },
+  marts: { icon: "🥇", order: 2, es: "Oro · vuestro cálculo", gl: "Ouro · o voso cálculo", descEs: "Vuestro esquema en estrella: hechos (fct_) y dimensiones (dim_), más los episodios", descGl: "O voso esquema en estrela: feitos (fct_) e dimensións (dim_), máis os episodios" },
   canon: { icon: "🏅", order: 3, es: "Oro · modelo final", gl: "Ouro · modelo final", descEs: "El cálculo limpio de referencia (igual para todos)", descGl: "O cálculo limpo de referencia (igual para todos)" },
 };
 
@@ -81,17 +81,14 @@ export function DbTree({ tables, started, lang, active, closed, toggle, onOpen }
                     {tables.filter((t) => t.schema === sc).map((t) => {
                       const full = `${t.schema}.${t.name}`;
                       const info = lookup(cat, `db:${full}`);
-                      // columns stay folded (they made the list hard to read); the table tab explains every column
-                      const colsOpen = closed.includes(`colsopen:${full}`);
+                      // no column list in the tree (it made it hard to read): the table tab explains every column
                       return (
                         <li key={full} role="treeitem" aria-selected={active === `db:${full}`}>
                           <div className="dbrow">
-                            <button className="node chev" aria-label={`${gl ? "Columnas de" : "Columnas de"} ${full}`} aria-expanded={colsOpen} onClick={() => toggle(`colsopen:${full}`)}>{colsOpen ? "▾" : "▸"}</button>
                             <button className={`node file ${active === `db:${full}` ? "sel" : ""}`} title={info ? `${info.label ?? t.name}: ${info.what}` : full} onClick={() => onOpen(full)}>
                               <span className="ico k-db" aria-hidden="true">▤</span><span className="nm">{t.name}{info?.label && <small className="tlabel"> · {info.label}</small>}</span><span className="cnt">{t.rows.toLocaleString(gl ? "gl" : "es")}</span>
                             </button>
                           </div>
-                          {colsOpen && <ul className="colslist">{t.cols.map((c) => { const d = info?.cols.find((x) => x.name.split(" / ").includes(c.name)); return <li key={c.name} title={d?.text}><span className="nm">{c.name}</span><span className="ty">{d ? "ℹ" : c.type.toLowerCase()}</span></li>; })}</ul>}
                         </li>
                       );
                     })}

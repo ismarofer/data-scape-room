@@ -33,8 +33,8 @@ console.log(llm ? "IA live disponible (Azure Foundry)" : "IA live no configurada
 const pin = process.env.FACILITATOR_PIN ?? "0000";
 if (pin === "0000") console.warn("[warn] FACILITATOR_PIN no definido: usando 0000 (solo desarrollo)");
 const prompts = loadPrompts(path.join(root, "content"));
-const commission = new Commission(engine, ai, loadCommission(path.join(root, "content")), prompts);
+const commission = new Commission(engine, ai, loadCommission(path.join(root, "content")), prompts, path.join(root, "data/dist/canon/fct_admission_clean.csv"));
 const app = buildApp({ engine, content, pin, commission, webDist: path.join(root, "apps/web/dist"), models, claims, ai, contentDir: path.join(root, "content") });
 const port = Number(process.env.PORT ?? 3000);
 await app.listen({ port, host: "0.0.0.0" });
-console.log(`Código Alta escuchando en http://0.0.0.0:${port}`);
+console.log(`DataQuest escuchando en http://0.0.0.0:${port}`);

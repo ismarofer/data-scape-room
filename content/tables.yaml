@@ -5,81 +5,173 @@ raw.patients:
   label: { es: "Pacientes (tal cual llegan)", gl: "Pacientes (tal cal chegan)" }
   what: { es: "La ficha de cada paciente, tal cual la mandó el hospital. Una fila = una ficha. Ojo: una misma persona puede tener dos fichas.", gl: "A ficha de cada paciente, tal cal a mandou o hospital. Unha fila = unha ficha. Ollo: unha mesma persoa pode ter dúas fichas." }
   cols:
-    - { name: patient_id, es: "código de la ficha (uno por ficha, no por persona)", gl: "código da ficha (un por ficha, non por persoa)" }
-    - { name: ssn, es: "número de identificación de la persona: sirve para saber si dos fichas son la misma persona", gl: "número de identificación da persoa: serve para saber se dúas fichas son a mesma persoa" }
-    - { name: birthdate / deathdate, es: "fecha de nacimiento y de fallecimiento (vacía si vive)", gl: "data de nacemento e de falecemento (baleira se vive)" }
-    - { name: first_name / last_name / address, es: "datos personales (ficticios): no hacen falta para medir", gl: "datos persoais (ficticios): non fan falta para medir" }
+    - { name: patient_id, es: "código de la ficha del paciente (uno por ficha, no por persona: una persona puede tener dos fichas)", gl: "código da ficha do paciente (un por ficha, non por persoa: unha persoa pode ter dúas fichas)" }
+    - { name: ssn, es: "número de identificación de la persona: dice si dos fichas son la misma persona. Dato personal", gl: "número de identificación da persoa: di se dúas fichas son a mesma persoa. Dato persoal" }
+    - { name: drivers, es: "número del carné de conducir. Dato personal", gl: "número do carné de conducir. Dato persoal" }
+    - { name: passport, es: "número de pasaporte. Dato personal", gl: "número de pasaporte. Dato persoal" }
+    - { name: prefix, es: "tratamiento: Sr., Sra.…", gl: "tratamento: Sr., Sra.…" }
+    - { name: first_name, es: "nombre (ficticio). Dato personal", gl: "nome (ficticio). Dato persoal" }
+    - { name: last_name, es: "apellidos (ficticios). Dato personal", gl: "apelidos (ficticios). Dato persoal" }
+    - { name: marital, es: "estado civil (M = casado/a, S = soltero/a…)", gl: "estado civil (M = casado/a, S = solteiro/a…)" }
+    - { name: birthdate, es: "fecha de nacimiento exacta", gl: "data de nacemento exacta" }
+    - { name: deathdate, es: "fecha de fallecimiento (vacía si la persona vive)", gl: "data de falecemento (baleira se a persoa vive)" }
+    - { name: birthplace, es: "lugar de nacimiento", gl: "lugar de nacemento" }
+    - { name: address, es: "calle y número donde vive. Dato personal", gl: "rúa e número onde vive. Dato persoal" }
+    - { name: city, es: "ciudad donde vive", gl: "cidade onde vive" }
+    - { name: state, es: "comunidad autónoma", gl: "comunidade autónoma" }
+    - { name: county, es: "provincia", gl: "provincia" }
+    - { name: postal_code, es: "código postal de su casa", gl: "código postal da súa casa" }
+    - { name: gender, es: "sexo (F = mujer, M = hombre)", gl: "sexo (F = muller, M = home)" }
+    - { name: lat, es: "latitud GPS de su casa", gl: "latitude GPS da súa casa" }
+    - { name: lon, es: "longitud GPS de su casa", gl: "lonxitude GPS da súa casa" }
 raw.organizations:
   label: { es: "Centros", gl: "Centros" }
   what: { es: "Los hospitales y clínicas de la red. Una fila = un centro.", gl: "Os hospitais e clínicas da rede. Unha fila = un centro." }
   cols:
     - { name: organization_id, es: "código del centro (ORG01, ORG02…)", gl: "código do centro (ORG01, ORG02…)" }
     - { name: name, es: "nombre del centro", gl: "nome do centro" }
-    - { name: feed, es: "qué envío de datos es el suyo (H1, H2…)", gl: "que envío de datos é o seu (H1, H2…)" }
+    - { name: feed, es: "qué envío de datos es el suyo (H1, H2, H3, H4)", gl: "que envío de datos é o seu (H1, H2, H3, H4)" }
+    - { name: city, es: "ciudad donde está el centro", gl: "cidade onde está o centro" }
 raw.conditions:
   label: { es: "Diagnósticos", gl: "Diagnósticos" }
   what: { es: "Cada diagnóstico que se le hizo a un paciente en una visita. Una fila = un diagnóstico.", gl: "Cada diagnóstico que se lle fixo a un paciente nunha visita. Unha fila = un diagnóstico." }
   cols:
-    - { name: patient_id, es: "a qué ficha de paciente pertenece", gl: "a que ficha de paciente pertence" }
-    - { name: encounter_id, es: "en qué visita se diagnosticó", gl: "en que visita se diagnosticou" }
-    - { name: description, es: "el diagnóstico en palabras", gl: "o diagnóstico en palabras" }
+    - { name: patient_id, es: "código de la ficha del paciente (uno por ficha, no por persona: una persona puede tener dos fichas)", gl: "código da ficha do paciente (un por ficha, non por persoa: unha persoa pode ter dúas fichas)" }
+    - { name: encounter_id, es: "en qué visita se diagnosticó (enlaza con los encuentros)", gl: "en que visita se diagnosticou (enlaza cos encontros)" }
+    - { name: start, es: "desde cuándo tiene ese problema de salud", gl: "desde cando ten ese problema de saúde" }
+    - { name: stop, es: "hasta cuándo (vacía si sigue)", gl: "ata cando (baleira se continúa)" }
+    - { name: code, es: "código médico del diagnóstico (SNOMED)", gl: "código médico do diagnóstico (SNOMED)" }
+    - { name: description, es: "el diagnóstico en palabras (por ejemplo, «Faringitis»)", gl: "o diagnóstico en palabras (por exemplo, «Faringite»)" }
 raw.encounters:
   label: { es: "Visitas de los 4 hospitales juntas", gl: "Visitas dos 4 hospitais xuntas" }
   what: { es: "Todas las visitas (encuentros) de los 5 ficheros juntas, incluido el reenvío de H2. Por eso hay visitas repetidas. Una fila = una visita.", gl: "Todas as visitas (encontros) dos 5 ficheiros xuntas, incluído o reenvío de H2. Por iso hai visitas repetidas. Unha fila = unha visita." }
   cols:
-    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita dos veces)", gl: "código da visita (se se repite, é a mesma visita dúas veces)" }
-    - { name: patient_id, es: "de qué ficha de paciente es", gl: "de que ficha de paciente é" }
-    - { name: organization_id, es: "en qué centro fue", gl: "en que centro foi" }
-    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó (stop_ts vacía = sin fecha de alta)", gl: "cando comezou e cando rematou (stop_ts baleira = sen data de alta)" }
-    - { name: encounter_class, es: "tipo de visita: inpatient = ingreso; emergency = urgencias; ambulatory = consulta…", gl: "tipo de visita: inpatient = ingreso; emergency = urxencias; ambulatory = consulta…" }
-    - { name: loaded_at, es: "cuándo se cargó la fila (la más nueva es la buena)", gl: "cando se cargou a fila (a máis nova é a boa)" }
-    - { name: source_file, es: "de qué fichero viene", gl: "de que ficheiro vén" }
+    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita más de una vez)", gl: "código da visita (se se repite, é a mesma visita máis dunha vez)" }
+    - { name: patient_id, es: "de qué ficha de paciente es (enlaza con los pacientes)", gl: "de que ficha de paciente é (enlaza cos pacientes)" }
+    - { name: organization_id, es: "en qué centro fue (enlaza con los centros)", gl: "en que centro foi (enlaza cos centros)" }
+    - { name: start_ts, es: "cuándo empezó la visita (fecha y hora)", gl: "cando comezou a visita (data e hora)" }
+    - { name: stop_ts, es: "cuándo terminó: la fecha de alta (vacía = sin alta registrada)", gl: "cando rematou: a data de alta (baleira = sen alta rexistrada)" }
+    - { name: encounter_class, es: "tipo de visita: inpatient = ingreso; emergency = urgencias; ambulatory / outpatient / wellness = consultas", gl: "tipo de visita: inpatient = ingreso; emergency = urxencias; ambulatory / outpatient / wellness = consultas" }
+    - { name: description, es: "motivo de la visita en palabras", gl: "motivo da visita en palabras" }
+    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital (si una visita sale dos veces, la más nueva es la buena)", gl: "cando se cargou esta fila no sistema do hospital (se unha visita sae dúas veces, a máis nova é a boa)" }
+    - { name: source_file, es: "de qué fichero viene la fila (encounters_h1, encounters_h2_reenvio…)", gl: "de que ficheiro vén a fila (encounters_h1, encounters_h2_reenvio…)" }
 raw.encounters_h*:
   label: { es: "Visitas de un hospital", gl: "Visitas dun hospital" }
   what: { es: "Las visitas de un solo envío (un fichero), tal cual llegaron. Una fila = una visita.", gl: "As visitas dun só envío (un ficheiro), tal cal chegaron. Unha fila = unha visita." }
   cols:
-    - { name: encounter_id, es: "código de la visita", gl: "código da visita" }
-    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó", gl: "cando comezou e cando rematou" }
-    - { name: encounter_class, es: "tipo de visita (inpatient = ingreso)", gl: "tipo de visita (inpatient = ingreso)" }
+    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita más de una vez)", gl: "código da visita (se se repite, é a mesma visita máis dunha vez)" }
+    - { name: patient_id, es: "de qué ficha de paciente es (enlaza con los pacientes)", gl: "de que ficha de paciente é (enlaza cos pacientes)" }
+    - { name: organization_id, es: "en qué centro fue (enlaza con los centros)", gl: "en que centro foi (enlaza cos centros)" }
+    - { name: start_ts, es: "cuándo empezó la visita (fecha y hora)", gl: "cando comezou a visita (data e hora)" }
+    - { name: stop_ts, es: "cuándo terminó: la fecha de alta (vacía = sin alta registrada)", gl: "cando rematou: a data de alta (baleira = sen alta rexistrada)" }
+    - { name: encounter_class, es: "tipo de visita: inpatient = ingreso; emergency = urgencias; ambulatory / outpatient / wellness = consultas", gl: "tipo de visita: inpatient = ingreso; emergency = urxencias; ambulatory / outpatient / wellness = consultas" }
+    - { name: description, es: "motivo de la visita en palabras", gl: "motivo da visita en palabras" }
+    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital (si una visita sale dos veces, la más nueva es la buena)", gl: "cando se cargou esta fila no sistema do hospital (se unha visita sae dúas veces, a máis nova é a boa)" }
 staging.stg_encounters:
   label: { es: "Visitas limpias", gl: "Visitas limpas" }
   what: { es: "Las visitas ya limpias: fechas de verdad, tipos de visita unificados y una sola fila por visita (la más reciente).", gl: "As visitas xa limpas: datas de verdade, tipos de visita unificados e unha soa fila por visita (a máis recente)." }
   cols:
-    - { name: encounter_id, es: "código de la visita (ya no se repite)", gl: "código da visita (xa non se repite)" }
-    - { name: start_ts / stop_ts, es: "inicio y fin, ya como fechas", gl: "inicio e fin, xa como datas" }
-    - { name: encounter_class, es: "tipo de visita en minúsculas", gl: "tipo de visita en minúsculas" }
+    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita más de una vez)", gl: "código da visita (se se repite, é a mesma visita máis dunha vez)" }
+    - { name: patient_id, es: "de qué ficha de paciente es (enlaza con los pacientes)", gl: "de que ficha de paciente é (enlaza cos pacientes)" }
+    - { name: organization_id, es: "en qué centro fue (enlaza con los centros)", gl: "en que centro foi (enlaza cos centros)" }
+    - { name: start_ts, es: "inicio de la visita, ya como fecha de verdad (los dos formatos convertidos)", gl: "inicio da visita, xa como data de verdade (os dous formatos convertidos)" }
+    - { name: stop_ts, es: "fin de la visita (alta), ya como fecha", gl: "fin da visita (alta), xa como data" }
+    - { name: encounter_class, es: "tipo de visita unificado en minúsculas (inpatient, emergency…)", gl: "tipo de visita unificado en minúsculas (inpatient, emergency…)" }
+    - { name: description, es: "motivo de la visita en palabras", gl: "motivo da visita en palabras" }
+    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital (si una visita sale dos veces, la más nueva es la buena)", gl: "cando se cargou esta fila no sistema do hospital (se unha visita sae dúas veces, a máis nova é a boa)" }
+    - { name: source_file, es: "de qué fichero viene la fila (encounters_h1, encounters_h2_reenvio…)", gl: "de que ficheiro vén a fila (encounters_h1, encounters_h2_reenvio…)" }
 staging.stg_patients:
   label: { es: "Pacientes limpios y protegidos", gl: "Pacientes limpos e protexidos" }
   what: { es: "Los pacientes sin datos personales: cada persona tiene un código seudónimo (patient_key) en lugar de su ssn.", gl: "Os pacientes sen datos persoais: cada persoa ten un código pseudónimo (patient_key) no canto do seu ssn." }
   cols:
-    - { name: patient_key, es: "código seudónimo de la persona (igual en todas sus fichas)", gl: "código pseudónimo da persoa (igual en todas as súas fichas)" }
-    - { name: birth_date / death_date, es: "fecha de nacimiento y de fallecimiento", gl: "data de nacemento e de falecemento" }
-    - { name: postal_prefix, es: "solo los 2 primeros números del código postal (zona)", gl: "só os 2 primeiros números do código postal (zona)" }
+    - { name: patient_id, es: "código de la ficha del paciente (uno por ficha, no por persona: una persona puede tener dos fichas)", gl: "código da ficha do paciente (un por ficha, non por persoa: unha persoa pode ter dúas fichas)" }
+    - { name: patient_key, es: "código seudónimo de la persona: el mismo en todas sus fichas y no deja ver el ssn", gl: "código pseudónimo da persoa: o mesmo en todas as súas fichas e non deixa ver o ssn" }
+    - { name: birth_date, es: "fecha de nacimiento", gl: "data de nacemento" }
+    - { name: death_date, es: "fecha de fallecimiento (vacía si vive)", gl: "data de falecemento (baleira se vive)" }
+    - { name: gender, es: "sexo (F = mujer, M = hombre)", gl: "sexo (F = muller, M = home)" }
+    - { name: postal_prefix, es: "solo los 2 primeros números del código postal (la zona, no la casa)", gl: "só os 2 primeiros números do código postal (a zona, non a casa)" }
 marts.int_admission_episodes:
   label: { es: "Episodios de ingreso", gl: "Episodios de ingreso" }
   what: { es: "Cada estancia en el hospital de una persona. Si dos ingresos están muy seguidos, cuentan como un solo episodio. Una fila = un episodio.", gl: "Cada estadía no hospital dunha persoa. Se dous ingresos están moi seguidos, contan como un só episodio. Unha fila = un episodio." }
   cols:
-    - { name: episode_id, es: "código del episodio", gl: "código do episodio" }
-    - { name: patient_key, es: "quién (código seudónimo)", gl: "quen (código pseudónimo)" }
-    - { name: episode_no, es: "número de episodio de esa persona (1.º, 2.º…)", gl: "número de episodio desa persoa (1.º, 2.º…)" }
-    - { name: admit_ts / discharge_ts, es: "fecha de ingreso y de alta", gl: "data de ingreso e de alta" }
+    - { name: episode_id, es: "código del episodio (persona + número de episodio)", gl: "código do episodio (persoa + número de episodio)" }
+    - { name: patient_key, es: "código seudónimo de la persona: el mismo en todas sus fichas y no deja ver el ssn", gl: "código pseudónimo da persoa: o mesmo en todas as súas fichas e non deixa ver o ssn" }
+    - { name: episode_no, es: "número de episodio de esa persona: 1.º, 2.º…", gl: "número de episodio desa persoa: 1.º, 2.º…" }
+    - { name: admit_ts, es: "cuándo empezó el episodio (ingreso)", gl: "cando comezou o episodio (ingreso)" }
+    - { name: discharge_ts, es: "cuándo terminó el episodio (alta)", gl: "cando rematou o episodio (alta)" }
+    - { name: organization_id, es: "centro donde empezó el episodio", gl: "centro onde comezou o episodio" }
 marts.fct_admission:
   label: { es: "Ingresos con reingreso marcado", gl: "Ingresos con reingreso marcado" }
   what: { es: "Los episodios con una marca que dice si cada uno es un reingreso a 30 días. Es la tabla de la que sale la cifra.", gl: "Os episodios cunha marca que di se cada un é un reingreso a 30 días. É a táboa da que sae a cifra." }
   cols:
-    - { name: days_since_prev_discharge, es: "días desde el alta anterior de esa persona", gl: "días desde a alta anterior desa persoa" }
-    - { name: is_readmission_30d, es: "true = es un reingreso a 30 días", gl: "true = é un reingreso a 30 días" }
+    - { name: episode_id, es: "código del episodio (persona + número de episodio)", gl: "código do episodio (persoa + número de episodio)" }
+    - { name: patient_key, es: "código seudónimo de la persona: el mismo en todas sus fichas y no deja ver el ssn", gl: "código pseudónimo da persoa: o mesmo en todas as súas fichas e non deixa ver o ssn" }
+    - { name: organization_id, es: "centro donde empezó el episodio", gl: "centro onde comezou o episodio" }
+    - { name: admit_ts, es: "cuándo empezó el episodio (ingreso)", gl: "cando comezou o episodio (ingreso)" }
+    - { name: discharge_ts, es: "cuándo terminó el episodio (alta)", gl: "cando rematou o episodio (alta)" }
+    - { name: admit_date, es: "día del ingreso: la clave que une con la dimensión fecha (dim_date)", gl: "día do ingreso: a clave que une coa dimensión data (dim_date)" }
+    - { name: length_of_stay_days, es: "días que duró el episodio", gl: "días que durou o episodio" }
+    - { name: prev_discharge_ts, es: "alta del episodio anterior de esa persona (vacía si es el primero)", gl: "alta do episodio anterior desa persoa (baleira se é o primeiro)" }
+    - { name: days_since_prev_discharge, es: "días desde el alta anterior de esa persona hasta este ingreso", gl: "días desde a alta anterior desa persoa ata este ingreso" }
+    - { name: is_readmission_30d, es: "true = este episodio es un reingreso según la ventana elegida; false = no", gl: "true = este episodio é un reingreso segundo a ventá elixida; false = non" }
+marts.dim_patient:
+  label: { es: "Dimensión paciente", gl: "Dimensión paciente" }
+  what: { es: "Una fila por PERSONA (las fichas repetidas de la misma persona se juntan): describe QUIÉN. Se une a los hechos por patient_key.", gl: "Unha fila por PERSOA (as fichas repetidas da mesma persoa xúntanse): describe QUEN. Únese aos feitos por patient_key." }
+  cols:
+    - { name: patient_key, es: "código seudónimo de la persona (la clave)", gl: "código pseudónimo da persoa (a clave)" }
+    - { name: birth_year, es: "año de nacimiento (solo el año)", gl: "ano de nacemento (só o ano)" }
+    - { name: age_band, es: "tramo de edad en 2023 (0-17, 18-44, 45-64, 65-79, 80+)", gl: "tramo de idade en 2023 (0-17, 18-44, 45-64, 65-79, 80+)" }
+    - { name: gender, es: "sexo (F = mujer, M = hombre)", gl: "sexo (F = muller, M = home)" }
+    - { name: area_sanitaria, es: "área sanitaria donde vive (sale de las 2 primeras cifras del código postal)", gl: "área sanitaria onde vive (sae das 2 primeiras cifras do código postal)" }
+    - { name: death_date, es: "fecha de fallecimiento (vacía si vive)", gl: "data de falecemento (baleira se vive)" }
+marts.dim_hospital:
+  label: { es: "Dimensión hospital", gl: "Dimensión hospital" }
+  what: { es: "Una fila por centro: describe DÓNDE. Se une a los hechos por organization_id.", gl: "Unha fila por centro: describe ONDE. Únese aos feitos por organization_id." }
+  cols:
+    - { name: organization_id, es: "código del centro (la clave)", gl: "código do centro (a clave)" }
+    - { name: name, es: "nombre del centro", gl: "nome do centro" }
+    - { name: source_system, es: "de qué sistema llegan sus datos (H1-H4)", gl: "de que sistema chegan os seus datos (H1-H4)" }
+marts.dim_date:
+  label: { es: "Dimensión fecha", gl: "Dimensión data" }
+  what: { es: "Una fila por día del calendario: describe CUÁNDO. Se une a los hechos por la fecha (admit_date, diagnosis_date).", gl: "Unha fila por día do calendario: describe CANDO. Únese aos feitos pola data (admit_date, diagnosis_date)." }
+  cols:
+    - { name: date, es: "el día (la clave)", gl: "o día (a clave)" }
+    - { name: year, es: "año", gl: "ano" }
+    - { name: month, es: "mes (1-12)", gl: "mes (1-12)" }
+    - { name: year_month, es: "año y mes (AAAA-MM)", gl: "ano e mes (AAAA-MM)" }
+    - { name: weekday, es: "día de la semana (1 = lunes … 7 = domingo)", gl: "día da semana (1 = luns … 7 = domingo)" }
+    - { name: is_weekend, es: "true si es sábado o domingo", gl: "true se é sábado ou domingo" }
+marts.fct_condition:
+  label: { es: "Hechos: diagnósticos", gl: "Feitos: diagnósticos" }
+  what: { es: "Una fila cada vez que se diagnostica algo a una persona. Se une a dim_patient (quién) y a dim_date (cuándo); no tiene centro.", gl: "Unha fila cada vez que se diagnostica algo a unha persoa. Únese a dim_patient (quen) e a dim_date (cando); non ten centro." }
+  cols:
+    - { name: patient_key, es: "a quién (clave de dim_patient)", gl: "a quen (clave de dim_patient)" }
+    - { name: encounter_id, es: "en qué visita se diagnosticó", gl: "en que visita se diagnosticou" }
+    - { name: diagnosis_date, es: "cuándo (clave de dim_date)", gl: "cando (clave de dim_date)" }
+    - { name: condition_code, es: "código del diagnóstico (SNOMED)", gl: "código do diagnóstico (SNOMED)" }
+    - { name: description, es: "el diagnóstico en palabras", gl: "o diagnóstico en palabras" }
 canon.fct_admission_clean:
   label: { es: "Ingresos limpios (modelo final)", gl: "Ingresos limpos (modelo final)" }
   what: { es: "El cálculo final, ya sin los datos raros. Es igual para todos los equipos y es el que ve la Comisión.", gl: "O cálculo final, xa sen os datos raros. É igual para todos os equipos e é o que ve a Comisión." }
   cols:
+    - { name: episode_id, es: "código del episodio (persona + número de episodio)", gl: "código do episodio (persoa + número de episodio)" }
+    - { name: patient_key, es: "código seudónimo de la persona: el mismo en todas sus fichas y no deja ver el ssn", gl: "código pseudónimo da persoa: o mesmo en todas as súas fichas e non deixa ver o ssn" }
+    - { name: organization_id, es: "centro donde empezó el episodio", gl: "centro onde comezou o episodio" }
     - { name: organization_name, es: "nombre del centro", gl: "nome do centro" }
-    - { name: is_readmission_30d, es: "true = reingreso a 30 días", gl: "true = reingreso a 30 días" }
-    - { name: age_band, es: "tramo de edad", gl: "tramo de idade" }
-    - { name: admit_month, es: "mes del ingreso", gl: "mes do ingreso" }
+    - { name: admit_ts, es: "cuándo empezó el episodio (ingreso)", gl: "cando comezou o episodio (ingreso)" }
+    - { name: discharge_ts, es: "cuándo terminó el episodio (alta)", gl: "cando rematou o episodio (alta)" }
+    - { name: days_since_prev_discharge, es: "días desde el alta anterior de esa persona hasta este ingreso", gl: "días desde a alta anterior desa persoa ata este ingreso" }
+    - { name: is_readmission_30d, es: "true = este episodio es un reingreso según la ventana elegida; false = no", gl: "true = este episodio é un reingreso segundo a ventá elixida; false = non" }
+    - { name: admit_year, es: "año del ingreso", gl: "ano do ingreso" }
+    - { name: admit_month, es: "mes del ingreso (AAAA-MM)", gl: "mes do ingreso (AAAA-MM)" }
+    - { name: age_band, es: "tramo de edad al ingresar (0-17, 18-44, 45-64, 65-79, 80+)", gl: "tramo de idade ao ingresar (0-17, 18-44, 45-64, 65-79, 80+)" }
+    - { name: area_sanitaria, es: "área sanitaria donde vive la persona", gl: "área sanitaria onde vive a persoa" }
 canon.anomalies:
   label: { es: "Registros sospechosos", gl: "Rexistros sospeitosos" }
   what: { es: "Los registros raros que encontraron los detectores. Una fila = un registro sospechoso.", gl: "Os rexistros raros que atoparon os detectores. Unha fila = un rexistro sospeitoso." }
   cols:
-    - { name: kind, es: "qué tipo de rareza: negative_stay (alta antes del ingreso), post_mortem (después de fallecer), frag_h3 (fragmentación en H3)", gl: "que tipo de rareza: negative_stay (alta antes do ingreso), post_mortem (despois de falecer), frag_h3 (fragmentación en H3)" }
+    - { name: kind, es: "tipo de rareza: negative_stay (alta antes del ingreso), post_mortem (visita después de fallecer), frag_h3 (altas y reingresos del mismo día en H3)", gl: "tipo de rareza: negative_stay (alta antes do ingreso), post_mortem (visita despois de falecer), frag_h3 (altas e reingresos do mesmo día en H3)" }
+    - { name: encounter_id, es: "la visita sospechosa", gl: "a visita sospeitosa" }
+    - { name: patient_key, es: "de quién es (código seudónimo)", gl: "de quen é (código pseudónimo)" }
+    - { name: organization_id, es: "en qué centro", gl: "en que centro" }
     - { name: ts, es: "cuándo ocurrió", gl: "cando ocorreu" }

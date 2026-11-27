@@ -1,16 +1,16 @@
 id: noa
 name: Noa
 role: { es: "Informática", gl: "Informática" }
-persona: { es: "Seca, técnica y directa. Sabe lo de la migración, pero no suelta datos si la pregunta es vaga.", gl: "Seca, técnica e directa. Sabe o da migración, pero non solta datos se a pregunta é vaga." }
+persona: { es: "Técnica, directa y amable. Sabe lo de la migración; si la pregunta es vaga, pide con simpatía un centro o una fecha.", gl: "Técnica, directa e amable. Sabe o da migración; se a pregunta é vaga, pide con simpatía un centro ou unha data." }
 max_questions: 6
-greeting: { es: "Dime. Tengo poco tiempo y mucho ticket abierto.", gl: "Dime. Teño pouco tempo e moito ticket aberto." }
+greeting: { es: "¡Hola! Voy liada con tickets, pero para vosotros saco un rato. ¿Qué habéis visto raro y en qué centro?", gl: "Ola! Vou liada con tickets, pero para vós saco un anaco. Que vistes raro e en que centro?" }
 facts:
   - id: C1
     text: { es: "El 14 de marzo de 2019, en la migración del sistema del centro H3, se duplicaron las marcas de alta: aparecen altas y reingresos del mismo día repetidos.", gl: "O 14 de marzo de 2019, na migración do sistema do centro H3, duplicáronse as marcas de alta: aparecen altas e reingresos do mesmo día repetidos." }
-    # reveal when the player is concrete: names the centre AND the date/migration
-    reveal_all: [["h3", "miño", "mino", "centro 3", "tercer centro", "terceiro centro"], ["migraci", "marzo", "2019", "14/03", "14 de marzo", "cambio de sistema", "sistema novo", "sistema nuevo"]]
+    # reveal when the player is concrete: names the centre, the date or the migration (the cards above the chat show them)
+    reveal_all: [["h3", "org05", "miño", "mino", "centro 3", "tercer centro", "terceiro centro", "migraci", "marzo", "2019", "14/03", "cambio de sistema", "sistema novo", "sistema nuevo", "fragment", "mismo día", "mismo dia", "mesmo día", "mesmo dia", "duplic"]]
 fallback:
-  - { es: "Sé más concreta: ¿de qué centro hablas y de qué momento?", gl: "Sé máis concreta: de que centro falas e de que momento?" }
-  - { es: "Con eso no puedo ayudarte. Dame centro y fecha y miro el registro.", gl: "Con iso non podo axudarte. Dame centro e data e miro o rexistro." }
-  - { es: "Los sistemas hacen cosas raras a veces. Concreta qué has visto en los datos.", gl: "Os sistemas fan cousas raras ás veces. Concreta que viches nos datos." }
-off_topic: { es: "Eso no va conmigo. Hablemos de los datos del hospital.", gl: "Iso non vai comigo. Falemos dos datos do hospital." }
+  - { es: "Te ayudo encantada, pero necesito algo concreto: ¿de qué centro habláis? Las tarjetas de arriba lo dicen.", gl: "Axúdovos encantada, pero preciso algo concreto: de que centro falades? As tarxetas de arriba dino." }
+  - { es: "Buena forma de empezar. Decidme un centro o una fecha que os parezca rara y miro el registro.", gl: "Boa forma de comezar. Dicídeme un centro ou unha data que vos pareza rara e miro o rexistro." }
+  - { es: "Los sistemas hacen cosas raras a veces. ¿Habéis visto algo que pase en un solo centro y desde un día concreto?", gl: "Os sistemas fan cousas raras ás veces. Vistes algo que pase nun só centro e desde un día concreto?" }
+off_topic: { es: "¡Ja! De eso no sé. Yo sé de los sistemas del hospital: preguntadme por un centro o una fecha.", gl: "Ha! Diso non sei. Eu sei dos sistemas do hospital: preguntádeme por un centro ou unha data." }

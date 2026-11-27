@@ -3,7 +3,9 @@ const EMAIL = /[\w.+-]+@[\w-]+\.[\w.-]+/g;
 const URL_RE = /\bhttps?:\/\/\S+|\bwww\.\S+/gi;
 const PHONE = /(?<!\d)(?:\+34[\s.-]?)?[6-9]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}(?!\d)/g;
 const DNI = /\b\d{8}[A-Za-z]\b|\b[XYZxyz]\d{7}[A-Za-z]\b/g;
-const INJECTION = /(ignora|ignore|olvida|forget|salta(te)? las? reglas|system\s*prompt|prompt del sistema|tus (reglas|instrucciones)|your (rules|instructions)|escribe tu prompt|reveal|jailbreak|act[uú]a como|pretend)/i;
+// Only clear attempts to override the tutor. Ordinary words («se me olvida», «ignoramos esa columna», «actúa como filtro») must not trip it:
+// a false positive answers a normal question with a refusal, which feels hostile to a 16-year-old.
+const INJECTION = /((ignora|olvida|olvídate de|salta(te)?|sáltate|ignore|forget|disregard)\s+([a-záéíóúñ]+\s+){0,3}(reglas|normas|instrucciones|restricciones|rules|instructions|prompt)|system\s*prompt|prompt del sistema|escribe tu prompt|jailbreak|modo (dios|desarrollador)|developer mode)/i;
 /** Asking for the answer is not an attack: Lumi answers it (and only gives it once the team has unlocked the solution). */
 const ASK_ANSWER = /(d[ií]me|dame|da?nos|dinos|d[ií]noslo|d[ií]melo|cu[aá]l es|c[aá]l [eé]|pasa?me) ?(el|la|o|a)? ?(c[oó]digo|respuesta|resposta|soluci[oó]n|solucion)|d[ií]melo|d[ií]noslo|d[ií]mo|dimo/i;
 export const asksForAnswer = (text: string) => ASK_ANSWER.test(text);

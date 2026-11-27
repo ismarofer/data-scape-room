@@ -14,9 +14,9 @@ validator: { type: ml_equity, min_chars: 40 }
 points: 110
 time_target_min: 6
 hints:
-  - { es: "¿Hay algún grupo con la barra mucho más baja que los demás?", gl: "Hai algún grupo coa barra moito máis baixa ca os demais?" }
-  - { es: "Si el modelo falla más con un grupo, no debería decidir él solo.", gl: "Se o modelo falla máis cun grupo, non debería decidir el só." }
-  - { es: "Elegid «Desplegar con revisión humana» y nombrad en la frase el grupo con menos aciertos (por ejemplo, las mujeres) y que una persona revisará.", gl: "Elixide «Despregar con revisión humana» e nomeade na frase o grupo con menos acertos (por exemplo, as mulleres) e que unha persoa revisará." }
+  - { es: "Mirad las barras de reingresos detectados por grupo: las rojas son grupos donde el modelo detecta bastante menos que la media. Ahí le falla más.", gl: "Mirade as barras de reingresos detectados por grupo: as vermellas son grupos onde o modelo detecta bastante menos ca a media. Aí fállalle máis." }
+  - { es: "Si falla más con un grupo, no debe decidir solo, pero tampoco hay que tirarlo: elegid «Desplegar con revisión humana».", gl: "Se falla máis cun grupo, non debe decidir só, pero tampouco hai que tiralo: elixide «Despregar con revisión humana»." }
+  - { es: "En la frase nombrad el grupo con menos aciertos (por ejemplo, las mujeres) y decid que una persona revisará los avisos antes de llamar.", gl: "Na frase nomeade o grupo con menos acertos (por exemplo, as mulleres) e dicide que unha persoa revisará os avisos antes de chamar." }
 solution:
   es: "Elegid «Desplegar con revisión humana» y escribid, por ejemplo: «El modelo detecta menos reingresos en mujeres que en hombres, así que una persona revisará los avisos antes de llamar»."
   gl: "Elixide «Despregar con revisión humana» e escribide, por exemplo: «O modelo detecta menos reingresos en mulleres ca en homes, así que unha persoa revisará os avisos antes de chamar»."

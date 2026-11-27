@@ -53,9 +53,9 @@ export const MSG: Record<string, Record<Lang, string>> = {
   ml_eq_deploy: { es: "Mirad otra vez el gráfico: ¿el modelo caza los reingresos por igual en todos los grupos? Si no, ¿debería decidir solo?", gl: "Mirade outra vez o gráfico: o modelo caza os reingresos por igual en todos os grupos? Se non, debería decidir só?" },
   ml_eq_nodeploy: { es: "Es una decisión prudente, pero el modelo sí aporta valor. ¿Hay una forma de usarlo reduciendo el riesgo de perjudicar a algún grupo?", gl: "É unha decisión prudente, pero o modelo si achega valor. Hai unha forma de usalo reducindo o risco de prexudicar a algún grupo?" },
   ml_eq_text: { es: "La decisión es razonable, pero la justificación no cita lo que habéis visto: nombrad los grupos y la diferencia entre ellos, y qué haría esa persona que revisa.", gl: "A decisión é razoable, pero a xustificación non cita o que vistes: nomeade os grupos e a diferenza entre eles, e que faría esa persoa que revisa." },
-  claims_fp: { es: "Alguna afirmación que habéis marcado como falsa sí es cierta. Cada marca falsa resta puntos: comprobadlo con el Laboratorio de preguntas.", gl: "Algunha afirmación que marcastes como falsa si é certa. Cada marca falsa resta puntos: comprobádeo co Laboratorio de preguntas." },
+  claims_fp: { es: "Alguna afirmación que habéis marcado como falsa sí es cierta. Cada marca falsa baja la confianza: comprobadlo con el Laboratorio de preguntas.", gl: "Algunha afirmación que marcastes como falsa si é certa. Cada marca falsa baixa a confianza: comprobádeo co Laboratorio de preguntas." },
   claims_fn: { es: "Se os escapa alguna afirmación falsa. Contrastad las seis con el Laboratorio de preguntas.", gl: "Escápavos algunha afirmación falsa. Contrastade as seis co Laboratorio de preguntas." },
-  dash_structure: { es: "Elegid entre 3 y 4 gráficos y poned un título a cada uno.", gl: "Elixide entre 3 e 4 gráficos e poñede un título a cada un." },
-  dash_findings: { es: "El crítico aún ve problemas importantes: retocad los gráficos señalados.", gl: "O crítico aínda ve problemas importantes: retocade os gráficos sinalados." },
-  wrong_code: { es: "Ese código no abre este candado. Revisa tus datos.", gl: "Ese código non abre este cadeado. Revisa os teus datos." },
+  dash_structure: { es: "Elegid entre 3 y 4 gráficos.", gl: "Elixide entre 3 e 4 gráficos." },
+  dash_findings: { es: "Aún hay algo en rojo (un gráfico que engaña): arregladlo para entregar. Lo amarillo se puede dejar.", gl: "Aínda hai algo en vermello (un gráfico que engana): arranxádeo para entregar. O amarelo pódese deixar." },
+  wrong_code: { es: "Esa respuesta no es correcta. Revisad vuestros datos y probad otra vez.", gl: "Esa resposta non é correcta. Revisade os vosos datos e probade outra vez." },
 };

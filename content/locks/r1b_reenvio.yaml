@@ -4,8 +4,8 @@ type: code
 title: { es: "El reenvío", gl: "O reenvío" }
 docs_needed: [doc_de_specs, doc_ds_analysis]
 story:
-  es: "El hospital H2 ha mandado su fichero dos veces y, al juntarlo todo, hay visitas repetidas. Decidid qué hacer con ellas y averiguad cuántas visitas DISTINTAS hay: ese número es el código."
-  gl: "O hospital H2 mandou o seu ficheiro dúas veces e, ao xuntalo todo, hai visitas repetidas. Decidide que facer con elas e descubride cantas visitas DISTINTAS hai: ese número é o código."
+  es: "El hospital H2 ha mandado su fichero dos veces y, al juntarlo todo, hay visitas repetidas. Decidid qué hacer con ellas y averiguad cuántas visitas DISTINTAS hay: ese número es la respuesta."
+  gl: "O hospital H2 mandou o seu ficheiro dúas veces e, ao xuntalo todo, hai visitas repetidas. Decidide que facer con elas e descubride cantas visitas DISTINTAS hai: ese número é a resposta."
 tools: [query_lab]
 decision:
   id: d_r1b_dedupe
@@ -36,11 +36,11 @@ answer_hint:
   gl: "Un número: cantas visitas (encontros) distintas hai. Só cifras, sen puntos."
 answer: { source: "answers.public.json#r1b_unique_encounters", normalize: digits_only }
 points: 120
-time_target_min: 10
+time_target_min: 6
 hints:
-  - { es: "Cada visita tiene un código único: la columna encounter_id. Si una visita sale dos veces, su código se repite.", gl: "Cada visita ten un código único: a columna encounter_id. Se unha visita sae dúas veces, o seu código repítese." }
-  - { es: "En el Laboratorio elegid la tabla encounters y la pregunta «Contar cuántos valores DISTINTOS hay en una columna».", gl: "No Laboratorio elixide a táboa encounters e a pregunta «Contar cantos valores DISTINTOS hai nunha columna»." }
-  - { es: "Tabla encounters · «valores DISTINTOS» · columna encounter_id. Copiad ese número tal cual, sin puntos.", gl: "Táboa encounters · «valores DISTINTOS» · columna encounter_id. Copiade ese número tal cal, sen puntos." }
+  - { es: "Cada visita tiene un código único, encounter_id: como H2 mandó su fichero dos veces, sus códigos salen repetidos. Por eso no vale contar filas, hay que contar códigos DISTINTOS. En la decisión, quedaos con la última versión de cada encuentro (el reenvío corrige al primero).", gl: "Cada visita ten un código único, encounter_id: como H2 mandou o seu ficheiro dúas veces, os seus códigos saen repetidos. Por iso non vale contar filas, hai que contar códigos DISTINTOS. Na decisión, quedade coa última versión de cada encontro (o reenvío corrixe o primeiro)." }
+  - { es: "En el Laboratorio: tabla encounters, pregunta «Contar cuántos valores DISTINTOS hay en una columna», columna encounter_id, y pulsad «Preguntar».", gl: "No Laboratorio: táboa encounters, pregunta «Contar cantos valores DISTINTOS hai nunha columna», columna encounter_id, e premede «Preguntar»." }
+  - { es: "El número que da esa pregunta es la respuesta: copiadlo tal cual, sin puntos ni espacios. Si os sale más alto, habéis contado filas en vez de valores distintos.", gl: "O número que dá esa pregunta é a resposta: copiádeo tal cal, sen puntos nin espazos. Se vos sae máis alto, contastes filas no canto de valores distintos." }
 solution:
   es: "En el Laboratorio: tabla encounters, «Contar cuántos valores DISTINTOS hay en una columna», columna encounter_id. Sale {answer}: escribid {answer}. La mejor decisión es «Quedarse con la última versión de cada encuentro»."
   gl: "No Laboratorio: táboa encounters, «Contar cantos valores DISTINTOS hai nunha columna», columna encounter_id. Sae {answer}: escribide {answer}. A mellor decisión é «Quedar coa última versión de cada encontro»."

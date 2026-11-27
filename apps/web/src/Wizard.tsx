@@ -18,7 +18,7 @@ export function Wizard({ teamId, lang, sheet, onSubmit, done }: { teamId: string
   const key = `ca_wiz_${teamId}`;
   const [opts, setOpts] = useState<Record<string, FileOpts>>(() => { try { return JSON.parse(store.read(key) ?? "{}"); } catch { return {}; } });
   const [sel, setSel] = useState(FILE_SPECS[0].name);
-  useEffect(() => { toolState.load(teamId, "wiz").then((v) => { if (v) try { setOpts(JSON.parse(v)); } catch { /* ignore */ } }); }, [teamId]);
+  useEffect(() => { toolState.load(teamId, "wiz").then((v) => { try { setOpts(v ? JSON.parse(v) : {}); } catch { /* ignore */ } }); }, [teamId]);
   const [loaded, setLoaded] = useState<Record<string, string>>({}); // file -> report
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [busy, setBusy] = useState(false);
@@ -81,9 +81,9 @@ export function Wizard({ teamId, lang, sheet, onSubmit, done }: { teamId: string
         <FileInfo name={sel} lang={lang} />
         {sheetInfo && <p className="sheet">📄 {es ? "Hoja de especificaciones" : "Folla de especificacións"}: {es ? "separador" : "separador"} «{sheetInfo.delimiter}», {sheetInfo.encoding}{sheetInfo.date_format ? `, ${sheetInfo.date_format}` : ""}</p>}
         <div className="opts">
-          <label>{es ? "Separador" : "Separador"}<select value={o.delimiter} onChange={(e) => set({ delimiter: e.target.value })}>{DELIMS.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
-          <label>{es ? "Codificación" : "Codificación"}<select value={o.encoding} onChange={(e) => set({ encoding: e.target.value as Encoding })}>{ENCS.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
-          <label>{es ? "Formato de fecha" : "Formato de data"}<select value={o.dateFormat} onChange={(e) => set({ dateFormat: e.target.value as DateFmt })}>{DATES.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
+          <label>{es ? "Separador" : "Separador"}<select disabled={done} value={o.delimiter} onChange={(e) => set({ delimiter: e.target.value })}>{DELIMS.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
+          <label>{es ? "Codificación" : "Codificación"}<select disabled={done} value={o.encoding} onChange={(e) => set({ encoding: e.target.value as Encoding })}>{ENCS.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
+          <label>{es ? "Formato de fecha" : "Formato de data"}<select disabled={done} value={o.dateFormat} onChange={(e) => set({ dateFormat: e.target.value as DateFmt })}>{DATES.map((d) => <option key={d.v} value={d.v}>{d.l}</option>)}</select></label>
         </div>
         {analysis && (
           <>
@@ -96,7 +96,7 @@ export function Wizard({ teamId, lang, sheet, onSubmit, done }: { teamId: string
               <thead><tr>{analysis.header.map((h, i) => <th key={i}>{h}</th>)}</tr></thead>
               <tbody>{analysis.preview.slice(0, 8).map((r, i) => <tr key={i} className={r.bad ? "rowbad" : ""}>{r.cells.map((c, j) => <td key={j}>{c}</td>)}</tr>)}</tbody>
             </table></div>
-            {analysis.header.length <= 1 && <p className="note-warn">👉 {es ? "Solo se ve UNA columna enorme: el «Separador» no es el correcto. Cámbialo (prueba con punto y coma)." : "Só se ve UNHA columna enorme: o «Separador» non é o correcto. Cámbiao (proba con punto e coma)."}</p>}
+            {analysis.header.length <= 1 && <p className="note-warn">👉 {es ? "Solo se ve UNA columna enorme: el «Separador» no es el correcto. Mira qué símbolo se repite entre los datos de la fila (; | o un hueco grande, que es el tabulador) y elígelo." : "Só se ve UNHA columna enorme: o «Separador» non é o correcto. Mira que símbolo se repite entre os datos da fila (; | ou un oco grande, que é o tabulador) e elíxeo."}</p>}
             {analysis.header.length > 1 && analysis.mojibake > 0 && <p className="note-warn">👉 {es ? "Hay símbolos raros donde deberían ir tildes: cambia la «Codificación»." : "Hai símbolos raros onde deberían ir acentos: cambia a «Codificación»."}</p>}
             {analysis.header.length > 1 && reasons && reasons.date > 0 && <p className="note-warn">👉 {es ? "Las filas fallan porque la FECHA no se entiende. Mira cómo se escriben las fechas en la tabla (columna start_ts) y cambia el «Formato de fecha» al que coincida." : "As filas fallan porque a DATA non se entende. Mira como se escriben as datas na táboa (columna start_ts) e cambia o «Formato de data» ao que coincida."}</p>}
             {reasons && reasons.col > 0 && reasons.date === 0 && analysis.mojibake === 0 && analysis.header.length > 1 && (

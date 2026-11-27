@@ -7,8 +7,8 @@ intro:
   es: "Son las 13:00. Defended vuestro trabajo ante la Comisión de Calidad Asistencial."
   gl: "Son as 13:00. Defendede o voso traballo ante a Comisión de Calidade Asistencial."
 briefing:
-  - { es: "Responder 6 preguntas de tres personas de la Comisión.", gl: "Responder 6 preguntas de tres persoas da Comisión." }
-  - { es: "Apoyaros en cifras y en las decisiones que habéis tomado.", gl: "Apoiarvos en cifras e nas decisións que tomastes." }
+  - { es: "Responder 5 preguntas sencillas de tres personas que no saben de datos.", gl: "Responder 5 preguntas sinxelas de tres persoas que non saben de datos." }
+  - { es: "Apoyaros en el resumen de vuestro trabajo (tarjetas bajo la pregunta).", gl: "Apoiarvos no resumo do voso traballo (tarxetas baixo a pregunta)." }
   - { es: "Ver el resultado, vuestro informe y las insignias.", gl: "Ver o resultado, o voso informe e as insignias." }
-target_minutes: 20
+target_minutes: 17
 locks: [f_comision]

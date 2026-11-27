@@ -1,10 +1,10 @@
-organization_id,name,feed,city
-ORG01,Hospital Universitario Costa Atlántica (HUCA-F),H1,Galicia
-ORG02,Hospital Comarcal Ría Norte,H1,Galicia
-ORG03,Hospital Santa Eira,H2,Galicia
-ORG04,Hospital da Mariña Alta-F,H2,Galicia
-ORG05,Complexo Hospitalario do Miño-F,H3,Galicia
-ORG06,Hospital Terra de Montes-F,H4,Galicia
-ORG07,Hospital Val do Sar-F,H4,Galicia
-ORG08,Hospital Illa Verde-F,H4,Galicia
-ORG09,Clínica Illas Cíes,H1,Vigo
+organization_id|name|feed|city
+ORG01|Hospital Universitario Costa Atlántica (HUCA-F)|H1|Galicia
+ORG02|Hospital Comarcal Ría Norte|H1|Galicia
+ORG03|Hospital Santa Eira|H2|Galicia
+ORG04|Hospital da Mariña Alta-F|H2|Galicia
+ORG05|Complexo Hospitalario do Miño-F|H3|Galicia
+ORG06|Hospital Terra de Montes-F|H4|Galicia
+ORG07|Hospital Val do Sar-F|H4|Galicia
+ORG08|Hospital Illa Verde-F|H4|Galicia
+ORG09|Clínica Illas Cíes|H1|Vigo

@@ -4,16 +4,16 @@ type: interview
 title: { es: "Entrevistas", gl: "Entrevistas" }
 docs_needed: [doc_ds_analysis]
 story:
-  es: "Hablad con Noa (Informática) y con Brais (Admisiones): saben por qué los datos están raros. Son personajes con IA. Necesitáis 2 de sus 3 pistas y tenéis 6 preguntas con cada uno."
-  gl: "Falade con Noa (Informática) e con Brais (Admisións): saben por que os datos están raros. Son personaxes con IA. Precisades 2 das súas 3 pistas e tedes 6 preguntas con cada un."
+  es: "Vuestra cifra de reingresos es provisional: unos detectores automáticos han encontrado tres grupos de registros que no tienen sentido (abajo, una tarjeta por problema). Los datos dicen QUÉ está mal, pero no POR QUÉ. Preguntad a Noa (Informática) y a Brais (Admisiones) por cada problema hasta saber la causa. Seguid cuando queráis."
+  gl: "A vosa cifra de reingresos é provisional: uns detectores automáticos atoparon tres grupos de rexistros que non teñen sentido (abaixo, unha tarxeta por problema). Os datos din QUE está mal, pero non POR QUE. Preguntade a Noa (Informática) e a Brais (Admisións) por cada problema ata saber a causa. Seguide cando queirades."
 tools: [npc_chat]
 validator: { type: interview, required_clues: 2, clues: [C1, C2, C3] }
 points: 120
-time_target_min: 9
+time_target_min: 8
 hints:
-  - { es: "Mirad las tarjetas del nivel anterior: ¿qué centro y qué fechas eran raros?", gl: "Mirade as tarxetas do nivel anterior: que centro e que datas eran raros?" }
-  - { es: "A Noa: nombrad el centro H3 y la migración. A Brais: preguntadle con amabilidad por el turno de noche o por las defunciones.", gl: "A Noa: nomeade o centro H3 e a migración. A Brais: preguntádelle con amabilidade polo turno de noite ou polas defuncións." }
-  - { es: "Por ejemplo, a Noa: «¿Qué pasó en el centro H3 con la migración de marzo de 2019?». A Brais: «Imagino que el turno de noche es duro: ¿cómo registráis las altas?».", gl: "Por exemplo, a Noa: «Que pasou no centro H3 coa migración de marzo de 2019?». A Brais: «Imaxino que o turno de noite é duro: como rexistrades as altas?»." }
+  - { es: "Cada tarjeta tiene su experto. Las altas y reingresos del mismo día pasan en un solo centro desde una fecha: es cosa de sistemas, preguntad a Noa por el centro H3 y la migración de marzo de 2019.", gl: "Cada tarxeta ten o seu experto. As altas e reingresos do mesmo día pasan nun só centro desde unha data: é cousa de sistemas, preguntádelle a Noa polo centro H3 e a migración de marzo de 2019." }
+  - { es: "Las estancias negativas son un error al apuntar la hora: preguntad a Brais (Admisiones) cómo registran las altas en el turno de noche.", gl: "As estadías negativas son un erro ao apuntar a hora: preguntádelle a Brais (Admisións) como rexistran as altas na quenda de noite." }
+  - { es: "Las visitas después del fallecimiento también son de Brais: preguntadle cómo y cuándo les llegan los registros de defunciones. Con las tres causas, «Terminar las entrevistas y seguir».", gl: "As visitas despois do falecemento tamén son de Brais: preguntádelle como e cando lles chegan os rexistros de defuncións. Coas tres causas, «Rematar as entrevistas e seguir»." }
 solution:
-  es: "Preguntad a Noa: «¿Qué ocurrió en el centro H3 con la migración de marzo de 2019?». Y a Brais: «Imagino que el turno de noche es duro: ¿cómo es registrar las altas de madrugada?» o «¿Cómo y cuándo os llegan los registros de defunciones?»."
-  gl: "Preguntade a Noa: «Que ocorreu no centro H3 coa migración de marzo de 2019?». E a Brais: «Imaxino que o turno de noite é duro: como é rexistrar as altas de madrugada?» ou «Como e cando vos chegan os rexistros de defuncións?»."
+  es: "Preguntad a Noa: «¿Qué ocurrió en el centro H3 con la migración de marzo de 2019?». Y a Brais: «¿Cómo registráis las altas en el turno de noche?» y «¿Cómo y cuándo os llegan los registros de defunciones?». Después, «Terminar las entrevistas y seguir»."
+  gl: "Preguntade a Noa: «Que ocorreu no centro H3 coa migración de marzo de 2019?». E a Brais: «Como rexistrades as altas na quenda de noite?» e «Como e cando vos chegan os rexistros de defuncións?». Despois, «Rematar as entrevistas e seguir»."

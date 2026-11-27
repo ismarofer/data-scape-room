@@ -1,19 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { analyze, buildReport, compile, consolidateEncounters, dag, decode, fileReport, FILE_SPECS, closure, guardSql, loadRaw, runProject, type FileOpts } from "./index";
+import { analyze, buildReport, compile, consolidateEncounters, dag, decode, fileReport, FILE_SPECS, closure, guardSql, loadRaw, runProject } from "./index";
 import { createNodeEngine, type NodeEngine } from "./node/duck-node";
 import { loadModels } from "../../../apps/server/src/models";
 
 const root = path.resolve(__dirname, "../../..");
-export const TRUTH: Record<string, FileOpts> = Object.fromEntries(
-  FILE_SPECS.map((s) => [
-    s.name,
-    (s.name.includes("H3")
-      ? { delimiter: ";", encoding: "latin-1", dateFormat: "dmy_hm" }
-      : { delimiter: ",", encoding: "utf-8", dateFormat: s.dateCols.length ? "iso" : "none" }) as FileOpts,
-  ]),
-);
+import { LOADER_TRUTH as TRUTH } from "../../../apps/server/src/loader-truth";
 const answers = JSON.parse(fs.readFileSync(path.join(root, "data/dist/answers.json"), "utf8"));
 const { models, tests } = loadModels(path.join(root, "content"));
 const correct = Object.fromEntries(
@@ -90,6 +83,19 @@ describe("dbt mini-runner on the loaded raw layer (R2B)", () => {
     const wrong = await runProject(eng, { models, tests }, { ...correct, fct_admission: { window: "lte_30" } }, { only: closure(models, ["fct_admission"]) });
     expect((await eng.query("select sum(is_readmission_30d::int) as n from marts.fct_admission"))[0].n).not.toBe(answers.r3c_readmissions_base.value);
     void wrong;
+  }, 180_000);
+  it("the star of «Esquema en estrella» is built for real: dimensions and facts, joined by keys that all exist", async () => {
+    const STAR = ["fct_admission", "dim_patient", "dim_hospital", "dim_date", "fct_condition"];
+    const only = closure(models, STAR);
+    const r = await runProject(eng, { models, tests }, correct, { only });
+    expect(r.models.filter((m) => m.status !== "ok").map((m) => `${m.model}: ${m.error}`)).toEqual([]);
+    expect(r.tests.filter((t) => t.status === "fail").map((t) => `${t.test}: ${t.message}`)).toEqual([]);
+    const rows = Object.fromEntries(r.models.map((m) => [m.model, m.rows]));
+    expect(rows.dim_patient).toBe(answers.r2c_unique_patients.value); // one row per person, not per file
+    expect(rows.dim_hospital).toBe(9);
+    expect(rows.fct_condition).toBeGreaterThan(10_000);
+    expect(r.tests.some((t) => t.test.includes("dim_date") && t.status === "pass")).toBe(true);
+    expect((await eng.query("select sum(is_readmission_30d::int) as n from marts.fct_admission"))[0].n).toBe(answers.r3c_readmissions_base.value); // unchanged
   }, 180_000);
   it("guards player SQL", () => {
     expect(guardSql("select * from raw.patients").ok).toBe(true);

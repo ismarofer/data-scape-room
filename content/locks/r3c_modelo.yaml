@@ -2,21 +2,21 @@ id: r3c_modelo
 room: R3
 type: code
 title: { es: "Modelo de reingreso", gl: "Modelo de reingreso" }
-docs_needed: [doc_de_keys, doc_ds_ml]
+docs_needed: [doc_analyst_requests, doc_de_keys]
 story:
-  es: "Ahora, el cálculo de verdad. Elegid las 3 piezas del modelo siguiendo vuestro protocolo, calculad y contad cuántos episodios salen marcados como reingreso. Esa cifra es el código (provisional: aún hay datos raros)."
-  gl: "Agora, o cálculo de verdade. Elixide as 3 pezas do modelo seguindo o voso protocolo, calculade e contade cantos episodios saen marcados como reingreso. Esa cifra é o código (provisional: aínda hai datos raros)."
-tools: [model_builder:int_admission_episodes+fct_admission, quick_checks]
+  es: "El protocolo oficial que dice qué es un reingreso está en el documento «Peticiones de la dirección y el protocolo» (docs/peticiones-direccion.md). Leedlo y traducid sus reglas a las piezas del cálculo, calculad y averiguad con el Laboratorio cuántos episodios salen marcados como reingreso. Esa cifra es la respuesta (provisional: aún hay datos raros)."
+  gl: "O protocolo oficial que di que é un reingreso está no documento «Peticións da dirección e o protocolo» (docs/peticiones-direccion.md). Lédeo e traducide as súas regras ás pezas do cálculo, calculade e descubride co Laboratorio cantos episodios saen marcados como reingreso. Esa cifra é a resposta (provisional: aínda hai datos raros)."
+tools: [model_builder:int_admission_episodes+fct_admission, query_lab]
 answer_hint:
-  es: "Un número: los reingresos que salen al pulsar «Episodios marcados como reingreso». Solo cifras."
-  gl: "Un número: os reingresos que saen ao premer «Episodios marcados como reingreso». Só cifras."
+  es: "Un número: cuántos episodios de vuestro cálculo están marcados como reingreso. Solo cifras."
+  gl: "Un número: cantos episodios do voso cálculo están marcados como reingreso. Só cifras."
 answer: { source: "answers.public.json#r3c_readmissions_base", normalize: digits_only }
-points: 160
-time_target_min: 14
+points: 200
+time_target_min: 13
 hints:
-  - { es: "Las piezas son las reglas del protocolo que acabáis de contestar. Las tenéis en el recuadro «Vuestro protocolo».", gl: "As pezas son as regras do protocolo que acabades de contestar. Tédelas no recadro «O voso protocolo»." }
-  - { es: "Solo cuentan los ingresos (inpatient). Si entre dos ingresos pasa un día o menos, son el mismo episodio.", gl: "Só contan os ingresos (inpatient). Se entre dous ingresos pasa un día ou menos, son o mesmo episodio." }
-  - { es: "Ingreso: solo inpatient. Episodio nuevo: si pasa más de 1 día. Ventana: entre 2 y 30 días. Calculad y pulsad «Episodios marcados como reingreso».", gl: "Ingreso: só inpatient. Episodio novo: se pasa máis de 1 día. Ventá: entre 2 e 30 días. Calculade e premede «Episodios marcados como reingreso»." }
+  - { es: "Abrid docs/peticiones-direccion.md: el protocolo tiene una regla por pieza. La de ámbito dice que solo cuentan los ingresos hospitalarios: en esa pieza, «Solo ingresos (inpatient)».", gl: "Abride docs/peticiones-direccion.md: o protocolo ten unha regra por peza. A de ámbito di que só contan os ingresos hospitalarios: nesa peza, «Só ingresos (inpatient)»." }
+  - { es: "Si entre un alta y el siguiente ingreso pasa 1 día o menos es el mismo episodio: «Episodio nuevo si pasa más de 1 día». Y es reingreso si vuelve entre 2 y 30 días después del alta: «Entre 2 y 30 días». Pulsad «▶ Calcular».", gl: "Se entre unha alta e o seguinte ingreso pasa 1 día ou menos é o mesmo episodio: «Episodio novo se pasa máis de 1 día». E é reingreso se volve entre 2 e 30 días despois da alta: «Entre 2 e 30 días». Premede «▶ Calcular»." }
+  - { es: "Para contarlos, en el Laboratorio: tabla marts.fct_admission, «Contar cuántas filas hay», condición is_readmission_30d es igual a true. El número que sale es la respuesta.", gl: "Para contalos, no Laboratorio: táboa marts.fct_admission, «Contar cantas filas hai», condición is_readmission_30d é igual a true. O número que sae é a resposta." }
 solution:
-  es: "Piezas: «Solo ingresos (inpatient)», «Episodio nuevo si pasa más de 1 día» y «Entre 2 y 30 días». Pulsad «▶ Calcular» y después «Episodios marcados como reingreso»: salen {answer}. Escribid {answer}."
-  gl: "Pezas: «Só ingresos (inpatient)», «Episodio novo se pasa máis de 1 día» e «Entre 2 e 30 días». Premede «▶ Calcular» e despois «Episodios marcados como reingreso»: saen {answer}. Escribide {answer}."
+  es: "Piezas: «Solo ingresos (inpatient)», «Episodio nuevo si pasa más de 1 día» y «Entre 2 y 30 días». Pulsad «▶ Calcular». En el Laboratorio: tabla marts.fct_admission, «Contar cuántas filas hay», condición is_readmission_30d es igual a true: salen {answer}. Escribid {answer}."
+  gl: "Pezas: «Só ingresos (inpatient)», «Episodio novo se pasa máis de 1 día» e «Entre 2 e 30 días». Premede «▶ Calcular». No Laboratorio: táboa marts.fct_admission, «Contar cantas filas hai», condición is_readmission_30d é igual a true: saen {answer}. Escribide {answer}."

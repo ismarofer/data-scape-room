@@ -61,7 +61,7 @@ function CsvView({ name, lang }: { name: string; lang: Lang }) {
   const es = lang === "es";
   return (
     <>
-    <div className="fileinfo-wrap"><FileInfo name={name} lang={lang} /></div>
+    <div className="fileinfo-wrap"><FileInfo name={name} lang={lang} open /></div>
     <Code
       text={lines.join("\n")}
       note={cut ? (es ? `Vista previa: primeras ${lines.length} líneas${d.size ? ` de un fichero de ${kb(d.size)}` : ""}. Para trabajar con todo el fichero, usad el cargador del nivel.` : `Vista previa: primeiras ${lines.length} liñas${d.size ? ` dun ficheiro de ${kb(d.size)}` : ""}. Para traballar con todo o ficheiro, usade o cargador do nivel.`) : undefined}
@@ -91,7 +91,7 @@ export function FileViewer({ path, lang, project, docs }: { path: string; lang: 
     const schema = m.name.startsWith("stg_") ? "staging" : "marts";
     return (
       <>
-        <div className="fileinfo-wrap"><InfoCard k={`db:${schema}.${m.name}`} lang={lang} note={es ? `Este fichero es la «receta» que crea la tabla ${m.name}.` : `Este ficheiro é a «receita» que crea a táboa ${m.name}.`} /></div>
+        <div className="fileinfo-wrap"><InfoCard k={`db:${schema}.${m.name}`} lang={lang} open note={es ? `Este fichero es la «receta» que crea la tabla ${m.name}.` : `Este ficheiro é a «receita» que crea a táboa ${m.name}.`} /></div>
         <Code text={readableSql(m.sql, m.slots, lang)} note={m.slots ? (es ? "Los huecos «▾ …» los rellenáis vosotros en el nivel (constructor del modelo)." : "Os ocos «▾ …» enchédelos vós no nivel (construtor do modelo).") : undefined} />
       </>
     );

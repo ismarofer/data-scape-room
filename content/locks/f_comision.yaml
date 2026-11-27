@@ -4,13 +4,13 @@ type: final
 title: { es: "La Comisión", gl: "A Comisión" }
 docs_needed: [doc_analyst_requests]
 story:
-  es: "Llega la Comisión: tres personas os harán 6 preguntas sobre vuestro trabajo. Responded corto, con una cifra, reconociendo lo que no sabéis y proponiendo qué hacer. Podéis adjuntar tarjetas de evidencia."
-  gl: "Chega a Comisión: tres persoas faranvos 6 preguntas sobre o voso traballo. Respondede curto, cunha cifra, recoñecendo o que non sabedes e propoñendo que facer. Podedes anexar tarxetas de evidencia."
+  es: "Llega la Comisión: tres personas que NO saben de datos os harán 5 preguntas sobre sus pacientes. Responded como se lo contaríais a vuestra familia: con una cifra, si os fiáis de ella y qué haríais. Abajo tenéis un resumen de todo vuestro trabajo."
+  gl: "Chega a Comisión: tres persoas que NON saben de datos faranvos 5 preguntas sobre os seus pacientes. Respondede como llo contariades á vosa familia: cunha cifra, se vos fiades dela e que fariades. Abaixo tedes un resumo de todo o voso traballo."
 tools: [commission]
-validator: { type: commission, turns: 6 }
+validator: { type: commission, turns: 5 }
 points: 100
-time_target_min: 20
+time_target_min: 17
 hints:
-  - { es: "Responde a lo que te preguntan, con una cifra o un hecho concreto.", gl: "Responde ao que che preguntan, cunha cifra ou un feito concreto." }
-  - { es: "Reconocer un límite de vuestros datos suma, no resta.", gl: "Recoñecer un límite dos vosos datos suma, non resta." }
-  - { es: "Termina cada respuesta con una propuesta: qué haríais ahora.", gl: "Remata cada resposta cunha proposta: que fariades agora." }
+  - { es: "Bajo cada pregunta hay un consejo y tarjetas con vuestras cifras. Responded con UNA de ellas en palabras sencillas, por ejemplo «de cada 100 altas, unas 10 vuelven al mes».", gl: "Baixo cada pregunta hai un consello e tarxetas coas vosas cifras. Respondede cunha delas en palabras sinxelas, por exemplo «de cada 100 altas, unhas 10 volven ao mes»." }
+  - { es: "Decid si os fiáis de la cifra y por qué, y reconoced un límite (registros quitados, el centro pequeño aparte, datos ficticios de pocos años): eso suma, no resta.", gl: "Dicide se vos fiades da cifra e por que, e recoñecede un límite (rexistros quitados, o centro pequeno á parte, datos ficticios de poucos anos): iso suma, non resta." }
+  - { es: "Acabad cada respuesta con lo que haríais ahora (por ejemplo, llamar a los pacientes de más riesgo, con una persona que revise los avisos). Sin palabras técnicas como AUC, SQL o tabla.", gl: "Rematade cada resposta co que fariades agora (por exemplo, chamar aos pacientes de máis risco, cunha persoa que revise os avisos). Sen palabras técnicas como AUC, SQL ou táboa." }

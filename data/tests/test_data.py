@@ -55,13 +55,18 @@ def test_excluded_two_implementations(tables):
     assert neg == 23 and neg + pm == ANS["r4c_excluded"]["value"]
 
 
+FMT = {"encounters_H1.csv": (",", "utf-8"), "encounters_H2.csv": (",", "latin-1"), "encounters_H2_reenvio.csv": (",", "utf-8"),
+       "encounters_H3.csv": (";", "latin-1"), "encounters_H4.csv": ("\t", "utf-8")}
+
+
 def read_raw():
     frames = []
     rej = {}
     for f in ("H1", "H2", "H3", "H4", "H2_reenvio"):
         p = RAW / f"encounters_{f}.csv"
         h3 = f == "H3"
-        df = pd.read_csv(p, sep=";" if h3 else ",", encoding="latin-1" if h3 else "utf-8", dtype=str, on_bad_lines="skip")
+        sep, enc = FMT[p.name]
+        df = pd.read_csv(p, sep=sep, encoding=enc, dtype=str, on_bad_lines="skip")
         fmt = "%d/%m/%Y %H:%M" if h3 else "%Y-%m-%d %H:%M:%S"
         df = df[df.encounter_class.notna() & df.loaded_at.notna()].copy()  # truncated rows are rejected
         df["start_ts"] = pd.to_datetime(df.start_ts, format=fmt)
@@ -85,7 +90,7 @@ def test_raw_pipeline_matches_canonical(tables):
 
 
 def test_t1_resend_corrections():
-    h2 = pd.read_csv(RAW / "encounters_H2.csv", dtype=str)
+    h2 = pd.read_csv(RAW / "encounters_H2.csv", dtype=str, encoding="latin-1")
     re = pd.read_csv(RAW / "encounters_H2_reenvio.csv", dtype=str)
     m = h2.merge(re, on="encounter_id", suffixes=("_a", "_b"))
     assert len(h2) == len(re) == len(m)
@@ -94,7 +99,7 @@ def test_t1_resend_corrections():
 
 def test_t2_truncated_rows():
     lines = open(RAW / "encounters_H4.csv", encoding="utf-8").read().splitlines()
-    bad = [l for l in lines[1:] if len(l.split(",")) != 8]
+    bad = [l for l in lines[1:] if len(l.split("	")) != 8]
     assert len(bad) == 17
 
 
@@ -155,7 +160,7 @@ def test_public_answers_leak_nothing():
 
 def test_no_sensitive_conditions():
     deny = open(ROOT / "denylist_conditions.txt", encoding="utf-8").read().lower().split()
-    c = pd.read_csv(RAW / "conditions.csv")
+    c = pd.read_csv(RAW / "conditions.csv", sep="	", encoding="latin-1")
     import re
     text = " ".join(c.description.unique()).lower()
     assert not any(re.search(rf"\b{w}\b", text) for w in deny)

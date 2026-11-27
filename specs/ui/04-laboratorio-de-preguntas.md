@@ -1,6 +1,13 @@
 # UI 04 · Laboratorio de preguntas (asistente de SQL)
 
-Se usa en R1B (contar visitas distintas) y R1C (auditar a Ada). Hace preguntas a las tablas **sin escribir SQL**.
+Hace preguntas a las tablas **sin escribir SQL**. Es una **pestaña del editor** («🔬 Laboratorio de preguntas», 25-nov), no un bloque dentro del nivel:
+- Se abre (o se trae al frente) desde: el botón «🔬 Abrir el Laboratorio de preguntas» de cada nivel con datos (resaltado en R1B, R1C y R3C, donde hace falta), el botón «🔬 Laboratorio» de la barra inferior y la entrada «🔬 Laboratorio de preguntas» al principio de la sección BASE DE DATOS del explorador.
+- Se cierra con × como cualquier pestaña y se reabre en cualquier momento desde esos tres sitios.
+- Mientras está abierta conserva lo que se ha preguntado aunque se cambie de pestaña; se vuelve al nivel con «▶ Nivel actual».
+- «🔬 Comprobar» en la auditoría de Ada abre la pestaña ya preparada (tabla y tipo de pregunta).
+
+## Tablas
+Todas las del navegador: `raw.*` (tal cual llegan), `marts.*` (vuestro cálculo, tras «▶ Calcular») y `canon.*` (modelo final limpio y registros raros). Tras «▶ Calcular» el laboratorio vuelve a leer las tablas solo; también hay «↻ Actualizar tablas». Las condiciones funcionan con cualquier tipo de columna (se compara como texto: `is_readmission_30d es igual a true`).
 
 ## Cómo funciona
 1. «¿Sobre qué tabla preguntas?» — cada tabla con su nombre amigable («encounters — todos los encuentros de los 4 hospitales juntos»).

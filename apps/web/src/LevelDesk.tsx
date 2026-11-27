@@ -9,12 +9,12 @@ import { PatientCompare } from "./Compare";
 import { GuidePanel } from "./Explain";
 import { emit, setDraft } from "./workContext";
 import { noteAction } from "./Feedback";
-import { EvidenceBoard, EvidenceCounts, KpiForm, ProtocolForm, QuickChecks, StarCanvas, VerdictForm } from "./M5Tools";
+import { EvidenceCounts, KpiForm, nm as starName, StarCanvas, VerdictForm } from "./M5Tools";
 import { DashboardBuilder } from "./Dashboard";
 import { NpcChat } from "./Chat";
-import { QueryLab } from "./QueryLab";
 import { MlEquity, MlThreshold, MlTrain } from "./MlLab";
 import { CommissionPanel } from "./Commission";
+import { SolvedView } from "./Solved";
 
 type L2 = { es: string; gl: string };
 const GROUPS: Record<string, L2> = {
@@ -22,15 +22,9 @@ const GROUPS: Record<string, L2> = {
   negative_stay: { es: "Estancias negativas (alta antes del ingreso)", gl: "Estadías negativas (alta antes do ingreso)" },
   post_mortem: { es: "Encuentros posteriores al fallecimiento", gl: "Encontros posteriores ao falecemento" },
 };
-const QUESTIONS: Record<string, L2> = {
-  q1: { es: "Ventana de reingreso", gl: "Ventá de reingreso" },
-  q2: { es: "¿Se fusionan ingresos separados por un día o menos?", gl: "Fusiónanse ingresos separados por un día ou menos?" },
-  q3: { es: "¿Qué clases de encuentro cuentan como ingreso?", gl: "Que clases de encontro contan como ingreso?" },
-  q4: { es: "Exclusiones", gl: "Exclusións" },
-};
 const KPI: Record<string, L2> = {
   kpi: { es: "Cómo se calcula la tasa", gl: "Como se calcula a taxa" },
-  min_n: { es: "Desde cuántas altas se publica la tasa de un centro", gl: "Desde cantas altas se publica a taxa dun centro" },
+  min_n: { es: "El mínimo de altas (con ese número dejáis fuera hospitales grandes o seguís publicando el centro de 3 casos)", gl: "O mínimo de altas (con ese número deixades fóra hospitais grandes ou seguides publicando o centro de 3 casos)" },
   small_center: { es: "Qué hacer con la Clínica Illas Cíes", gl: "Que facer coa Clínica Illas Cíes" },
 };
 /** Plain-words name of an item the server says is wrong (it never says what the right value is). */
@@ -38,10 +32,9 @@ function itemLabel(lockId: string, id: string, lang: Lang, project: Project | nu
   const gl = lang === "gl";
   if (lockId === "r1a_bandeja") return `${gl ? "Ficheiro" : "Fichero"} ${id}`;
   if (lockId === "r1c_ada") return `${gl ? "Afirmación" : "Afirmación"} ${id.replace(/^c/, "")}`;
-  if (lockId === "r3a_protocolo") return QUESTIONS[id]?.[lang] ?? id;
-  if (lockId === "r4a_pruebas" || lockId === "r4c_veredicto") return GROUPS[id]?.[lang] ?? id;
+  if (lockId === "r4c_veredicto") return GROUPS[id]?.[lang] ?? id;
   if (lockId === "r5a_kpi") return KPI[id]?.[lang] ?? id;
-  if (lockId === "r3b_estrella") return id.startsWith("type:") ? `${gl ? "Tipo da táboa" : "Tipo de la tabla"} ${id.slice(5)} (${gl ? "feito ou dimensión" : "hecho o dimensión"})` : `${gl ? "Unión" : "Unión"} ${id.slice(5).replace(">", " → ")}`;
+  if (lockId === "r3b_estrella") return id.startsWith("type:") ? `${gl ? "Tipo da táboa" : "Tipo de la tabla"} ${starName(id.slice(5))} (${gl ? "feito ou dimensión" : "hecho o dimensión"})` : `${gl ? "Unión" : "Unión"} ${id.slice(5).split(">").map(starName).join(" → ")}`;
   if (lockId === "r3c_modelo") {
     if (id === "failed") return gl ? "Aínda hai tests que fallan" : "Aún hay tests que fallan";
     const [model, slot] = id.split(":");
@@ -69,6 +62,7 @@ export function LevelDesk({ s, lock, teamId, lang, t, project, sheet, refresh, o
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [code, setCode] = useState("");
   const [bad, setBad] = useState<{ ids: string[]; missing: number } | null>(null);
+  const badIds = bad?.ids;
   const act = async (fn: () => Promise<unknown>) => {
     try { await fn(); } catch (x) { const e = x as ApiError; setMsg({ kind: "err", text: e.code === "hint_gate" ? `${e.message} (${Math.ceil(e.extra.waitSeconds / 60)} min)` : e.message }); }
   };
@@ -94,11 +88,15 @@ export function LevelDesk({ s, lock, teamId, lang, t, project, sheet, refresh, o
       <header className="lvlhead">
         {room && <button className="lvlroom" onClick={onRoomInfo} title={gl ? "De que vai esta sala" : "De qué va esta sala"}>{room.icon} {room.number === "F" ? "" : `${gl ? "Sala" : "Sala"} ${room.number} · `}{room.stage} · {gl ? "nivel" : "nivel"} {pos}/{inRoom.length} <span aria-hidden="true">ⓘ</span></button>}
         <h2>{lock.title}</h2>
-        <span className="lvlmeta">🏆 {lock.points} {gl ? "puntos" : "puntos"} · ⏱ ~{lock.timeTargetMin} min</span>
+        <span className="lvlmeta">⏱ ~{lock.timeTargetMin} min</span>
       </header>
-      {!open && <p className="done-banner">✔ {gl ? "Nivel superado. Podedes repasar de que ía, pero xa non se pode cambiar." : "Nivel superado. Podéis repasar de qué iba, pero ya no se puede cambiar."}</p>}
+      {!open && <p className="done-banner">✔ {gl ? "Nivel superado. Podedes repasar de que ía e o que fixestes, pero xa non se pode cambiar." : "Nivel superado. Podéis repasar de qué iba y lo que hicisteis, pero ya no se puede cambiar."}</p>}
       <section className="mission" data-tour="mission"><b>🎯 {gl ? "Misión" : "Misión"}</b><p className="story">{lock.story}</p></section>
+      {(lock.docs?.length ?? 0) > 0 && (
+        <p className="leveldocs">📄 <b>{gl ? "Documentación do nivel:" : "Documentación del nivel:"}</b> {lock.docs!.map((d) => <button key={d.path} className="doclink" onClick={() => emit({ type: "doc:open", path: d.path })}>{d.title}</button>)} <small className="hint-small">{gl ? "(ábrese nunha lapela: explica os conceptos con calma)" : "(se abre en una pestaña: explica los conceptos con calma)"}</small></p>
+      )}
       {lock.guide && <GuidePanel key={lock.id + lang} guide={lock.guide} lang={lang} memoKey={`ca_guide_${teamId}_${lock.id}`} />}
+      {!open && lock.status === "done" && <SolvedView lock={lock} s={s} teamId={teamId} lang={lang} project={project} sheet={sheet} />}
       {open && (
         <>
           {lock.decision && (
@@ -119,24 +117,33 @@ export function LevelDesk({ s, lock, teamId, lang, t, project, sheet, refresh, o
             const names = tool.includes(":") ? tool.split(":")[1].split("+") : undefined;
             return <ModelBuilder lockId={lock.id} teamId={teamId} lang={lang} project={project} names={names} noSubmit={!!names} done={false} onSubmit={(report) => send(report, wrong("La entrega no coincide: revisa los tests y las piezas elegidas.", "A entrega non coincide: revisa os tests e as pezas escollidas."))} />;
           })()}
-          {lock.tools.includes("protocol_doc") && <ProtocolForm lang={lang} onSubmit={(r) => send(r, wrong("Alguna respuesta no cuadra con el protocolo: releedlo con calma.", "Algunha resposta non cadra co protocolo: relédeo con calma."))} />}
-          {lock.tools.includes("star_canvas") && <StarCanvas lang={lang} onSubmit={(r) => send(r, wrong("El esquema aún no es correcto: un hecho va en el centro y las dimensiones no se conectan entre sí.", "O esquema aínda non é correcto: un feito vai no centro e as dimensións non se conectan entre si."))} />}
-          {lock.tools.includes("evidence_board") && <EvidenceBoard lang={lang} onSubmit={(r) => send(r, wrong("Alguna causa no encaja: mirad fechas y centros.", "Algunha causa non encaixa: mirade datas e centros."))} />}
-          {lock.tools.includes("verdict_form") && <VerdictForm lang={lang} onSubmit={(r) => send(r, wrong("Algún tratamiento no es el más prudente: si dudáis de un dato clínico, no lo inventéis.", "Algún tratamento non é o máis prudente: se dubidades dun dato clínico, non o inventes."))} />}
+          {lock.tools.includes("star_canvas") && <StarCanvas lang={lang} bad={badIds} onSubmit={(r) => send(r, wrong("El esquema aún no es correcto: lo que está mal se ha marcado en rojo.", "O esquema aínda non é correcto: o que está mal marcouse en vermello."))} />}
+          {lock.tools.includes("verdict_form") && <VerdictForm lang={lang} bad={badIds} onSubmit={(r) => send(r, wrong("Algún tratamiento no es el más prudente: si dudáis de un dato clínico, no lo inventéis.", "Algún tratamento non é o máis prudente: se dubidades dun dato clínico, non o inventes."))} />}
           {lock.tools.includes("evidence_counts") && <EvidenceCounts lang={lang} />}
-          {lock.tools.includes("kpi_form") && <KpiForm lang={lang} onSubmit={(r) => send(r, wrong("Esa definición no evita las trampas de la tasa: pensad en el denominador y en los centros pequeños.", "Esa definición non evita as trampas da taxa: pensade no denominador e nos centros pequenos."))} />}
-          {lock.tools.includes("quick_checks") && <QuickChecks teamId={teamId} lang={lang} lockId={lock.id} />}
+          {lock.tools.includes("kpi_form") && <KpiForm lang={lang} teamId={teamId} bad={badIds} onSubmit={(r) => send(r, wrong("Esa definición no evita las trampas de la tasa: pensad en el denominador y en los centros pequeños.", "Esa definición non evita as trampas da taxa: pensade no denominador e nos centros pequenos."))} />}
           {lock.tools.includes("dashboard_builder") && <DashboardBuilder key={lock.id} teamId={teamId} lang={lang} review={lock.tools.includes("critic_panel")} onSubmit={(spec) => send(spec, wrong("El crítico aún ve problemas importantes.", "O crítico aínda ve problemas importantes."))} />}
-          {lock.tools.includes("npc_chat") && <NpcChat teamId={teamId} lang={lang} onClue={refresh} />}
+          {lock.tools.includes("npc_chat") && <><h3 className="probhead">{gl ? "🔎 Os tres problemas que atoparon os detectores" : "🔎 Los tres problemas que han encontrado los detectores"}</h3><p className="hint-small">{gl ? "Os datos din QUE está mal, pero non POR QUE. Iso sábeno as persoas que traballan co sistema: preguntádelles por cada problema." : "Los datos dicen QUÉ está mal, pero no POR QUÉ. Eso lo saben las personas que trabajan con el sistema: preguntadles por cada problema."}</p><EvidenceCounts lang={lang} clues={s.clues ?? []} /></>}
+          {lock.tools.includes("npc_chat") && <NpcChat teamId={teamId} lang={lang} clues={s.clues ?? []} onClue={refresh} />}
+          {lock.tools.includes("npc_chat") && (
+            <div className="goon">
+              <p>{gl ? `Levades ${s.clues?.length ?? 0} de 3 pistas. Podedes seguir cando queirades: cada pista suma confianza e axúdavos no veredicto.` : `Lleváis ${s.clues?.length ?? 0} de 3 pistas. Podéis seguir cuando queráis: cada pista suma confianza y os ayuda en el veredicto.`}</p>
+              <button className="primary" onClick={() => { if ((s.clues?.length ?? 0) === 0 && !window.confirm(gl ? "Aínda non tedes ningunha pista. Seguir igualmente?" : "Aún no tenéis ninguna pista. ¿Seguir igualmente?")) return; send("seguir"); }}>{gl ? "Rematar as entrevistas e seguir ▶" : "Terminar las entrevistas y seguir ▶"}</button>
+            </div>
+          )}
           {lock.tools.includes("verify_panel") && <VerifyPanel teamId={teamId} lockId={lock.id} lang={lang} onSubmit={(report) => send(report)} />}
           {lock.tools.includes("privacy_radar") && <PrivacyRadar lang={lang} onSubmit={(report) => sendWith(report)} />}
-          {lock.tools.includes("query_lab") && <QueryLab teamId={teamId} lang={lang} />}
+          {!["p0_tutorial", "r1a_bandeja", "f_comision"].includes(lock.id) && (
+            <div className={`labdock ${lock.tools.includes("query_lab") ? "need" : ""}`}>
+              <button className={lock.tools.includes("query_lab") ? "primary" : "ghost"} onClick={() => emit({ type: "lab:open" })}>🔬 {gl ? "Abrir o Laboratorio de preguntas" : "Abrir el Laboratorio de preguntas"}</button>
+              <small className="hint-small">{lock.tools.includes("query_lab") ? (gl ? " Neste nivel precisádelo: ábrese nunha lapela ao lado. Volvede aquí con «▶ Nivel actual»." : " En este nivel lo necesitáis: se abre en una pestaña al lado. Volved aquí con «▶ Nivel actual».") : (gl ? " (nunha lapela, para comprobar o que queirades)" : " (en una pestaña, para comprobar lo que queráis)")}</small>
+            </div>
+          )}
           {lock.tools.includes("ml_train") && <MlTrain teamId={teamId} lang={lang} onSubmit={(r) => send(r)} />}
           {lock.tools.includes("ml_threshold") && <MlThreshold teamId={teamId} lang={lang} onSubmit={(r) => send(r)} />}
           {lock.tools.includes("ml_equity") && <MlEquity teamId={teamId} lang={lang} onSubmit={(r) => send(r)} />}
           {lock.tools.includes("commission") && <CommissionPanel teamId={teamId} lang={lang} />}
           {lock.tools.includes("patient_compare") && <PatientCompare teamId={teamId} lang={lang} />}
-          {!lock.decision && !lock.tools.some((x) => ["load_wizard", "verify_panel", "privacy_radar", "protocol_doc", "star_canvas", "evidence_board", "verdict_form", "kpi_form", "dashboard_builder", "npc_chat", "ml_train", "ml_threshold", "ml_equity", "commission"].includes(x) || (x.startsWith("model_builder") && !x.includes(":"))) && (
+          {!lock.decision && !lock.tools.some((x) => ["load_wizard", "verify_panel", "privacy_radar", "star_canvas", "verdict_form", "kpi_form", "dashboard_builder", "npc_chat", "ml_train", "ml_threshold", "ml_equity", "commission"].includes(x) || (x.startsWith("model_builder") && !x.includes(":"))) && (
             <form onSubmit={async (e) => { e.preventDefault(); setMsg(null); noteAction(`${gl ? "Entrega" : "Entrega"}: ${lock.title}`); await act(async () => { const r = await api.submit(teamId, code); setMsg(r.ok ? { kind: "ok", text: t("lock.correct") } : { kind: "err", text: t("lock.wrong") }); if (r.ok) setCode(""); }); }}>
               <div className="answerbox" data-tour="answer">
                 <b>✍️ {gl ? "Que tedes que escribir" : "Qué tenéis que escribir"}</b>

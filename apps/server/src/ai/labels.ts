@@ -23,8 +23,10 @@ export function itemWords(id: string, lang: Lang): string {
   if (ITEMS[id]) return ITEMS[id][lang];
   if (/^c\d$/.test(id)) return `${gl ? "a afirmación" : "la afirmación"} ${id.slice(1)}`;
   if (id.endsWith(".csv")) return `${gl ? "o ficheiro" : "el fichero"} ${id}`;
-  if (id.startsWith("type:")) return `${gl ? "o tipo da táboa" : "el tipo de la tabla"} ${id.slice(5)}`;
-  if (id.startsWith("edge:")) return `${gl ? "a unión" : "la unión"} ${id.slice(5).replace(">", " → ")}`;
+  // the star-schema tables are shown without their fct_/dim_ prefix (it would give the answer away)
+  const bare = (s: string) => s.replace(/\b(fct|dim)_/g, "");
+  if (id.startsWith("type:")) return `${gl ? "o tipo da táboa" : "el tipo de la tabla"} ${bare(id.slice(5))}`;
+  if (id.startsWith("edge:")) return `${gl ? "a unión" : "la unión"} ${bare(id.slice(5)).replace(">", " → ")}`;
   const col = /^(\w+) \((\w+)\)$/.exec(id);
   if (col) return `${gl ? "a columna" : "la columna"} ${col[1]}`;
   if (/_\d+$/.test(id)) return `${gl ? "o gráfico" : "el gráfico"} ${id.split("_").pop()} (${id.replace(/_\d+$/, "").replace(/_/g, " ")})`;

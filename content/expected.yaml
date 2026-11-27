@@ -1,5 +1,3 @@
-r3a_protocolo: "q1=d30;q2=merge;q3=inpatient;q4=deceased"
 r3b_estrella: "types:dim_date=dim,dim_hospital=dim,dim_patient=dim,fct_admission=fact,fct_condition=fact|edges:fct_admission>dim_date,fct_admission>dim_hospital,fct_admission>dim_patient,fct_condition>dim_date,fct_condition>dim_patient"
-r4a_pruebas: "frag_h3=migration;negative_stay=capture;post_mortem=late_death"
 r4c_veredicto: "frag_h3=document;negative_stay=exclude_document;post_mortem=exclude_escalate"
 r5a_kpi: "kpi=readmit_over_discharges;min_n=n30;small_center=warn"

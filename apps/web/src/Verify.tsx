@@ -14,10 +14,10 @@ const PRESET: Record<string, { table: string; op: string; col?: string; es: stri
 
 interface Claim { id: string; text: { es: string; gl: string } }
 
-export function VerifyPanel({ teamId, lockId, lang, onSubmit }: { teamId: string; lockId: string; lang: Lang; onSubmit: (report: string) => Promise<void> }) {
+export function VerifyPanel({ teamId, lockId, lang, onSubmit, initial }: { teamId: string; lockId: string; lang: Lang; onSubmit: (report: string) => Promise<void>; initial?: string }) {
   const es = lang === "es";
   const [data, setData] = useState<{ claims: Claim[] } | null>(null);
-  const [flag, setFlag] = useState<Record<string, boolean>>({});
+  const [flag, setFlag] = useState<Record<string, boolean>>(() => Object.fromEntries((initial ?? "").split(";").filter(Boolean).map((id) => [id, true])));
   useEffect(() => { fetch(`/api/verify/${lockId}`).then((r) => r.json()).then(setData).catch(() => {}); }, [lockId]);
   if (!data) return <p>…</p>;
 

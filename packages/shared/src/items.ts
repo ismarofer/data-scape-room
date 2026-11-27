@@ -13,6 +13,6 @@ export function itemizeReport(key: string, report: string): ReportItem[] {
     for (const e of edges.replace(/^edges:/, "").split(",").filter(Boolean)) out.push({ id: `edge:${e}`, value: `edge:${e}` });
     return out;
   }
-  // r3a_protocolo, r4a_pruebas, r4c_veredicto, r5a_kpi: "k=v;k=v"
+  // r4c_veredicto, r5a_kpi: "k=v;k=v"
   return r.split(";").filter((p) => p.includes("=")).map((p) => ({ id: p.split("=")[0], value: p }));
 }

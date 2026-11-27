@@ -1,23 +1,13 @@
 # R2A rubric (server only). Actions: remove | pseudonymize | keep | generalize
 # ok = best treatments; critical = direct identifiers kept in clear; blocking = loses the join key; anything else = "warn".
-max_warn: 3
+# Only the 8 columns the team decides (Radar.tsx): the other 11 of patients.csv are shown as already removed.
+max_warn: 1
 columns:
   patient_id:  { ok: [keep, pseudonymize] }
   ssn:         { ok: [pseudonymize], critical: [keep], blocking: [remove] }
-  drivers:     { ok: [remove], critical: [keep] }
-  passport:    { ok: [remove], critical: [keep] }
-  prefix:      { ok: [remove, keep, generalize] }
   first_name:  { ok: [remove], critical: [keep] }
-  last_name:   { ok: [remove], critical: [keep] }
-  marital:     { ok: [remove, keep, generalize] }
-  birthdate:   { ok: [generalize] }
-  deathdate:   { ok: [keep] }
-  birthplace:  { ok: [remove, generalize] }
   address:     { ok: [remove], critical: [keep] }
-  city:        { ok: [generalize, remove] }
-  state:       { ok: [keep, remove] }
-  county:      { ok: [keep, generalize, remove] }
+  birthdate:   { ok: [generalize] }
   postal_code: { ok: [generalize] }
   gender:      { ok: [keep] }
-  lat:         { ok: [remove, generalize] }
-  lon:         { ok: [remove, generalize] }
+  deathdate:   { ok: [keep] }

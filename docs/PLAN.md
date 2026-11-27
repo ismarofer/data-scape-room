@@ -1,4 +1,4 @@
-# PLAN — Código Alta (evento: mié 2-dic-2026; inicio 17-nov)
+# PLAN — DataQuest (evento: mié 2-dic-2026; inicio 17-nov)
 
 Orden: M0 → M1 ∥ M2 → M3 → M4 → M5 → M7 → M6 → M9 → M8 (si sobra) → M10 (humano).
 Regla: nada de IA live verificada hasta tener clave; `scripted` completable al 100 %.

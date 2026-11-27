@@ -7,9 +7,9 @@ intro:
   es: "Brais, de Admisiones, ha dejado en la bandeja los ficheros de cuatro hospitales. Hay que cargarlos bien, limpiar un reenvío, comprobar a la IA del hospital y proteger los datos personales."
   gl: "Brais, de Admisións, deixou na caixa de entrada os ficheiros de catro hospitais. Hai que cargalos ben, limpar un reenvío, comprobar a IA do hospital e protexer os datos persoais."
 briefing:
-  - { es: "Cargar 8 ficheros que llegan cada uno con su formato.", gl: "Cargar 8 ficheiros que chegan cada un co seu formato." }
+  - { es: "Cargar 8 ficheros que llegan cada uno con su formato (separador, codificación y fechas distintas).", gl: "Cargar 8 ficheiros que chegan cada un co seu formato (separador, codificación e datas distintas)." }
   - { es: "Decidir qué hacer con un fichero que llegó dos veces.", gl: "Decidir que facer cun ficheiro que chegou dúas veces." }
   - { es: "Pillar a una IA que dice cosas falsas sobre los datos.", gl: "Pillar unha IA que di cousas falsas sobre os datos." }
   - { es: "Proteger los datos personales de los pacientes (RGPD).", gl: "Protexer os datos persoais dos pacientes (RXPD)." }
-target_minutes: 30
+target_minutes: 33
 locks: [r1a_bandeja, r1b_reenvio, r1c_ada, r2a_radar]

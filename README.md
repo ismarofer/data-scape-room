@@ -1,4 +1,4 @@
-# Código Alta — escape room de datos (sanidad)
+# DataQuest — escape room de datos (sanidad)
 
 Escape room de ingeniería y ciencia de datos ambientado en un hospital. Un equipo
 recorre salas (ingesta, modelado, calidad, visualización, predicción y presentación),

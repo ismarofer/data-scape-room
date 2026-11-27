@@ -4,7 +4,7 @@ import { getEngine } from "./duck";
 import { restoreRaw } from "./raw";
 import { toolState } from "./kv";
 import { readableSql } from "./FileViewer";
-import { setDraft } from "./workContext";
+import { emit, setDraft } from "./workContext";
 
 const store = {
   read: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
@@ -16,7 +16,13 @@ const MODEL_TEXT: Record<string, { title: L2; what: L2 }> = {
   fct_admission: { title: { es: "Reingresos", gl: "Reingresos" }, what: { es: "Marca qué episodios son un reingreso a 30 días.", gl: "Marca que episodios son un reingreso a 30 días." } },
   stg_encounters: { title: { es: "Visitas limpias", gl: "Visitas limpas" }, what: { es: "Limpia las fechas, los tipos de visita y los repetidos.", gl: "Limpa as datas, os tipos de visita e os repetidos." } },
   stg_patients: { title: { es: "Pacientes protegidos", gl: "Pacientes protexidos" }, what: { es: "Cambia el ssn por un código seudónimo.", gl: "Cambia o ssn por un código pseudónimo." } },
+  dim_patient: { title: { es: "Dimensión paciente", gl: "Dimensión paciente" }, what: { es: "Una fila por persona: tramo de edad, sexo y área.", gl: "Unha fila por persoa: tramo de idade, sexo e área." } },
+  dim_hospital: { title: { es: "Dimensión hospital", gl: "Dimensión hospital" }, what: { es: "Una fila por centro.", gl: "Unha fila por centro." } },
+  dim_date: { title: { es: "Dimensión fecha", gl: "Dimensión data" }, what: { es: "Una fila por día del calendario.", gl: "Unha fila por día do calendario." } },
+  fct_condition: { title: { es: "Hechos: diagnósticos", gl: "Feitos: diagnósticos" }, what: { es: "Una fila cada vez que se diagnostica algo.", gl: "Unha fila cada vez que se diagnostica algo." } },
 };
+/** The rest of the star of «Esquema en estrella» (no pieces to choose): built with the readmission model, so the gold layer really has its facts and dimensions. */
+export const STAR_MODELS = ["dim_patient", "dim_hospital", "dim_date", "fct_condition"];
 /** The checks in plain words (the runner's messages talk about columns and expressions). */
 const TEST_TEXT = (t: { test: string; status: string; message: string; failures: number }, es: boolean) => {
   if (t.status === "pass") return es ? "Comprobación superada" : "Comprobación superada";
@@ -32,21 +38,20 @@ const TEST_TEXT = (t: { test: string; status: string; message: string; failures:
  */
 export function ModelBuilder({ teamId, lang, project: full, names: namesProp, noSubmit, onSubmit, done, lockId }: { teamId: string; lang: Lang; project: Project; names?: string[]; noSubmit?: boolean; onSubmit: (report: string) => Promise<void>; done: boolean; lockId?: string }) {
   const names = namesProp ?? full.models.filter((m) => m.name.startsWith("stg_")).map((m) => m.name);
-  const cl = closure(full.models, names);
-  const project: Project = { models: full.models.filter((m) => cl.includes(m.name)), tests: full.tests.filter((t) => cl.includes(t.model)) };
+  const cl = closure(full.models, names.includes("fct_admission") ? [...names, ...STAR_MODELS.filter((n) => full.models.some((m) => m.name === n))] : names);
+  const project: Project = { models: full.models.filter((m) => cl.includes(m.name)), tests: full.tests.filter((t) => cl.includes(t.model) && (t.kind !== "relationships" || cl.includes(t.toModel))) };
+  const shown = (n: string) => names.includes(n) || (!n.startsWith("stg_") && cl.includes(n)); // models whose result is listed
   const es = lang === "es";
   const key = `ca_mb_${teamId}`;
   const [choices, setChoices] = useState<Record<string, Record<string, string>>>(() => { try { return JSON.parse(store.read(key) ?? "{}"); } catch { return {}; } });
   const [report, setReport] = useState<RunReport | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
-  const [proto, setProto] = useState<string[]>([]);
   const { order } = useMemo(() => dag(project.models), [project]);
   const tx = (t: any) => (typeof t === "string" ? t : (t?.[lang] ?? t?.es ?? ""));
-  useEffect(() => { toolState.load(teamId, "mb").then((v) => { if (v) try { setChoices(JSON.parse(v)); } catch { /* ignore */ } }); }, [teamId]);
-  useEffect(() => { toolState.save(teamId, "mb", JSON.stringify(choices)); }, [choices, teamId]);
-  // the protocol the team just answered, as a reminder next to the pieces
-  useEffect(() => { fetch("/api/protocol").then((r) => r.json()).then((p) => setProto(String(tx(p.body)).split("\n").filter((l: string) => /^[1-4]\./.test(l.trim())))).catch(() => {}); }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [mbLoaded, setMbLoaded] = useState(false);
+  useEffect(() => { toolState.load(teamId, "mb").then((v) => { try { setChoices(v ? JSON.parse(v) : {}); } catch { /* ignore */ } setMbLoaded(true); }); }, [teamId]);
+  useEffect(() => { if (mbLoaded) toolState.save(teamId, "mb", JSON.stringify(choices)); }, [choices, teamId, mbLoaded]); // never overwrite the server with a stale local copy
   const editable = project.models.filter((m) => names.includes(m.name) && m.slots);
   useEffect(() => {
     if (!lockId) return;
@@ -63,19 +68,18 @@ export function ModelBuilder({ teamId, lang, project: full, names: namesProp, no
       if (!(await restoreRaw(teamId))) { setMsg(es ? "Primero terminad de cargar los ficheros en «La bandeja de entrada»." : "Primeiro rematade de cargar os ficheiros en «A caixa de entrada»."); return; }
       const eng = await getEngine();
       setReport(await runProject(eng, project, choices));
+      emit({ type: "lab:refresh" }); // the new tables can now be asked in the Query Lab
     } catch (e) { setMsg(String((e as Error).message)); } finally { setBusy(false); }
   };
   const canSubmit = !!report && report.ok && report.tests.every((t) => t.status === "pass" || t.status === "warn") && allChosen;
   const status = (n: string) => report?.models.find((m) => m.model === n);
-  const chain = order.filter((n) => names.includes(n) || n.startsWith("stg_"));
+  const chain = order.filter((n) => cl.includes(n));
 
   return (
     <div className="mb">
-      {proto.length > 0 && (
-        <aside className="protonote" aria-label={es ? "Vuestro protocolo" : "O voso protocolo"}>
-          <b>📄 {es ? "Vuestro protocolo" : "O voso protocolo"}</b>
-          <ul>{proto.map((l) => <li key={l}>{l.replace(/^\s*\d\.\s*/, "")}</li>)}</ul>
-        </aside>
+      {lockId === "r3c_modelo" && (
+        // the rules are NOT copied here: finding them in the document is part of the level (26-nov)
+        <p className="protonote">📄 {es ? "Las reglas de cada pieza están en el protocolo oficial, dentro del documento " : "As regras de cada peza están no protocolo oficial, dentro do documento "}<button className="doclink" onClick={() => emit({ type: "doc:open", path: "docs/peticiones-direccion.md" })}>docs/peticiones-direccion.md</button>{es ? ". Abridlo y buscad la frase que responde a cada pregunta." : ". Abrídeo e buscade a frase que responde a cada pregunta."}</p>
       )}
       <ol className="chain" aria-label={es ? "Orden del cálculo" : "Orde do cálculo"}>
         {chain.map((n) => { const st = status(n); return <li key={n} className={st?.status === "ok" ? "ok" : st?.status === "error" ? "bad" : ""}><b>{MODEL_TEXT[n] ? tx(MODEL_TEXT[n].title) : n}</b><small>{n}</small>{st?.rows != null && <small>{st.rows.toLocaleString(lang)} {es ? "filas" : "filas"}</small>}</li>; })}
@@ -112,9 +116,9 @@ export function ModelBuilder({ teamId, lang, project: full, names: namesProp, no
         <section aria-label={es ? "Resultado" : "Resultado"} className="mbres">
           <h3>{es ? "Resultado del cálculo" : "Resultado do cálculo"}</h3>
           <ul className="results">
-            {report.models.filter((x) => names.includes(x.model)).map((x) => <li key={x.model} className={x.status === "ok" ? "pass" : "fail"}>{x.status === "ok" ? "✔" : "✘"} {MODEL_TEXT[x.model] ? tx(MODEL_TEXT[x.model].title) : x.model} {x.rows != null && `· ${x.rows.toLocaleString(lang)} ${es ? "filas" : "filas"}`} {x.error && <em>— {x.error}</em>}</li>)}
-            {report.tests.filter((t) => names.includes(t.model) && t.status !== "pass").map((t) => <li key={t.id} className={t.status}>{t.status === "warn" ? "🟡" : t.status === "skipped" ? "⚪" : "🔴"} {TEST_TEXT(t, es)}{t.status === "warn" ? (es ? " (es un aviso, no un error: lo investigaréis en la sala siguiente)" : " (é un aviso, non un erro: investigarédelo na sala seguinte)") : ""}</li>)}
-            <li className="pass">🟢 {report.tests.filter((t) => names.includes(t.model) && t.status === "pass").length} {es ? "comprobaciones superadas" : "comprobacións superadas"}</li>
+            {report.models.filter((x) => shown(x.model)).map((x) => <li key={x.model} className={x.status === "ok" ? "pass" : "fail"}>{x.status === "ok" ? "✔" : "✘"} {MODEL_TEXT[x.model] ? tx(MODEL_TEXT[x.model].title) : x.model} {x.rows != null && `· ${x.rows.toLocaleString(lang)} ${es ? "filas" : "filas"}`} {x.error && <em>— {x.error}</em>}</li>)}
+            {report.tests.filter((t) => shown(t.model) && t.status !== "pass").map((t) => <li key={t.id} className={t.status}>{t.status === "warn" ? "🟡" : t.status === "skipped" ? "⚪" : "🔴"} {TEST_TEXT(t, es)}{t.status === "warn" ? (es ? " (es un aviso, no un error: lo investigaréis en la sala siguiente)" : " (é un aviso, non un erro: investigarédelo na sala seguinte)") : ""}</li>)}
+            <li className="pass">🟢 {report.tests.filter((t) => shown(t.model) && t.status === "pass").length} {es ? "comprobaciones superadas" : "comprobacións superadas"}</li>
           </ul>
         </section>
       )}

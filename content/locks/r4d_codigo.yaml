@@ -4,19 +4,19 @@ type: code
 title: { es: "Registros excluidos", gl: "Rexistros excluídos" }
 docs_needed: [doc_ds_analysis]
 story:
-  es: "Con vuestras reglas, algunos registros salen del cálculo. El informe tiene que decir cuántos: ese total es el código."
-  gl: "Coas vosas regras, algúns rexistros saen do cálculo. O informe ten que dicir cantos: ese total é o código."
+  es: "Con vuestro veredicto, algunos registros salen del cálculo y otros se quedan. El informe tiene que decir cuántos se quitan en total: esa cifra es la respuesta."
+  gl: "Co voso veredicto, algúns rexistros saen do cálculo e outros quedan. O informe ten que dicir cantos se quitan en total: esa cifra é a resposta."
 tools: [evidence_counts]
 answer_hint:
-  es: "Un número: estancias negativas + encuentros posteriores al fallecimiento. Solo cifras."
-  gl: "Un número: estadías negativas + encontros posteriores ao falecemento. Só cifras."
+  es: "Un número: cuántos registros quitan del cálculo vuestras reglas. Solo cifras."
+  gl: "Un número: cantos rexistros quitan do cálculo as vosas regras. Só cifras."
 answer: { source: "answers.public.json#r4c_excluded", normalize: digits_only }
 points: 90
-time_target_min: 5
+time_target_min: 4
 hints:
-  - { es: "La fragmentación no se excluye (ya la arregla la fusión de episodios): no la sumes.", gl: "A fragmentación non se exclúe (xa a arranxa a fusión de episodios): non a sumes." }
-  - { es: "Sumad el número «registros» de dos tarjetas.", gl: "Sumade o número «registros» de dúas tarxetas." }
-  - { es: "Sumad «registros» de las tarjetas ⏪ Estancias negativas y 🕯 Encuentros posteriores al fallecimiento.", gl: "Sumade «registros» das tarxetas ⏪ Estadías negativas e 🕯 Encontros posteriores ao falecemento." }
+  - { es: "Solo se quitan los grupos que en el veredicto decidisteis excluir. Las altas y reingresos del mismo día se quedan: ya los arregla la fusión de episodios.", gl: "Só se quitan os grupos que no veredicto decidistes excluír. As altas e reingresos do mesmo día quedan: xa os arranxa a fusión de episodios." }
+  - { es: "Los que salen son dos: ⏪ Estancias negativas y 🕯 Visitas después del fallecimiento. Buscad en cada tarjeta el número «registros».", gl: "Os que saen son dous: ⏪ Estadías negativas e 🕯 Visitas despois do falecemento. Buscade en cada tarxeta o número «rexistros»." }
+  - { es: "Sumad los «registros» de esas dos tarjetas (no los pacientes) y escribid el total, solo cifras.", gl: "Sumade os «rexistros» desas dúas tarxetas (non os pacientes) e escribide o total, só cifras." }
 solution:
   es: "Estancias negativas + encuentros posteriores al fallecimiento = {answer}. Escribid {answer}."
   gl: "Estadías negativas + encontros posteriores ao falecemento = {answer}. Escribide {answer}."

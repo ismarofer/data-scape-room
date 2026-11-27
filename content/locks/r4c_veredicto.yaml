@@ -9,11 +9,11 @@ story:
 tools: [verdict_form]
 answer: { source: "build_answers.public.json#r4c_veredicto", normalize: report }
 points: 110
-time_target_min: 5
+time_target_min: 4
 hints:
-  - { es: "Ninguno se arregla inventando datos. Pensad: ¿se quita y se apunta por qué, o hay que avisar al hospital?", gl: "Ningún se arranxa inventando datos. Pensade: quítase e apúntase por que, ou hai que avisar ao hospital?" }
-  - { es: "La fragmentación ya la resuelve la regla de fusionar episodios: basta con documentarla. Lo que tiene que ver con fallecimientos lo tiene que revisar el hospital.", gl: "A fragmentación xa a resolve a regra de fusionar episodios: abonda con documentala. O que ten que ver con falecementos tense que revisar o hospital." }
-  - { es: "Altas y reingresos del mismo día → documentar. Encuentros tras el fallecimiento → excluir y escalar. Os queda decidir las estancias negativas.", gl: "Altas e reingresos do mesmo día → documentar. Encontros tras o falecemento → excluír e escalar. Quédavos decidir as estadías negativas." }
+  - { es: "Un dato clínico nunca se inventa ni se corrige a mano. Las altas y reingresos del mismo día ya los junta la regla de fusionar episodios del protocolo: «Ya cubierto por la fusión de episodios: documentar».", gl: "Un dato clínico nunca se inventa nin se corrixe a man. As altas e reingresos do mesmo día xa os xunta a regra de fusionar episodios do protocolo: «Xa cuberto pola fusión de episodios: documentar»." }
+  - { es: "Las estancias negativas son horas mal apuntadas: no se puede saber la buena, así que se quitan del cálculo y se explica por qué: «Excluir y documentar».", gl: "As estadías negativas son horas mal apuntadas: non se pode saber a boa, así que se quitan do cálculo e explícase por que: «Excluír e documentar»." }
+  - { es: "Las visitas después del fallecimiento se quitan, y como el fallo está en cómo el hospital registra las defunciones, hay que avisarle: «Excluir y escalar al hospital».", gl: "As visitas despois do falecemento quítanse e, como o fallo está en como o hospital rexistra as defuncións, hai que avisalo: «Excluír e escalar ao hospital»." }
 solution:
   es: "Altas y reingresos del mismo día → «Ya cubierto por la fusión de episodios: documentar». Estancias negativas → «Excluir y documentar». Encuentros posteriores al fallecimiento → «Excluir y escalar al hospital»."
   gl: "Altas e reingresos do mesmo día → «Xa cuberto pola fusión de episodios: documentar». Estadías negativas → «Excluír e documentar». Encontros posteriores ao falecemento → «Excluír e escalar ao hospital»."

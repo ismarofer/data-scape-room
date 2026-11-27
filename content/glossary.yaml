@@ -1,3 +1,6 @@
+tabla:
+  term: { es: "Tabla (fila y columna)", gl: "Táboa (fila e columna)" }
+  def: { es: "La forma en que se guardan casi todos los datos, como una hoja de cálculo. Cada fila es una cosa (un paciente, una visita) y cada columna es un dato de esa cosa (nombre, fecha…). La primera línea, la cabecera, da el nombre de cada columna.", gl: "A forma na que se gardan case todos os datos, como unha folla de cálculo. Cada fila é unha cousa (un paciente, unha visita) e cada columna é un dato desa cousa (nome, data…). A primeira liña, a cabeceira, dá o nome de cada columna." }
 csv:
   term: { es: "CSV", gl: "CSV" }
   def: { es: "Fichero de texto que guarda una tabla: cada línea es una fila y un símbolo especial (el separador) marca dónde acaba cada columna.", gl: "Ficheiro de texto que garda unha táboa: cada liña é unha fila e un símbolo especial (o separador) marca onde acaba cada columna." }

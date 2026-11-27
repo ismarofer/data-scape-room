@@ -39,7 +39,8 @@ describe("engine", () => {
     expect(engine.submit(a.teamId, "mal").ok).toBe(false);
     expect(engine.submit(a.teamId, " atlántico ").ok).toBe(true); // normalisation: case, accents, spaces
     const st = engine.state(a.teamId);
-    expect(st.score).toBe(20);
+    expect(st.meters.trust).toBe(41); // one meter (ADR 014): starts at 40, a solved level raises it
+    expect(st.score).toBe(st.meters.trust); // there are no separate points
     expect(st.currentLockId).toBe("r1a_bandeja");
     expect(events).toContain("state_update");
   });
@@ -51,24 +52,25 @@ describe("engine", () => {
     solveTo(engine, teamId, ["p0_tutorial", "r1a_bandeja"]);
     expect(engine.state(teamId).currentLockId).toBe("r1b_reenvio");
     expect(() => engine.submit(teamId, "123")).toThrow(GameError);
+    const before = engine.state(teamId).meters.trust;
     engine.decide(teamId, "r1b_reenvio", "union_all");
-    const m = engine.state(teamId).meters;
-    expect(m.quality).toBe(30);
-    expect(m.trust).toBe(55);
+    expect(engine.state(teamId).meters.trust).toBe(before - 5); // a risky decision lowers the single meter
     const code = String(answersFull.r1b_unique_encounters.value);
     expect(engine.submit(teamId, code.padStart(10, "0")).ok).toBe(true); // leading zeros accepted
     expect(engine.state(teamId).currentLockId).toBe("r1c_ada");
     solveTo(engine, teamId, ["r1c_ada", "r2a_radar"]);
-    expect(engine.state(teamId).currentLockId).toBe("r3a_protocolo");
-    solveTo(engine, teamId, ["r3a_protocolo", "r3b_estrella", "r3c_modelo", "r4a_pruebas"]);
+    expect(engine.state(teamId).currentLockId).toBe("r3b_estrella"); // the protocol is read inside the model level now
+    solveTo(engine, teamId, ["r3b_estrella", "r3c_modelo"]);
     expect(engine.state(teamId).currentLockId).toBe("r4b_entrevistas");
-    expect(() => engine.submit(teamId, "x")).toThrow(/hablando/); // interview locks open only through the characters
     engine.addClues(teamId, ["C1", "C3"]);
+    expect(engine.state(teamId).currentLockId).toBe("r4b_entrevistas"); // finding clues never moves the team on by itself
+    expect(engine.state(teamId).clues).toEqual(["C1", "C3"]);
+    expect(engine.submit(teamId, "seguir").ok).toBe(true); // the team decides when to go on
     solveTo(engine, teamId, ["r4c_veredicto", "r4d_codigo", "r5a_kpi"]);
     expect(engine.submit(teamId, sol("r5b_dashboard").code).ok).toBe(true); // build mode: structure only
     const r5c = engine.submit(teamId, sol("r5b_dashboard").code); // review mode with the sloppy dashboard fails and lists findings
     expect(r5c.ok).toBe(false);
-    expect(r5c.findings!.some((f) => f.id.startsWith("axis_zero"))).toBe(true);
+    expect(r5c.findings!.some((f) => f.id.startsWith("counts_") && f.severity === "critical")).toBe(true);
     solveTo(engine, teamId, ["r5c_critico", "r5d_codigo"]);
     expect(engine.state(teamId).currentLockId).toBe("r6a_entrenar"); // after R5 comes the optional lab (R6), then the Commission
   });
@@ -80,18 +82,19 @@ describe("engine", () => {
     solveTo(engine, teamId, ["p0_tutorial", "r1a_bandeja"]);
     engine.decide(teamId, "r1b_reenvio", "latest_by_id");
     solveTo(engine, teamId, ["r1b_reenvio"]);
-    const before = engine.state(teamId).score;
+    const before = engine.state(teamId).meters.trust;
     const wrong = engine.submit(teamId, "c1;c2;c3");
     expect(wrong.ok).toBe(false);
     expect(wrong.feedback).toMatch(/falsa/);
-    expect(engine.state(teamId).score).toBe(before - 10);
+    expect(engine.state(teamId).meters.trust).toBe(before - 2);
     expect(engine.submit(teamId, "c2").ok).toBe(false); // one false claim is still missing
     solveTo(engine, teamId, ["r1c_ada"]);
+    const beforePrivacy = engine.state(teamId).meters.trust;
     const bad = engine.submit(teamId, sol("r2a_radar").code.replace("ssn=pseudonymize", "ssn=keep"));
     expect(bad.ok).toBe(false);
     expect(bad.badColumns).toContainEqual({ col: "ssn", kind: "critical" });
     expect(bad.badColumns!.map((b) => b.col)).toEqual(["ssn"]); // only the wrong column is reported
-    expect(engine.state(teamId).meters.compliance).toBe(50);
+    expect(engine.state(teamId).meters.trust).toBe(beforePrivacy - 6);
     expect(engine.submit(teamId, sol("r2a_radar").code.replace("ssn=pseudonymize", "ssn=remove")).feedback).toMatch(/unir/);
     expect(engine.submit(teamId, sol("r2a_radar").code).ok).toBe(true);
   });
@@ -106,7 +109,7 @@ describe("engine", () => {
     expect(help().next).toMatchObject({ level: 1, unlocked: true, penalty: 5 });
     expect(() => engine.hint(teamId, 2)).toThrow(/orden/);
     expect(engine.hint(teamId, 1).text).toMatch(/Costa/);
-    expect(engine.state(teamId).score).toBe(-5);
+    expect(engine.state(teamId).meters.trust).toBe(35);
     expect(engine.state(teamId).locks[0].hints).toHaveLength(1);
     // step 2 needs one failed try or 3 minutes
     expect(help().next).toMatchObject({ level: 2, unlocked: false, attemptsNeeded: 1 });
@@ -117,11 +120,11 @@ describe("engine", () => {
     // step 3 by time
     now.t += 6 * 60_000;
     engine.hint(teamId, 3);
-    expect(help().next).toMatchObject({ level: 4, penalty: 40 });
+    expect(help().next).toMatchObject({ level: 4, penalty: 10 });
     now.t += 4 * 60_000;
     const sol4 = engine.hint(teamId, 4);
     expect(sol4.text).toContain("ATLANTICO"); // the real value fills {answer}
-    expect(engine.state(teamId).score).toBe(-(5 + 10 + 20 + 40));
+    expect(engine.state(teamId).meters.trust).toBe(40 - (5 + 5 + 5 + 10));
     expect(engine.state(teamId).locks[0].solution).toContain("ATLANTICO");
     expect(help().next).toBeNull();
     expect(engine.state(teamId).locks[0].hints).toHaveLength(3);
@@ -170,8 +173,35 @@ describe("engine", () => {
     const { teamId } = join(engine, s.code);
     engine.masterKey(teamId);
     const st = engine.state(teamId);
-    expect(st.score).toBe(-60);
+    expect(st.meters.trust).toBe(30);
     expect(st.currentLockId).toBe("r1a_bandeja");
+  });
+
+  it("facilitator shortcut: jump to any level (forward and back) with what the later tools need", () => {
+    const { engine } = make();
+    const s = engine.createSession();
+    const { teamId } = join(engine, s.code);
+    const trust = engine.state(teamId).meters.trust;
+    engine.jumpTo(teamId, "r4b_entrevistas");
+    let st = engine.state(teamId);
+    expect(st.currentLockId).toBe("r4b_entrevistas");
+    expect(st.locks.filter((l) => l.status === "done").map((l) => l.id)).toEqual(content.order.slice(0, content.order.indexOf("r4b_entrevistas")));
+    expect(st.meters.trust).toBe(trust); // the meter is not touched
+    expect(JSON.parse(engine.kvGet(teamId, "wiz")!)["encounters_H3.csv"]).toMatchObject({ delimiter: ";", encoding: "latin-1" }); // the raw data can be rebuilt
+    expect(engine.ledger(teamId).find((l) => l.lock_id === "r1b_reenvio")?.tag).toBe("correct_dedupe");
+    engine.addClues(teamId, ["C1"]);
+    engine.hint(teamId, 1);
+    engine.jumpTo(teamId, "r4b_entrevistas"); // again: the level starts from zero
+    st = engine.state(teamId);
+    expect(st.clues).toEqual([]);
+    expect(st.locks.find((l) => l.id === "r4b_entrevistas")!.hintsUsed).toBe(0);
+    engine.jumpTo(teamId, "r1a_bandeja"); // back: later levels are locked again and the loader starts empty
+    st = engine.state(teamId);
+    expect(st.currentLockId).toBe("r1a_bandeja");
+    expect(st.locks.filter((l) => l.status === "done").map((l) => l.id)).toEqual(["p0_tutorial"]);
+    expect(engine.kvGet(teamId, "wiz")).toBeNull();
+    expect(engine.ledger(teamId).some((l) => l.lock_id === "r1b_reenvio")).toBe(false);
+    expect(() => engine.jumpTo(teamId, "nope")).toThrow(/no existe/);
   });
 
   it("blocks inappropriate team names", () => {
@@ -199,17 +229,16 @@ describe("engine", () => {
     const c = engine.submit(teamId, "c1;c2;c3");
     expect(c.ok).toBe(false);
     expect(c.badItems).toEqual([{ id: "c1" }]);
-    to("r3a_protocolo");
-    const q = engine.submit(teamId, "q1=d7;q2=merge;q3=inpatient;q4=none");
-    expect(q.badItems).toEqual([{ id: "q1" }, { id: "q4" }]);
-    expect(q.missingCount).toBe(0);
-    expect(JSON.stringify(q)).not.toContain("d30");
     to("r3b_estrella");
     const star = engine.submit(teamId, "types:dim_date=fact,dim_hospital=dim,dim_patient=dim,fct_admission=fact,fct_condition=fact|edges:fct_admission>dim_date,fct_admission>dim_hospital,dim_date>dim_patient");
     expect(star.badItems!.map((x) => x.id).sort()).toEqual(["edge:dim_date>dim_patient", "type:dim_date"]);
     expect(star.missingCount).toBe(2);
     to("r5a_kpi");
-    expect(engine.submit(teamId, "kpi=readmit_count;min_n=n30;small_center=warn").badItems).toEqual([{ id: "kpi" }]);
+    expect(engine.submit(teamId, "kpi=readmit_count;min_n=25;small_center=warn").badItems).toEqual([{ id: "kpi" }]);
+    // the minimum of discharges is any sensible number: it must leave out the 3-case clinic and keep every real hospital
+    expect(engine.submit(teamId, "kpi=readmit_over_discharges;min_n=3;small_center=warn").badItems).toEqual([{ id: "min_n" }]);
+    expect(engine.submit(teamId, "kpi=readmit_over_discharges;min_n=1000;small_center=warn").badItems).toEqual([{ id: "min_n" }]);
+    expect(engine.submit(teamId, "kpi=readmit_over_discharges;min_n=25;small_center=warn").ok).toBe(true);
   });
   it("project documents appear in the explorer when the level that needs them is reached, and stay", () => {
     const { engine } = make();
@@ -305,20 +334,24 @@ describe("R6 laboratorio de riesgo y la Comisión", () => {
     expect(engine.submit(teamId, `decision=deploy_review;text=${t}`).ok).toBe(true);
     expect(engine.state(teamId).currentLockId).toBe("f_comision");
   });
-  it("the bonus room can be skipped, and the Commission runs 6 turns (rules) to an ending with badges and a report", async () => {
+  it("the bonus room can be skipped, and the Commission runs 5 functional turns (rules) to an ending with badges and a report", async () => {
     const { engine } = make();
     const { teamId } = join(engine, engine.createSession().code);
     reach(engine, teamId, "r6a_entrenar");
     engine.skipBonus(teamId);
     expect(engine.state(teamId).currentLockId).toBe("f_comision");
     const cc = content; void cc;
-    const commission = new Commission(engine, undefined, loadCommission(path.join(root, "content")), {});
+    const commission = new Commission(engine, undefined, loadCommission(path.join(root, "content")), {}, path.join(root, "data/dist/canon/fct_admission_clean.csv"));
     const v0 = await commission.view(teamId, "es");
+    expect(v0.question!.text).toMatch(/de cada 100/); // functional, not technical
+    expect(v0.question!.tip).toBeTruthy();
+    expect(v0.evidence.find((c) => c.id === "ev_rate")?.text).toMatch(/10,0 %/); // summary card with the clean figure
+    expect(v0.evidence.find((c) => c.id === "ev_where")?.text).toMatch(/Illa Verde/);
     expect(v0.turn).toBe(0);
     expect(v0.question!.persona.name).toMatch(/Valcárcel/);
     let v = v0;
     const good = "Hemos fijado un mínimo de 30 altas porque un centro con 3 ingresos da un 100 % por azar. Es un límite de nuestros datos, que son provisionales. Recomendamos revisar los centros pequeños aparte y proponemos un plan de seguimiento.";
-    for (let i = 0; i < 6; i++) { v = await commission.answer(teamId, good, v.evidence.map((c) => c.id).slice(0, 2), "es"); }
+    for (let i = 0; i < 5; i++) { v = await commission.answer(teamId, good, [], "es"); }
     expect(v.done).toBe(true);
     expect(v.result!.votes).toHaveLength(3);
     expect(["approved", "conditions", "more_data"]).toContain(v.result!.ending);

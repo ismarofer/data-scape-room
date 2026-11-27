@@ -1,55 +1,56 @@
-# La Comisión (final). Tres personas, dos preguntas cada una (6 turnos). Las preguntas por plantilla se eligen según las decisiones del equipo;
-# con IA live se generan a partir de las mismas decisiones y se cae a esta plantilla si el modelo tarda o falla.
-turns: 6
+# La Comisión (final). Tres personas NO técnicas, 5 preguntas funcionales (27-nov): lo que preguntaría un cliente de verdad
+# (¿cuántos vuelven?, ¿me puedo fiar?, ¿dónde me fijo?, ¿están protegidos los pacientes?, ¿qué hacemos mañana?).
+# Debajo de la pregunta el equipo ve un resumen de su trabajo en tarjetas (commission.ts → summary) para poder responder.
+# Las preguntas por plantilla se eligen según las decisiones del equipo; con IA live se reformulan a partir de las mismas
+# decisiones y se cae a esta plantilla si el modelo tarda o falla.
+turns: 5
 personas:
   - id: valcarcel
     name: "Dra. Marta Valcárcel"
     role: { es: "Directora Médica y presidenta de la Comisión", gl: "Directora Médica e presidenta da Comisión" }
-    focus: { es: "Rigurosa y cálida; odia las cifras sin contexto: denominadores, comparabilidad y honestidad con los límites.", gl: "Rigorosa e cálida; odia as cifras sen contexto: denominadores, comparabilidade e honestidade cos límites." }
+    focus: { es: "Quiere entender la situación de sus pacientes en palabras sencillas y decidir qué hacer. No sabe de datos ni de informática.", gl: "Quere entender a situación dos seus pacientes en palabras sinxelas e decidir que facer. Non sabe de datos nin de informática." }
   - id: pardo
     name: "Xaquín Pardo"
     role: { es: "Gerente del hospital", gl: "Xerente do hospital" }
-    focus: { es: "Pragmático; mira riesgos legales, costes y plazos: privacidad, tiempo empleado y si el proceso se puede repetir.", gl: "Pragmático; mira riscos legais, custos e prazos: privacidade, tempo empregado e se o proceso se pode repetir." }
+    focus: { es: "Pragmático: le preocupa poder fiarse de la cifra y no tener problemas con los datos de los pacientes. No sabe de datos ni de informática.", gl: "Pragmático: preocúpalle poder fiarse da cifra e non ter problemas cos datos dos pacientes. Non sabe de datos nin de informática." }
   - id: louzao
     name: "Carmen Louzao"
     role: { es: "Enfermera jefa", gl: "Enfermeira xefa" }
-    focus: { es: "Cercana a la realidad asistencial; pregunta «¿y qué hago yo con esto?»: anomalías, acciones concretas en planta.", gl: "Próxima á realidade asistencial; pregunta «e que fago eu con isto?»: anomalías, accións concretas en planta." }
-# turno -> persona (índice en personas)
-order: [valcarcel, pardo, louzao, valcarcel, pardo, louzao]
+    focus: { es: "Organiza a las enfermeras de planta; quiere saber dónde fijarse y qué hacer en el día a día. No sabe de datos ni de informática.", gl: "Organiza as enfermeiras de planta; quere saber onde fixarse e que facer no día a día. Non sabe de datos nin de informática." }
+# turno -> persona
+order: [valcarcel, pardo, louzao, pardo, valcarcel]
 questions:
-  v1_dup:
-    es: "Vuestra decisión sobre los ficheros reenviados dejó duplicados o versiones antiguas en los datos. ¿Cómo cambia eso la cifra de encuentros y cómo podéis estar seguros del número que me presentáis?"
-    gl: "A vosa decisión sobre os ficheiros reenviados deixou duplicados ou versións antigas nos datos. Como cambia iso a cifra de encontros e como podedes estar seguros do número que me presentades?"
-  v1_ok:
-    es: "Decidisteis quedaros con una sola versión de cada encuentro. ¿Cómo sabéis que la cifra de encuentros es fiable y qué habríais hecho si las dos versiones no coincidieran?"
-    gl: "Decidistes quedar cunha soa versión de cada encontro. Como sabedes que a cifra de encontros é fiable e que fariades se as dúas versións non coincidisen?"
-  p1_priv_bad:
-    es: "En algún momento dejasteis datos que identifican directamente a una persona. Si esto fuera real, ¿qué riesgo legal habría corrido el hospital y qué habéis cambiado para que no se repita?"
-    gl: "Nalgún momento deixastes datos que identifican directamente a unha persoa. Se isto fose real, que risco legal correría o hospital e que cambiastes para que non se repita?"
-  p1_priv_ok:
-    es: "Habéis tratado los datos personales antes de analizarlos. Explicadme, sin tecnicismos, qué hicisteis con el SSN y por qué no bastaba con borrarlo."
-    gl: "Tratastes os datos persoais antes de analizalos. Explicádeme, sen tecnicismos, que fixestes co SSN e por que non abondaba con borralo."
-  l1_anom:
-    es: "Hay pacientes con ingresos anotados después de fallecer y estancias con el alta antes del ingreso. ¿Qué ha pasado con esos registros, qué habéis decidido y qué tengo que decirle yo a mi equipo de planta?"
-    gl: "Hai pacientes con ingresos anotados despois de falecer e estadías coa alta antes do ingreso. Que pasou con eses rexistros, que decidistes e que teño que lle dicir eu ao meu equipo de planta?"
-  v2_small_bad:
-    es: "Un centro con muy pocos casos aparece con una tasa de reingresos altísima. ¿Cómo habéis tratado ese centro y por qué no confiaríais en compararlo con los hospitales grandes?"
-    gl: "Un centro con moi poucos casos aparece cunha taxa de reingresos altísima. Como tratastes ese centro e por que non confiariades en comparalo cos hospitais grandes?"
-  v2_small_ok:
-    es: "Habéis fijado un mínimo de altas y avisáis de los centros pequeños. ¿Por qué ese mínimo y no otro, y qué le diríais a un director de un centro pequeño que se siente excluido?"
-    gl: "Fixestes un mínimo de altas e avisades dos centros pequenos. Por que ese mínimo e non outro, e que lle diriades ao director dun centro pequeno que se sente excluído?"
-  p2_time:
-    es: "Habéis necesitado ayudas o atajos para llegar hasta aquí. Si esto hubiera que repetirlo cada mes, ¿qué parte del proceso automatizaríais y qué os preocupa que falle?"
-    gl: "Necesitastes axudas ou atallos para chegar ata aquí. Se isto houbese que repetilo cada mes, que parte do proceso automatizariades e que vos preocupa que falle?"
-  p2_cost:
-    es: "Habéis llegado con buen ritmo. Si hubiera que repetir este análisis cada mes con datos nuevos, ¿qué necesitaríais del hospital (personas, tiempo, datos) y qué garantizaría que el resultado es siempre fiable?"
-    gl: "Chegastes con bo ritmo. Se houbese que repetir esta análise cada mes con datos novos, que precisariades do hospital (persoas, tempo, datos) e que garantiría que o resultado é sempre fiable?"
-  l2_action:
-    es: "Ya tenéis el centro con la tasa más alta de reingresos. Yo soy enfermera jefa: ¿qué debería hacer mi equipo mañana con esa información y qué NO deberíamos concluir todavía?"
-    gl: "Xa tedes o centro coa taxa máis alta de reingresos. Eu son enfermeira xefa: que debería facer o meu equipo mañá con esa información e que NON deberiamos concluír aínda?"
-  l2_ml:
-    es: "Habéis probado un modelo para avisar de pacientes con riesgo de reingreso. ¿Me lo recomendáis para usarlo en planta mañana, con qué condiciones y a quién podría perjudicar?"
-    gl: "Probastes un modelo para avisar de pacientes con risco de reingreso. Recomendádesmo para usalo en planta mañá, con que condicións e a quen podería prexudicar?"
+  q_cifra:
+    es: "Empecemos por lo básico: de cada 100 pacientes a los que damos el alta, ¿cuántos vuelven a ingresar antes de un mes? ¿Os parece mucho o poco?"
+    gl: "Comecemos polo básico: de cada 100 pacientes aos que lles damos a alta, cantos volven ingresar antes dun mes? Parécevos moito ou pouco?"
+  q_fiar_ok:
+    es: "Antes de llevar esa cifra al Consejo necesito saber si me puedo fiar de ella. ¿Qué problemas tenían los datos y qué hicisteis para que no la inflaran?"
+    gl: "Antes de levar esa cifra ao Consello preciso saber se me podo fiar dela. Que problemas tiñan os datos e que fixestes para que non a inchasen?"
+  q_fiar_dup:
+    es: "Me cuentan que, con el fichero que un hospital mandó dos veces, se os quedaron visitas repetidas. ¿Me puedo fiar entonces de la cifra? ¿Qué cambiaríais?"
+    gl: "Cóntanme que, co ficheiro que un hospital mandou dúas veces, quedáronvos visitas repetidas. Podo fiarme entón da cifra? Que cambiariades?"
+  q_donde:
+    es: "Yo organizo a las enfermeras de planta. ¿Hay algún hospital o algún tipo de paciente en el que deba fijarme más?"
+    gl: "Eu organizo as enfermeiras de planta. Hai algún hospital ou algún tipo de paciente no que deba fixarme máis?"
+  q_priv_ok:
+    es: "Si mañana un paciente me pregunta si su nombre ha estado en vuestro ordenador, ¿qué le digo? ¿Podría alguien saber quién es quién con lo que habéis usado?"
+    gl: "Se mañá un paciente me pregunta se o seu nome estivo no voso ordenador, que lle digo? Podería alguén saber quen é quen co que usastes?"
+  q_priv_bad:
+    es: "Me han dicho que en algún momento quedó a la vista un dato que identificaba a los pacientes. ¿Qué pasó y cómo me aseguráis que no vuelve a ocurrir?"
+    gl: "Dixéronme que nalgún momento quedou á vista un dato que identificaba os pacientes. Que pasou e como me asegurades que non volve ocorrer?"
+  q_next:
+    es: "Tengo que decidir hoy. ¿Qué nos recomendáis hacer a partir de mañana? ¿Y qué no deberíamos hacer todavía?"
+    gl: "Teño que decidir hoxe. Que nos recomendades facer a partir de mañá? E que non deberiamos facer aínda?"
+  q_next_ml:
+    es: "Tengo que decidir hoy. ¿Qué nos recomendáis hacer a partir de mañana? Y esa herramienta que avisa de los pacientes con riesgo de volver, ¿la ponemos ya en marcha?"
+    gl: "Teño que decidir hoxe. Que nos recomendades facer a partir de mañá? E esa ferramenta que avisa dos pacientes con risco de volver, poñémola xa en marcha?"
+# what a good answer contains, one per turn (shown under the question)
+tips:
+  - { es: "La cifra global dicha en palabras («unos X de cada 100») y si os parece alta o baja. Está en la tarjeta «La cifra».", gl: "A cifra global dita en palabras («uns X de cada 100») e se vos parece alta ou baixa. Está na tarxeta «A cifra»." }
+  - { es: "Uno o dos problemas que encontrasteis en los datos y qué hicisteis con ellos. Mirad «Los datos» y «Datos raros».", gl: "Un ou dous problemas que atopastes nos datos e que fixestes con eles. Mirade «Os datos» e «Datos raros»." }
+  - { es: "El hospital con más reingresos y por qué el más pequeño no cuenta. Si queréis, el grupo de edad. Mirad «Dónde» y «Por edad».", gl: "O hospital con máis reingresos e por que o máis pequeno non conta. Se queredes, o grupo de idade. Mirade «Onde» e «Por idade»." }
+  - { es: "Qué datos personales quitasteis o cambiasteis, en palabras sencillas. Mirad «Privacidad».", gl: "Que datos persoais quitastes ou cambiastes, en palabras sinxelas. Mirade «Privacidade»." }
+  - { es: "Una o dos acciones concretas (por ejemplo, revisar las altas del hospital con más reingresos) y una cosa que todavía no sabéis.", gl: "Unha ou dúas accións concretas (por exemplo, revisar as altas do hospital con máis reingresos) e unha cousa que aínda non sabedes." }
 endings:
   approved:
     title: { es: "Plan aprobado", gl: "Plan aprobado" }

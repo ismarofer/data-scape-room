@@ -198,25 +198,37 @@ def feed_frame(df, loaded, wrong=False, h3=False):
     return d
 
 
+# R1A: each sender exports "its own way" (separator and encoding per file); only H3 writes dates as day/month/year.
+# Same truth server side in apps/server/src/loader-truth.ts. The values never change, only how they are written.
+FORMATS = {
+    "patients.csv": (",", "utf-8"), "organizations.csv": ("|", "utf-8"), "conditions.csv": ("\t", "latin-1"),
+    "encounters_H1.csv": (",", "utf-8"), "encounters_H2.csv": (",", "latin-1"), "encounters_H2_reenvio.csv": (",", "utf-8"),
+    "encounters_H3.csv": (";", "latin-1"), "encounters_H4.csv": ("\t", "utf-8"),
+}
+
+
+def write_raw(d, name):
+    sep, enc = FORMATS[name]
+    d.to_csv(RAW / name, index=False, sep=sep, encoding=enc)
+
+
 manifest = {"files": {}}
 for f in ("H1", "H2", "H3", "H4"):
     sub = te[te.feed == f]
     d = feed_frame(sub, "2024-01-15", wrong=(f == "H2"), h3=(f == "H3"))
     name = f"encounters_{f}.csv"
-    if f == "H3":
-        d.to_csv(RAW / name, index=False, sep=";", encoding="latin-1")
-    else:
-        d.to_csv(RAW / name, index=False, encoding="utf-8")
+    write_raw(d, name)
     n_rej = 0
     if f == "H4":
-        with open(RAW / name, "a", encoding="utf-8", newline="") as fh:
+        sep, enc = FORMATS[name]
+        with open(RAW / name, "a", encoding=enc, newline="") as fh:
             for r in truncated.itertuples():
-                line = f"{r.encounter_id},{r.patient_id},{r.organization_id},{r.start_ts:%Y-%m-%d %H:%M:%S}"
+                line = sep.join([r.encounter_id, r.patient_id, r.organization_id, f"{r.start_ts:%Y-%m-%d %H:%M:%S}"])
                 fh.write(line[: int(rng.integers(len(r.encounter_id) + 5, len(line)))] + "\n")
         n_rej = 17
     manifest["files"][name] = dict(rows_loaded=len(d), rows_rejected=n_rej)
 sub = te[te.feed == "H2"]
-feed_frame(sub, "2024-02-05").to_csv(RAW / "encounters_H2_reenvio.csv", index=False)
+write_raw(feed_frame(sub, "2024-02-05"), "encounters_H2_reenvio.csv")
 manifest["files"]["encounters_H2_reenvio.csv"] = dict(rows_loaded=len(sub), rows_rejected=0)
 
 pcols = ["patient_id", "ssn", "drivers", "passport", "prefix", "first_name", "last_name", "marital", "birthdate", "deathdate",
@@ -224,15 +236,15 @@ pcols = ["patient_id", "ssn", "drivers", "passport", "prefix", "first_name", "la
 pout = tp_all[pcols].copy()
 for c in ("birthdate", "deathdate"):
     pout[c] = pout[c].dt.strftime("%Y-%m-%d")
-pout.sample(frac=1, random_state=SEED).to_csv(RAW / "patients.csv", index=False, encoding="utf-8")
+write_raw(pout.sample(frac=1, random_state=SEED), "patients.csv")
 manifest["files"]["patients.csv"] = dict(rows_loaded=len(pout), rows_rejected=0)
 orgs = pd.DataFrame([dict(organization_id=o[0], name=o[1], feed=o[2], city=("Vigo" if o[0] == "ORG09" else "Galicia")) for o in ORGS])
-orgs.to_csv(RAW / "organizations.csv", index=False, encoding="utf-8")
+write_raw(orgs, "organizations.csv")
 manifest["files"]["organizations.csv"] = dict(rows_loaded=len(orgs), rows_rejected=0)
 tcw = tc[tc.encounter_id.isin(te.encounter_id)].copy()
 for c in ("start", "stop"):
     tcw[c] = tcw[c].dt.strftime("%Y-%m-%d")
-tcw.to_csv(RAW / "conditions.csv", index=False, encoding="utf-8")
+write_raw(tcw, "conditions.csv")
 manifest["files"]["conditions.csv"] = dict(rows_loaded=len(tcw), rows_rejected=0)
 
 # ================= CANONICAL PARQUET =================
@@ -255,7 +267,9 @@ log["manifest"] = manifest
 json.dump(log, open(DIST / "inject_log.json", "w"), indent=1, default=str)
 json.dump(manifest["files"], open(WORK / "expected_files.json", "w"), indent=1)  # private: expected counts
 sheet = {"description": "Entrega de ficheros del hospital (datos ficticios).", "files": {
-    n: {"delimiter": ";" if "H3" in n else ",", "encoding": "UTF-8",  # H3 sheet says UTF-8 but the file is latin-1 (intentional)
+    # what each hospital declares: right, except that H2 and H3 say UTF-8 while their files are Latin-1 (intentional trap)
+    n: {"delimiter": {"\t": "tabulador", "|": "barra |"}.get(FORMATS[n][0], FORMATS[n][0]),
+        "encoding": "UTF-8" if n in ("encounters_H2.csv", "encounters_H3.csv") else {"utf-8": "UTF-8", "latin-1": "Latin-1"}[FORMATS[n][1]],
         "date_format": "dd/MM/yyyy HH:mm" if "H3" in n else ("yyyy-MM-dd HH:mm:ss" if n.startswith("encounters") else None)}
     for n in manifest["files"]}}
 json.dump(sheet, open(RAW / "manifest.json", "w"), indent=1, ensure_ascii=False)

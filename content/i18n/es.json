@@ -1,6 +1,6 @@
 {
  "app": {
-  "title": "Código Alta",
+  "title": "DataQuest",
   "disclaimer": "Datos 100 % ficticios. Ninguna persona ni centro real."
  },
  "join": {
@@ -12,8 +12,8 @@
   "try": "Probar",
   "hint": "Pedir pista",
   "code": "Vuestra respuesta",
-  "correct": "¡Candado abierto!",
-  "wrong": "Ese código no abre este candado. Revisa tus datos.",
+  "correct": "¡Respuesta correcta! Nivel superado.",
+  "wrong": "Esa respuesta no es correcta. Revisad vuestros datos y probad otra vez.",
   "done": "Hecho"
  },
  "meters": {

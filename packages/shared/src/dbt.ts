@@ -116,7 +116,8 @@ export async function runProject(eng: SqlEngine, p: Project, choices: Record<str
   }
   const tests: TestResult[] = [];
   for (const t of p.tests) {
-    if (opts.only && !opts.only.includes(t.model)) continue;
+    if (opts.only && (!opts.only.includes(t.model) || (t.kind === "relationships" && !opts.only.includes(t.toModel)))) continue;
+    if (!p.models.some((m) => m.name === t.model) || (t.kind === "relationships" && !p.models.some((m) => m.name === t.toModel))) continue;
     const spec = testSql(t);
     const needs = [t.model, ...(t.kind === "relationships" ? [t.toModel] : [])];
     if (needs.some((n) => failed.has(n))) { tests.push({ id: spec.id, model: t.model, test: spec.label, column: "column" in t ? t.column : undefined, status: "skipped", failures: 0, message: "No se pudo ejecutar el modelo" }); continue; }

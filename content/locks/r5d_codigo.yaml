@@ -4,19 +4,19 @@ type: code
 title: { es: "El centro con mayor tasa", gl: "O centro con maior taxa" }
 docs_needed: [doc_ds_analysis]
 story:
-  es: "Última pregunta antes de la Comisión: mirando solo centros con 30 altas o más, ¿cuál tiene la tasa de reingresos más alta? Su nombre corto es el código."
-  gl: "Última pregunta antes da Comisión: mirando só centros con 30 altas ou máis, cal ten a taxa de reingresos máis alta? O seu nome curto é o código."
-tools: [quick_checks]
+  es: "Última pregunta antes de la Comisión: aplicando vuestro mínimo de altas, ¿qué centro tiene la tasa de reingresos más alta? Averiguadlo con el Laboratorio de preguntas sobre el modelo final limpio. Su nombre corto es la respuesta."
+  gl: "Última pregunta antes da Comisión: aplicando o voso mínimo de altas, que centro ten a taxa de reingresos máis alta? Descubrídeo co Laboratorio de preguntas sobre o modelo final limpo. O seu nome curto é a resposta."
+tools: [query_lab]
 answer_hint:
   es: "El nombre corto del centro, por ejemplo: Santa Eira."
   gl: "O nome curto do centro, por exemplo: Santa Eira."
 answer: { source: "answers.public.json#r5c_top_center", normalize: text }
 points: 90
-time_target_min: 5
+time_target_min: 6
 hints:
-  - { es: "Primero aplicad el mínimo de 30 altas: sin él, gana un centro con 3 casos.", gl: "Primeiro aplicade o mínimo de 30 altas: sen el, gaña un centro con 3 casos." }
-  - { es: "Pulsad «Solo centros con 30 o más altas» y mirad la primera fila.", gl: "Premede «Só centros con 30 ou máis altas» e mirade a primeira fila." }
-  - { es: "Escribid solo el nombre: si fuera «Hospital Santa Eira-B», sería «Santa Eira».", gl: "Escribide só o nome: se fose «Hospital Santa Eira-B», sería «Santa Eira»." }
+  - { es: "La tasa de un centro es el % de sus altas que son reingreso. En el Laboratorio: tabla canon.fct_admission_clean y la pregunta «Para cada valor de una columna: cuántas filas hay y qué % tiene una marca».", gl: "A taxa dun centro é a % das súas altas que son reingreso. No Laboratorio: táboa canon.fct_admission_clean e a pregunta «Para cada valor dunha columna: cantas filas hai e que % ten unha marca»." }
+  - { es: "Columna organization_name y marca is_readmission_30d. En «Solo grupos con al menos … filas» poned vuestro mínimo de altas (el de «KPI con sentido», p. ej. 30): sin él gana la clínica de 3 casos.", gl: "Columna organization_name e marca is_readmission_30d. En «Só grupos con polo menos … filas» poñede o voso mínimo de altas (o de «KPI con sentido», p. ex. 30): sen el gaña a clínica de 3 casos." }
+  - { es: "La primera fila (la de mayor %) es el centro. Escribid solo su nombre corto: de «Hospital Santa Eira-B» sería «Santa Eira».", gl: "A primeira fila (a de maior %) é o centro. Escribide só o seu nome curto: de «Hospital Santa Eira-B» sería «Santa Eira»." }
 solution:
-  es: "Con «Solo centros con 30 o más altas», el primero es {answer}. Escribid {answer}."
-  gl: "Con «Só centros con 30 ou máis altas», o primeiro é {answer}. Escribide {answer}."
+  es: "Laboratorio: tabla canon.fct_admission_clean, «Para cada valor de una columna: cuántas filas hay y qué % tiene una marca», columna organization_name, marca is_readmission_30d, «Solo grupos con al menos 30 filas». La primera fila es {answer}. Escribid {answer}."
+  gl: "Laboratorio: táboa canon.fct_admission_clean, «Para cada valor dunha columna: cantas filas hai e que % ten unha marca», columna organization_name, marca is_readmission_30d, «Só grupos con polo menos 30 filas». A primeira fila é {answer}. Escribide {answer}."

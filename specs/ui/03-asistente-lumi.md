@@ -20,20 +20,35 @@ Lumi es **la única ayuda del juego**: explica, comprueba lo que tenéis y, si h
 ### Escalera de ayuda
 | Paso | Qué da | Se abre con… | Coste |
 |---|---|---|---|
-| 0 (siempre) | Explicaciones, cómo usar la herramienta, **qué parte de lo vuestro está mal** (no cuál es lo bueno) | — | 0 |
-| Pista 1 | Dónde mirar | al instante | −5 |
-| Pista 2 | Método concreto | 1 intento fallido **o** 3 min | −10 |
-| Pista 3 | Casi la solución | 2 intentos **o** 6 min | −20 |
-| 🔑 Solución | La respuesta, paso a paso | 3 intentos **o** 10 min (y confirmación) | −40 |
+| 0 (siempre) | Explicaciones, cómo usar la herramienta, **qué parte de lo vuestro está mal** (no cuál es lo bueno) | — | −1 por pregunta |
+| Pista 1 | Cómo se hace y la primera parte ya resuelta | al instante | −5 confianza |
+| Pista 2 | La mayor parte, con los valores reales | 1 intento fallido **o** 2 min | −5 |
+| Pista 3 | Todo menos el último paso (la cifra o el nombre final) | 2 intentos **o** 4 min | −5 |
+| 🔑 Solución | La respuesta, paso a paso | 2 intentos **o** 6 min (y confirmación) | −10 |
+
+**27-nov (ADR 015):** cada pregunta a Lumi (también las preguntas rápidas) baja 1 la confianza; los mensajes bloqueados no cuentan. Las pistas se reescribieron para que cada una haga avanzar de verdad (antes −1/−2/−3/−5 y bastante vagas). Las entrevistas (Noa y Brais) y el crítico del dashboard son el propio nivel y no cuestan (`ai_use_penalty` en `session.yaml`: `{ lumi: 1, npc: 0, critic: 0 }`). Bajo la caja de texto: «Cada pregunta a Lumi baja 1 la confianza; cada pista, más.»
+
+Desde el ADR 014 el coste es de **confianza de la Comisión** (el único medidor), no de puntos.
+
+Tiempos rebajados el 23-nov (antes 3/6/10 min y 3 intentos para la solución): con ellos ningún nivel bloquea más de ~6 min a quien pide ayuda (ADR 013).
 Configurable en `content/session.yaml` (`help_gate_attempts`, `help_gate_minutes`, `hint_penalty`, `solution_penalty`). El paso se pide con el botón del panel; el texto es contenido fijo (no depende del modelo) y se guarda en el chat, así que lo ven todos los portátiles del equipo. La Comisión no tiene solución (solo 3 pistas).
 
 ### Interfaz (`Chat.tsx`)
 - Cabecera: avatar, «IA», aviso de que puede equivocarse.
-- Caja «Ayudas en este nivel»: 4 círculos (1 2 3 🔑), botón «💡 Dame una pista (−5 puntos)» / «🔑 Ver la solución (−40 puntos)», y si está cerrado «⏳ Se abre tras 1 intento más o en 2:30 min» con cuenta atrás.
+- Caja «Ayudas en este nivel»: 4 círculos (1 2 3 🔑), botón «💡 Dame una pista (−5 confianza)» / «🔑 Ver la solución (−10 confianza)», y si está cerrado «⏳ Se abre tras 1 intento más o en 2:30 min» con cuenta atrás.
 - Conversación con separadores por nivel; los pasos de ayuda resaltados en ámbar; indicador «escribiendo».
 - 4 preguntas rápidas: «¿Qué hay que hacer aquí?», «¿Vamos bien?», «No entiendo una palabra», «¿Para qué sirve esta pantalla?».
 - Caja de texto multilínea (Enter envía). El botón «Preguntad a Lumi» de cada nivel enfoca la caja.
 - El historial se carga del servidor (`GET /api/ai/lumi/history/:teamId`).
+
+### Tono: de su parte, nunca «hater» (23-nov)
+Problema: en la prueba Lumi sonaba a portero. Causas: el filtro de inyección saltaba con palabras normales («se me olvida», «¿ignoramos esa columna?», «actúa como», «reveal») y respondía «Eso no puedo dártelo: … no a saltarte el reto»; pedir la respuesta daba «Todavía no os puedo dar la respuesta: primero probad vosotros»; el filtro de fuga decía «Casi te suelto demasiado».
+Ahora:
+- **Prompt:** empezar siempre por algo útil o positivo, nunca por «No puedo»; no regañar ni insinuar trampa; si están atascados, un paso concreto en vez de otra pregunta; los errores en positivo («Casi: revisad X»). En nivel 0 puede decir también **en qué parte de la pantalla** está la información.
+- **Pedir la respuesta:** primero un paso concreto que acerque y después, en una frase, que «Dame una pista» / «Ver la solución» la dan entera.
+- **Filtro de inyección** (`moderation.ts`) solo con intentos claros: verbo de anulación + reglas/instrucciones/prompt («ignora tus reglas», «olvida las instrucciones anteriores», «system prompt», «jailbreak», «modo desarrollador»). Respuesta con humor: «¡Buen intento! 😄 Mis reglas no se tocan, pero sí os ayudo…».
+- **Sin modelo:** «He mirado lo que tenéis: vais bien, solo falta revisar …»; al pedir la respuesta, «¡Vamos a acercarnos juntos! Para empezar: <paso 1>» + cómo desbloquear.
+- Test: palabras normales no cuentan como ataque; los ataques claros sí.
 
 ### Reglas del modelo (`content/prompts/lumi.md`)
 - ≤ 60 palabras, frases cortas, termina con un paso o una pregunta. Sin nombres de herramientas internas.

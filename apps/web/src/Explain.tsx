@@ -46,25 +46,19 @@ export function MetersLegend({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const rows: [string, string][] = es
     ? [
-        ["🏆 Puntos", "Suben al abrir cada candado. Bajan al pedir ayudas a Lumi o al marcar algo falso. Sirven para cerrar el juego, no para competir."],
+        ["⭐ Confianza de la Comisión", "El único medidor del juego (0-100): cuánto se fía la Comisión de vuestro trabajo. Sube al superar cada nivel y con decisiones prudentes y honestas. Baja al usar a Lumi (−1 por pregunta, −5 por pista, −10 la solución), al marcar algo falso, al dejar datos personales a la vista o con atajos."],
         ["⏱ Tiempo", "Lo que queda hasta las 13:00, cuando se reúne la Comisión."],
-        ["🤝 Confianza", "Cuánto se fía la Comisión de vosotros. Sube con decisiones prudentes y honestas; baja con atajos."],
-        ["🛡 Cumplimiento", "Qué bien protegéis los datos personales (RGPD). Baja si dejáis datos que identifican a alguien."],
-        ["🧹 Calidad de datos", "Lo limpios y fiables que están vuestros datos. Sube al limpiar bien."],
-        ["", "Cada vez que algo cambia, veréis un aviso con la subida o la bajada y el motivo. La Comisión tendrá en cuenta la confianza y la calidad al final."],
+        ["", "Cada vez que cambia, veréis un aviso con la subida o la bajada y el motivo. Al final, la Comisión la tiene en cuenta junto a vuestras respuestas."],
       ]
     : [
-        ["🏆 Puntos", "Soben ao abrir cada cadeado. Baixan ao pedir axudas a Lumi ou ao marcar algo falso. Serven para pechar o xogo, non para competir."],
+        ["⭐ Confianza da Comisión", "O único medidor do xogo (0-100): canto se fía a Comisión do voso traballo. Sobe ao superar cada nivel e con decisións prudentes e honestas. Baixa ao usar a Lumi (−1 por pregunta, −5 por pista, −10 a solución), ao marcar algo falso, ao deixar datos persoais á vista ou con atallos."],
         ["⏱ Tempo", "O que queda ata as 13:00, cando se reúne a Comisión."],
-        ["🤝 Confianza", "Canto se fía a Comisión de vós. Sobe con decisións prudentes e honestas; baixa con atallos."],
-        ["🛡 Cumprimento", "Que ben protexedes os datos persoais (RXPD). Baixa se deixades datos que identifican a alguén."],
-        ["🧹 Calidade de datos", "Que limpos e fiables están os vosos datos. Sobe ao limpar ben."],
-        ["", "Cada vez que algo cambia, veredes un aviso coa subida ou a baixada e o motivo. A Comisión terá en conta a confianza e a calidade ao final."],
+        ["", "Cada vez que cambia, veredes un aviso coa subida ou a baixada e o motivo. Ao final, a Comisión tena en conta xunto ás vosas respostas."],
       ];
   return (
     <details className="pop" data-tour="meterhelp">
-      <summary className="ghost btnlike" aria-label={es ? "Qué significan los medidores" : "Que significan os medidores"}>❓ {es ? "Medidores" : "Medidores"}</summary>
-      <div className="popbody"><h3>{es ? "¿Qué significa cada medidor?" : "Que significa cada medidor?"}</h3><dl>{rows.map(([a, b], i) => <div key={i}>{a && <dt>{a}</dt>}<dd>{b}</dd></div>)}</dl></div>
+      <summary className="ghost btnlike" aria-label={es ? "Qué significa el medidor" : "Que significa o medidor"}>❓ {es ? "Confianza" : "Confianza"}</summary>
+      <div className="popbody"><h3>{es ? "¿Qué es la confianza?" : "Que é a confianza?"}</h3><dl>{rows.map(([a, b], i) => <div key={i}>{a && <dt>{a}</dt>}<dd>{b}</dd></div>)}</dl></div>
     </details>
   );
 }

@@ -19,11 +19,13 @@ Servido por `GET /api/files` (ficheros + `db:*`).
 ## Base de datos en el explorador
 - Capas con nombre que se entiende: «🥉 Bronce · tal cual llegan», «🥈 Plata · datos limpios», «🥇 Oro · vuestro cálculo», «🏅 Oro · modelo final».
 - Cada tabla: nombre técnico + **etiqueta amigable** («encounters · Visitas de los 4 hospitales juntas») + nº de filas; al pasar el ratón, su descripción.
-- **Columnas plegadas** por defecto; ▸ las despliega (con su significado al pasar el ratón).
-- Pestaña de tabla: ficha abierta, primeras 100 filas, cabeceras con ⓘ y la explicación al pasar el ratón.
+- **Sin lista de columnas** en el árbol (25-nov): solo tablas, etiqueta y filas. Las columnas se explican al abrir la tabla.
+- Pestaña de tabla: ficha abierta con **todas las columnas explicadas** (las 19 de pacientes, las 8 de cada fichero de encuentros, las de los modelos y del modelo final), primeras 100 filas, cabeceras con ⓘ y la explicación al pasar el ratón.
+- Pestaña de un CSV o de un modelo SQL: la misma ficha, con «Qué significa cada columna» **abierto**. En el cargador sigue plegada para no tapar la vista previa.
+- Fuente: `content/files.yaml` (ficheros) y `content/tables.yaml` (tablas); cada columna tiene su línea en es y gl.
 
 ## Modelos SQL en el explorador
 Se ven «limpios»: sin `{{ config }}`, `ref('x')` → `x`, `source('raw','encounters')` → `raw.encounters`, huecos como «▾ ¿Qué cuenta como ingreso?».
 
 ## Probado
-E2E: tras cargar `patients.csv`, el árbol no muestra columnas; abrir la tabla muestra «Pacientes» y la explicación de `ssn`; hay cabeceras con información.
+E2E: tras cargar `patients.csv`, el árbol no tiene listas ni flechas de columnas; abrir la tabla muestra «Pacientes» y **19 columnas explicadas**; hay cabeceras con información.

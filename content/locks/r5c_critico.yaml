@@ -4,16 +4,16 @@ type: verify_ai
 title: { es: "Revisión del crítico", gl: "Revisión do crítico" }
 docs_needed: [doc_analyst_style]
 story:
-  es: "El crítico (una IA) ha revisado vuestros gráficos y señala problemas. Arreglad los gráficos hasta que quede como mucho uno y entregad."
-  gl: "O crítico (unha IA) revisou os vosos gráficos e sinala problemas. Arranxade os gráficos ata que quede como moito un e entregade."
+  es: "El crítico (una IA) revisa vuestros gráficos. Lo rojo engaña a quien lo mira: hay que arreglarlo para entregar. Lo amarillo es mejorable: podéis entregar igual, pero ganaréis menos confianza."
+  gl: "O crítico (unha IA) revisa os vosos gráficos. O vermello engana a quen o mira: hai que arranxalo para entregar. O amarelo é mellorable: podedes entregar igual, pero gañaredes menos confianza."
 tools: [dashboard_builder, critic_panel]
-validator: { type: chart_rules, mode: review, max_findings: 1 }
+validator: { type: chart_rules, mode: review, max_findings: 0 }
 points: 110
-time_target_min: 7
+time_target_min: 8
 hints:
-  - { es: "En cada gráfico: el eje empieza en cero, se ve el número de casos (n) y solo salen centros con 30 altas o más.", gl: "En cada gráfico: o eixe empeza en cero, vese o número de casos (n) e só saen centros con 30 altas ou máis." }
-  - { es: "Colores «Uno + énfasis», sin doble eje ni 3D, y los centros ordenados de mayor a menor.", gl: "Cores «Un + énfase», sen dobre eixe nin 3D, e os centros ordenados de maior a menor." }
-  - { es: "El título debe decir la conclusión, con 6 palabras o más y un verbo. Por ejemplo: «Un centro supera claramente al resto en reingresos».", gl: "O título debe dicir a conclusión, con 6 palabras ou máis e un verbo. Por exemplo: «Un centro supera claramente ao resto en reingresos»." }
+  - { es: "Leed cada aviso rojo: dice qué cambiar. Los típicos: número de reingresos en vez de tasa (en «Qué dato» elegid la tasa), y línea, área, tarta o donut para algo que no es tiempo (cambiadlo a barras).", gl: "Lede cada aviso vermello: di que cambiar. Os típicos: número de reingresos no canto de taxa (en «Que dato» elixide a taxa), e liña, área, torta ou donut para algo que non é tempo (cambiádeo a barras)." }
+  - { es: "En el gráfico de centros marcad «Aplicar vuestro mínimo de altas»: si no, sale un centro con 3 casos y un 100 %. Con eso desaparece el último rojo típico y ya podéis entregar.", gl: "No gráfico de centros marcade «Aplicar o voso mínimo de altas»: se non, sae un centro con 3 casos e un 100 %. Con iso desaparece o último vermello típico e xa podedes entregar." }
+  - { es: "Para lo amarillo (más confianza): «Mostrar n», orden «De mayor a menor» y colores «Uno + énfasis». Si dos gráficos enseñan lo mismo, cambiad uno a otra pregunta (por edad o por mes).", gl: "Para o amarelo (máis confianza): «Mostrar n», orde «De maior a menor» e cores «Un + énfase». Se dous gráficos ensinan o mesmo, cambiade un a outra pregunta (por idade ou por mes)." }
 solution:
-  es: "En los 3 gráficos: marcad «El eje empieza en cero», «Mostrar n» y «Solo centros con ≥ 30 altas»; colores «Uno + énfasis»; sin doble eje ni 3D; en el de centros, orden «De mayor a menor». Títulos con conclusión: «Un centro supera con claridad al resto en reingresos a 30 días», «La tasa mensual de reingresos sube y baja alrededor del 10 %» y «Los mayores de 80 años reingresan más que cualquier otro grupo»."
-  gl: "Nos 3 gráficos: marcade «O eixe empeza en cero», «Amosar n» e «Só centros con ≥ 30 altas»; cores «Un + énfase»; sen dobre eixe nin 3D; no de centros, orde «De maior a menor». Títulos con conclusión: «Un centro supera con claridade ao resto en reingresos a 30 días», «A taxa mensual de reingresos sobe e baixa arredor do 10 %» e «Os maiores de 80 anos reingresan máis ca calquera outro grupo»."
+  es: "En cada gráfico usad la tasa (no el número) y barras salvo para meses o años; en el de centros marcad «Aplicar vuestro mínimo de altas», orden «De mayor a menor», «Mostrar n» y colores «Uno + énfasis». Con nada en rojo, entregad."
+  gl: "En cada gráfico usade a taxa (non o número) e barras agás para meses ou anos; no de centros marcade «Aplicar o voso mínimo de altas», orde «De maior a menor», «Amosar n» e cores «Un + énfase». Sen nada en vermello, entregade."

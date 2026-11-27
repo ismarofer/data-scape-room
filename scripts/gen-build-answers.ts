@@ -48,8 +48,9 @@ for (const [k, v] of Object.entries(expected)) sol(k.replace("r4c_veredicto", "r
 sol("r3c_modelo", String(answers.r3c_readmissions_base.value), { choices: Object.fromEntries(models.map((m) => [m.name, Object.fromEntries(Object.entries(m.slots ?? {}).map(([k, d]) => [k, d.options.find((o) => o.correct)!.id]))])) });
 sol("r4d_codigo", String(answers.r4c_excluded.value));
 sol("r5d_codigo", String(answers.r5c_top_center.value));
-const chart = (type: string, title: string) => ({ type, title, axisZero: true, showN: true, sort: "desc", minN: true, palette: "accent", dualAxis: false, threeD: false });
-const bad = (type: string) => ({ type, title: "Gráfico", axisZero: false, showN: false, sort: "none", minN: false, palette: "rainbow", dualAxis: false, threeD: false });
-sol("r5b_dashboard", JSON.stringify({ charts: [bad("bar_center"), bad("line_month"), bad("bar_age")] }));
-sol("r5c_critico", JSON.stringify({ charts: [chart("bar_center", "Un centro supera con claridad al resto en reingresos a 30 días"), { ...chart("line_month", "La tasa mensual de reingresos sube y baja alrededor del 10 %"), sort: "none" }, chart("bar_age", "Los mayores de 80 años reingresan más que cualquier otro grupo")] }));
+// dashboards: kind + measure + split (packages/shared/src/charts.ts). The sloppy one passes «build» but has red findings.
+const chart = (kind: string, by: string, title: string) => ({ kind, measure: "rate", by, title, showN: true, sort: "desc", minN: true, palette: "accent" });
+const bad = (kind: string, measure: string, by: string) => ({ kind, measure, by, title: "Gráfico", showN: false, sort: "none", minN: false, palette: "rainbow" });
+sol("r5b_dashboard", JSON.stringify({ charts: [bad("bar", "readmissions", "center"), bad("line", "rate", "age"), bad("bar", "rate", "center")] }));
+sol("r5c_critico", JSON.stringify({ charts: [chart("bar", "center", "Un centro reingresa casi el doble que el resto"), { ...chart("line", "month", "La tasa mensual sube y baja alrededor del 10 %"), sort: "none" }, chart("bar", "age", "Los mayores de 80 años reingresan más que nadie")] }));
 console.log("build answers OK\n", r2b);

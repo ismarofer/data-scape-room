@@ -39,13 +39,13 @@ function workText(w?: WorkContext): string {
 
 const MSGS: Record<string, Record<Lang, string>> = {
   pii: { es: "Mejor no escribas datos personales (nombres, teléfonos, correos o enlaces). Cuéntame qué has hecho con los datos del caso.", gl: "Mellor non escribas datos persoais (nomes, teléfonos, correos ou ligazóns). Cóntame que fixeches cos datos do caso." },
-  injection: { es: "Eso no puedo dártelo: yo te ayudo a pensar, no a saltarte el reto. Cuéntame qué has probado y qué dato te falta.", gl: "Iso non podo dártelo: eu axúdote a pensar, non a saltar o reto. Cóntame que probaches e que dato che falta." },
+  injection: { es: "¡Buen intento! 😄 Mis reglas no se tocan, pero sí os ayudo: contadme qué habéis probado y os digo por dónde seguir.", gl: "Bo intento! 😄 As miñas regras non se tocan, pero si vos axudo: contádeme que probastes e dígovos por onde seguir." },
   empty: { es: "Escribe tu pregunta y te ayudo.", gl: "Escribe a túa pregunta e axúdote." },
   too_long: { es: "Cuéntamelo más corto, en una o dos frases.", gl: "Cóntamo máis curto, nunha ou dúas frases." },
   slow: { es: "Voy un poco justa de tiempo: probad y volved a preguntarme en un momento.", gl: "Vou un pouco xusta de tempo: probade e volvede preguntarme nun momento." },
   no_credits: { es: "Os habéis quedado sin créditos de IA. Ada ya no puede ayudar; seguid con vuestros datos.", gl: "Quedastes sen créditos de IA. Ada xa non pode axudar; seguide cos vosos datos." },
   npc_done: { es: "Ya no me quedan más minutos para vosotros, lo siento.", gl: "Xa non me quedan máis minutos para vós, síntoo." },
-  leak: { es: "Casi te suelto demasiado… Mejor pregúntame cómo comprobarlo y lo pensamos juntos.", gl: "Case che solto demasiado… Mellor pregúntame como comprobalo e pensámolo xuntos." },
+  leak: { es: "¡Uy, casi os lo digo todo! 😅 Si queréis la respuesta entera, pulsad «Dame una pista» o «Ver la solución». Mientras, contadme qué os sale y lo miramos juntos.", gl: "Uy, case vos o digo todo! 😅 Se queredes a resposta enteira, premede «Dame unha pista» ou «Ver a solución». Mentres, contádeme que vos sae e mirámolo xuntos." },
 };
 const m = (k: string, lang: Lang) => MSGS[k][lang];
 
@@ -99,6 +99,7 @@ export class AiService {
     if (bad) { this.e.logAi(teamId, "lumi", c.lock?.id ?? null, "user", bad === "injection" ? "[bloqueado: intento de saltar reglas]" : "[bloqueado]"); return { text: m(bad === "injection" ? "injection" : bad, lang), source: "scripted" }; }
     const history: ChatTurn[] = this.e.recentChat(teamId, "lumi", 8).map((t) => (t.role === "user" ? { role: "user" as const, content: `<jugador>${t.text}</jugador>` } : { role: "assistant" as const, content: JSON.stringify({ text: t.text }) }));
     this.e.logAi(teamId, "lumi", c.lock?.id ?? null, "user", message);
+    if (c.lock) this.e.chargeAi(teamId, "lumi"); // every question to Lumi costs confidence (blocked messages do not)
     const lock = c.lock;
     const level = Math.min(4, c.hintsUsed);
     const granted = lock ? lock.hints.slice(0, Math.min(3, level)).map((h) => tr(h, lang)) : [];
@@ -117,7 +118,7 @@ export class AiService {
         answerHint: lock.answer_hint ? tr(lock.answer_hint, lang) : "",
         helpLevel: String(level),
         grantedHelp: granted.length ? granted.map((h, i) => `${i + 1}) ${h}`).join(" | ") : "(ninguna todavía)",
-        nextHelp: c.help?.next ? (c.help.next.unlocked ? `La ayuda ${c.help.next.level} ya está desbloqueada (cuesta ${c.help.next.penalty} puntos): pueden pulsar «${c.help.next.level >= 4 ? "Ver la solución" : "Dame una pista"}».` : `La ayuda ${c.help.next.level} se desbloquea ${c.help.next.attemptsNeeded ? `tras ${c.help.next.attemptsNeeded} intento(s) fallido(s) más o ` : ""}en ${Math.ceil(c.help.next.waitSeconds / 60)} min.`) : "Ya tienen todas las ayudas, incluida la solución.",
+        nextHelp: c.help?.next ? (c.help.next.unlocked ? `La ayuda ${c.help.next.level} ya está desbloqueada (baja ${c.help.next.penalty} la confianza): pueden pulsar «${c.help.next.level >= 4 ? "Ver la solución" : "Dame una pista"}».` : `La ayuda ${c.help.next.level} se desbloquea ${c.help.next.attemptsNeeded ? `tras ${c.help.next.attemptsNeeded} intento(s) fallido(s) más o ` : ""}en ${Math.ceil(c.help.next.waitSeconds / 60)} min.`) : "Ya tienen todas las ayudas, incluida la solución.",
         solution: solution.slice(0, 1600),
         draft: work?.draftText ? clean(work.draftText, 900) : work?.draft ? clean(work.draft, 900) : "(no hay nada a medio hacer en este nivel)",
         diagnosis: diag ? (diag.ok ? "CORRECTO: lo que tienen ahora resolvería el nivel." : `INCORRECTO en: ${diag.wrong.map((w) => itemWords(w, lang)).join(", ") || "—"}${diag.missing ? `; además faltan ${diag.missing} elemento(s)` : ""}.`) : "(sin borrador que comprobar)",
@@ -154,15 +155,16 @@ export class AiService {
       const isDash = lock.validator?.type === "chart_rules";
       const what = isDash ? (gl ? `o crítico aínda ve ${diag.wrong.length} problema(s) nos gráficos` : `el crítico aún ve ${diag.wrong.length} problema(s) en los gráficos`) : diag.wrong.map((w) => itemWords(w, lang)).join(", ");
       const miss = diag.missing ? (gl ? ` Ademais, fáltanvos ${diag.missing} elemento(s).` : ` Además, os faltan ${diag.missing} elemento(s).`) : "";
-      if (what) return `${gl ? "Mirei o que tedes agora. Revisade:" : "He mirado lo que tenéis ahora. Revisad:"} ${what}.${miss}${granted.length ? "" : gl ? " Se non sabedes como, pedídeme unha pista." : " Si no sabéis cómo, pedidme una pista."}`;
+      if (what) return `${gl ? "Mirei o que tedes: ides ben, só falta revisar" : "He mirado lo que tenéis: vais bien, solo falta revisar"} ${what}.${miss}${granted.length ? "" : gl ? " Se non sabedes como, pedídeme unha pista." : " Si no sabéis cómo, pedidme una pista."}`;
       if (miss) return miss.trim();
     }
     if (asksForAnswer(message)) {
       const n = c.help?.next;
       const how = !n ? "" : n.unlocked
-        ? (gl ? ` Podedes premer «${n.level >= 4 ? "Ver a solución" : "Dame unha pista"}» (custa ${n.penalty} puntos).` : ` Podéis pulsar «${n.level >= 4 ? "Ver la solución" : "Dame una pista"}» (cuesta ${n.penalty} puntos).`)
+        ? (gl ? ` Podedes premer «${n.level >= 4 ? "Ver a solución" : "Dame unha pista"}» (baixa ${n.penalty} a confianza).` : ` Podéis pulsar «${n.level >= 4 ? "Ver la solución" : "Dame una pista"}» (baja ${n.penalty} la confianza).`)
         : (gl ? ` A seguinte axuda ábrese ${n.attemptsNeeded ? `tras ${n.attemptsNeeded} intento(s) máis ou ` : ""}en ${Math.max(1, Math.ceil(n.waitSeconds / 60))} min.` : ` La siguiente ayuda se abre ${n.attemptsNeeded ? `tras ${n.attemptsNeeded} intento(s) más o ` : ""}en ${Math.max(1, Math.ceil(n.waitSeconds / 60))} min.`);
-      return (gl ? "Aínda non vos podo dar a resposta: primeiro probade vós." : "Todavía no os puedo dar la respuesta: primero probad vosotros.") + how;
+      const step = guide?.steps[0] ? (gl ? ` Para empezar: ${tr(guide.steps[0], lang)}` : ` Para empezar: ${tr(guide.steps[0], lang)}`) : "";
+      return (gl ? "Imos achegarnos xuntos!" : "¡Vamos a acercarnos juntos!") + step + how;
     }
     const last = granted[granted.length - 1];
     if (last) return gl ? `Lembrade a última axuda: «${last}» Que probastes con ela?` : `Recordad la última ayuda: «${last}» ¿Qué habéis probado con ella?`;
@@ -192,6 +194,7 @@ export class AiService {
     const bad = inputProblem(message);
     if (bad && bad !== "injection") return { text: m(bad, lang), revealed: [] as string[], left: left(used), source: "scripted" as Source, done: false };
     this.e.logAi(teamId, npcId, c.lock?.id ?? null, "user", bad ? "[bloqueado: intento de saltar reglas]" : message);
+    if (!bad) this.e.chargeAi(teamId, "npc");
     const already = this.e.clues(teamId);
     // authoritative reveal rule: always evaluated locally, never trusted from the model
     const sc = bad ? { text: m("injection", lang), revealed: [] as string[] } : scriptedNpc(ch, message, used, already, lang);
@@ -220,6 +223,7 @@ export class AiService {
   // ---------- Dashboard critic ----------
   async critic(teamId: string, spec: DashboardSpec, lang: Lang): Promise<{ findings: { id: string; severity: string; aspect: string; text: string }[]; source: Source }> {
     const rules = evaluateDashboard(spec).map((f: Finding) => ({ id: f.id, severity: f.severity, aspect: f.aspect, text: f.text[lang] }));
+    this.e.chargeAi(teamId, "critic");
     let findings = rules;
     let source: Source = "scripted";
     if (this.liveOk(teamId)) {
@@ -228,7 +232,7 @@ export class AiService {
       const out = await this.llm(teamId, "fast", sys, JSON.stringify(spec).slice(0, 3000), z.object({ findings: z.array(F).min(1).max(8) }), 600);
       if (out) {
         // rule-based findings are authoritative and always shown; model adds extra, deduplicated by id
-        const extra = out.findings.filter((f) => !rules.some((r) => r.id === f.id)).slice(0, 3).map((f) => ({ ...f, text: scrubOutput(f.text) }));
+        const extra = out.findings.filter((f) => !rules.some((r) => r.id === f.id)).slice(0, 3).map((f) => ({ ...f, severity: "info" as const, text: scrubOutput(f.text) })); // only the rules can block (red) or cost confidence (yellow)
         findings = [...rules, ...extra];
         source = "live";
       }

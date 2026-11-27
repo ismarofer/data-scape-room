@@ -10,5 +10,5 @@ briefing:
   - { es: "Definir un indicador que no engañe.", gl: "Definir un indicador que non engane." }
   - { es: "Montar un cuadro de mando con 3 o 4 gráficos.", gl: "Montar un cadro de mando con 3 ou 4 gráficos." }
   - { es: "Pasar la revisión del crítico y encontrar el centro con más reingresos.", gl: "Pasar a revisión do crítico e atopar o centro con máis reingresos." }
-target_minutes: 25
+target_minutes: 27
 locks: [r5a_kpi, r5b_dashboard, r5c_critico, r5d_codigo]

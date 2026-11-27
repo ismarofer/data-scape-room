@@ -30,6 +30,8 @@ export const Lock = z.object({
   tools: z.array(z.string()).default([]),
   decision: Decision.optional(),
   answer: z.object({ source: z.string(), normalize: z.enum(["text", "digits_only", "report"]).default("text") }).optional(),
+  /** report fields that accept any number in a range (server only), e.g. the KPI minimum of discharges */
+  numeric_ranges: z.array(z.object({ field: z.string(), min: z.number(), max: z.number(), canonical: z.string() })).default([]),
   validator: z
     .discriminatedUnion("type", [
       z.object({ type: z.literal("privacy_rubric"), rubric: z.string() }),
@@ -68,7 +70,8 @@ export const Guide = z.object({
 });
 export type GuideT = z.infer<typeof Guide>;
 export const Glossary = z.record(z.object({ term: LText, def: LText }));
-export const RoomGuide = z.object({ context: LText, learn: LText });
+/** primer: a short explainer shown in the room briefing before any level (e.g. what a table is), Markdown body. */
+export const RoomGuide = z.object({ context: LText, learn: LText, primer: z.object({ title: LText, body: LText }).optional() });
 export const GuidesFile = z.object({ rooms: z.record(RoomGuide), locks: z.record(Guide) });
 /** A project document shown in the explorer (docs/*.md). It appears when the first level that needs it is reached. */
 export const ProjectDoc = z.object({ id: z.string(), path: z.string().regex(/^docs\/[a-z0-9-]+\.md$/), title: LText, body: LText });
@@ -79,6 +82,8 @@ export const SessionConfig = z.object({
   solution_penalty: z.number().default(40),
   help_gate_attempts: z.tuple([z.number(), z.number(), z.number(), z.number()]).default([0, 1, 2, 3]),
   help_gate_minutes: z.tuple([z.number(), z.number(), z.number(), z.number()]).default([0, 3, 6, 10]),
+  /** confidence lost each time the team uses an AI character (27-nov): Lumi's chat, the interviews, the dashboard critic */
+  ai_use_penalty: z.object({ lumi: z.number().default(1), npc: z.number().default(0), critic: z.number().default(0) }).default({}),
   ai_credits: z.number().default(20), show_leaderboard: z.boolean().default(false), auto_master_key: z.boolean().default(false),
   meters_start: z.object({ trust: z.number(), compliance: z.number(), quality: z.number() }).default({ trust: 60, compliance: 70, quality: 40 }),
   rooms: z.array(z.string()),
@@ -91,6 +96,10 @@ export interface LockStateView {
   id: string; room: string; type: string; title: string; story: string; points: number; status: "locked" | "open" | "done";
   attempts: number; hintsUsed: number; hints: string[]; decision?: { id: string; options: { id: string; label: string; explain?: string }[] };
   timeTargetMin: number; tools: string[]; answerHint?: string;
+  /** a level already passed: what the team delivered (its accepted answer) and the option it chose, to review it read-only */
+  mine?: { code?: string; decision?: string; options?: { label: string; explain?: string; chosen: boolean }[] };
+  /** the project documents that explain this level (open in a tab) */
+  docs?: { path: string; title: string }[];
   guide?: { goal: string; steps: string[]; why: string; job?: string; terms: { term: string; def: string }[] };
   roomInfo?: { id: string; title: string; context: string; learn: string; first: boolean }; startedAt?: number; hintAvailableAt?: number;
   /** Lumi's help ladder for the open level: what is unlocked next and when */
@@ -102,12 +111,16 @@ export interface HelpStatus {
   used: number; max: 4;
   next: null | { level: number; penalty: number; unlocked: boolean; waitSeconds: number; attemptsNeeded: number };
 }
-export interface RoomView { id: string; title: string; number?: string; stage?: string; icon?: string; intro: string; context?: string; learn?: string; briefing: string[]; targetMinutes: number }
+export interface RoomView { id: string; title: string; number?: string; stage?: string; icon?: string; intro: string; context?: string; learn?: string; primer?: { title: string; body: string }; briefing: string[]; targetMinutes: number }
 export interface TeamState {
   teamId: string; alias: string; lang: Lang; score: number; meters: Meters;
   startedAt: number; pausedAt: number | null; currentLockId: string | null; locks: LockStateView[];
   rooms: RoomView[];
+  /** clues found in the interviews (R4B) */
+  clues?: string[];
   docs: { id: string; path: string; title: string; body: string }[]; glossary: { term: string; def: string }[]; serverNow: number;
+  /** confidence each AI use costs (0 = free) */
+  aiCost?: { lumi: number; npc: number; critic: number };
 }
 
 // ---------- answer normalisation (must mirror data/common.py::normalize) ----------

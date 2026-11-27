@@ -1,4 +1,5 @@
 import type { Lang, RoomView, TeamState } from "@codigo-alta/shared";
+import { Markdown } from "./Markdown";
 
 /**
  * Room briefing: the «phase 0» of every room. Before its first level the team sees what the room is about,
@@ -14,6 +15,12 @@ export function RoomBriefing({ room, s, lang, onGo, again }: { room: RoomView; s
       <p className="bstage">{label}</p>
       <h2>{room.title}</h2>
       <p className="bintro">{room.intro}</p>
+      {room.primer && (
+        <div className="bprimer">
+          <h3>📚 {room.primer.title}</h3>
+          <Markdown source={room.primer.body} />
+        </div>
+      )}
       {room.briefing.length > 0 && (
         <>
           <h3>{gl ? "Nesta sala ides:" : "En esta sala vais a:"}</h3>

@@ -25,5 +25,34 @@ models:
     columns:
       - name: episode_id
         tests: [not_null, unique]
+      - name: patient_key
+        tests:
+          - relationships: { to: "ref('dim_patient')", field: patient_key }
+      - name: organization_id
+        tests:
+          - relationships: { to: "ref('dim_hospital')", field: organization_id }
+      - name: admit_date
+        tests:
+          - relationships: { to: "ref('dim_date')", field: date }
     tests:
       - expression_is_true: { expression: "discharge_ts >= admit_ts", severity: warn }
+  - name: dim_patient
+    columns:
+      - name: patient_key
+        tests: [not_null, unique]
+  - name: dim_hospital
+    columns:
+      - name: organization_id
+        tests: [not_null, unique]
+  - name: dim_date
+    columns:
+      - name: date
+        tests: [not_null, unique]
+  - name: fct_condition
+    columns:
+      - name: patient_key
+        tests:
+          - relationships: { to: "ref('dim_patient')", field: patient_key }
+      - name: diagnosis_date
+        tests:
+          - relationships: { to: "ref('dim_date')", field: date }

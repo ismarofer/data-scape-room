@@ -8,7 +8,7 @@ intro:
   gl: "Son as 10:00 no Hospital Costa Atlántica. Ás 13:00 reúnese a Comisión de Calidade: os reingresos subiron e ninguén se fía dos números. Sodes o equipo de datos. (Datos 100 % ficticios.)"
 briefing:
   - { es: "Conocer la pantalla: niveles a la izquierda, trabajo en el centro y Lumi, vuestra ayudante, a la derecha.", gl: "Coñecer a pantalla: niveis á esquerda, traballo no centro e Lumi, a vosa axudante, á dereita." }
-  - { es: "Abrir vuestro primer candado escribiendo un código.", gl: "Abrir o voso primeiro cadeado escribindo un código." }
+  - { es: "Abrir vuestro primer candado escribiendo una respuesta.", gl: "Abrir o voso primeiro cadeado escribindo unha resposta." }
   - { es: "Aprender a pedir ayuda a Lumi cuando os atasquéis.", gl: "Aprender a pedir axuda a Lumi cando vos atasquedes." }
-target_minutes: 10
+target_minutes: 8
 locks: [p0_tutorial]

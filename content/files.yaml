@@ -4,11 +4,25 @@ patients.csv:
     es: "PACIENTES. Una fila por persona: la ficha del paciente. Aquí están los datos personales (ficticios), por eso, antes de usarlos, habrá que protegerlos (nivel «Radar RGPD»)."
     gl: "PACIENTES. Unha fila por persoa: a ficha do paciente. Aquí están os datos persoais (ficticios), por iso, antes de usalos, haberá que protexelos (nivel «Radar RGPD»)."
   cols:
-    - { name: patient_id, es: "código único de la ficha del paciente", gl: "código único da ficha do paciente" }
-    - { name: ssn, es: "número de identificación de la persona", gl: "número de identificación da persoa" }
-    - { name: first_name / last_name, es: "nombre y apellidos", gl: "nome e apelidos" }
-    - { name: birthdate / deathdate, es: "fecha de nacimiento y de fallecimiento (si ha fallecido)", gl: "data de nacemento e de falecemento (se faleceu)" }
-    - { name: address / city / postal_code, es: "dónde vive", gl: "onde vive" }
+    - { name: patient_id, es: "código de la ficha del paciente (uno por ficha, no por persona: una persona puede tener dos fichas)", gl: "código da ficha do paciente (un por ficha, non por persoa: unha persoa pode ter dúas fichas)" }
+    - { name: ssn, es: "número de identificación de la persona: dice si dos fichas son la misma persona. Dato personal", gl: "número de identificación da persoa: di se dúas fichas son a mesma persoa. Dato persoal" }
+    - { name: drivers, es: "número del carné de conducir. Dato personal", gl: "número do carné de conducir. Dato persoal" }
+    - { name: passport, es: "número de pasaporte. Dato personal", gl: "número de pasaporte. Dato persoal" }
+    - { name: prefix, es: "tratamiento: Sr., Sra.…", gl: "tratamento: Sr., Sra.…" }
+    - { name: first_name, es: "nombre (ficticio). Dato personal", gl: "nome (ficticio). Dato persoal" }
+    - { name: last_name, es: "apellidos (ficticios). Dato personal", gl: "apelidos (ficticios). Dato persoal" }
+    - { name: marital, es: "estado civil (M = casado/a, S = soltero/a…)", gl: "estado civil (M = casado/a, S = solteiro/a…)" }
+    - { name: birthdate, es: "fecha de nacimiento exacta", gl: "data de nacemento exacta" }
+    - { name: deathdate, es: "fecha de fallecimiento (vacía si la persona vive)", gl: "data de falecemento (baleira se a persoa vive)" }
+    - { name: birthplace, es: "lugar de nacimiento", gl: "lugar de nacemento" }
+    - { name: address, es: "calle y número donde vive. Dato personal", gl: "rúa e número onde vive. Dato persoal" }
+    - { name: city, es: "ciudad donde vive", gl: "cidade onde vive" }
+    - { name: state, es: "comunidad autónoma", gl: "comunidade autónoma" }
+    - { name: county, es: "provincia", gl: "provincia" }
+    - { name: postal_code, es: "código postal de su casa", gl: "código postal da súa casa" }
+    - { name: gender, es: "sexo (F = mujer, M = hombre)", gl: "sexo (F = muller, M = home)" }
+    - { name: lat, es: "latitud GPS de su casa", gl: "latitude GPS da súa casa" }
+    - { name: lon, es: "longitud GPS de su casa", gl: "lonxitude GPS da súa casa" }
 organizations.csv:
   what:
     es: "CENTROS. Una fila por hospital o clínica: cómo se llama, en qué ciudad está y qué envío de datos (H1, H2…) es el suyo. Sirve para saber en qué centro ocurrió cada ingreso."
@@ -16,27 +30,32 @@ organizations.csv:
   cols:
     - { name: organization_id, es: "código del centro (ORG01, ORG02…)", gl: "código do centro (ORG01, ORG02…)" }
     - { name: name, es: "nombre del centro", gl: "nome do centro" }
-    - { name: feed, es: "qué envío de datos es el suyo", gl: "que envío de datos é o seu" }
+    - { name: feed, es: "qué envío de datos es el suyo (H1, H2, H3, H4)", gl: "que envío de datos é o seu (H1, H2, H3, H4)" }
+    - { name: city, es: "ciudad donde está el centro", gl: "cidade onde está o centro" }
 conditions.csv:
   what:
     es: "DIAGNÓSTICOS. Una fila por cada enfermedad o problema de salud que se le diagnostica a un paciente durante una visita (por ejemplo, «Faringitis estreptocócica»)."
     gl: "DIAGNÓSTICOS. Unha fila por cada enfermidade ou problema de saúde que se lle diagnostica a un paciente durante unha visita (por exemplo, «Faringite estreptocócica»)."
   cols:
-    - { name: patient_id, es: "a qué paciente", gl: "a que paciente" }
-    - { name: encounter_id, es: "en qué visita (encuentro) se diagnosticó", gl: "en que visita (encontro) se diagnosticou" }
-    - { name: start / stop, es: "desde cuándo hasta cuándo", gl: "desde cando ata cando" }
-    - { name: description, es: "el diagnóstico en palabras", gl: "o diagnóstico en palabras" }
+    - { name: patient_id, es: "código de la ficha del paciente (uno por ficha, no por persona: una persona puede tener dos fichas)", gl: "código da ficha do paciente (un por ficha, non por persoa: unha persoa pode ter dúas fichas)" }
+    - { name: encounter_id, es: "en qué visita se diagnosticó (enlaza con los encuentros)", gl: "en que visita se diagnosticou (enlaza cos encontros)" }
+    - { name: start, es: "desde cuándo tiene ese problema de salud", gl: "desde cando ten ese problema de saúde" }
+    - { name: stop, es: "hasta cuándo (vacía si sigue)", gl: "ata cando (baleira se continúa)" }
+    - { name: code, es: "código médico del diagnóstico (SNOMED)", gl: "código médico do diagnóstico (SNOMED)" }
+    - { name: description, es: "el diagnóstico en palabras (por ejemplo, «Faringitis»)", gl: "o diagnóstico en palabras (por exemplo, «Faringite»)" }
 encounters:
   what:
     es: "ENCUENTROS. Un «encuentro» es cada vez que un paciente pasa por el hospital: una consulta, urgencias, un ingreso… Cada hospital envía su fichero de encuentros con su propio formato. Una fila = una visita."
     gl: "ENCONTROS. Un «encontro» é cada vez que un paciente pasa polo hospital: unha consulta, urxencias, un ingreso… Cada hospital envía o seu ficheiro de encontros co seu propio formato. Unha fila = unha visita."
   cols:
-    - { name: encounter_id, es: "código único de la visita (no debería repetirse)", gl: "código único da visita (non debería repetirse)" }
-    - { name: patient_id, es: "quién fue (enlaza con patients.csv)", gl: "quen foi (enlaza con patients.csv)" }
-    - { name: organization_id, es: "a qué centro fue (enlaza con organizations.csv)", gl: "a que centro foi (enlaza con organizations.csv)" }
-    - { name: start_ts / stop_ts, es: "cuándo empezó y cuándo terminó la visita", gl: "cando comezou e cando rematou a visita" }
-    - { name: encounter_class, es: "tipo de visita (consulta, urgencias, ingreso…)", gl: "tipo de visita (consulta, urxencias, ingreso…)" }
-    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital", gl: "cando se cargou esta fila no sistema do hospital" }
+    - { name: encounter_id, es: "código de la visita (si se repite, es la misma visita más de una vez)", gl: "código da visita (se se repite, é a mesma visita máis dunha vez)" }
+    - { name: patient_id, es: "de qué ficha de paciente es (enlaza con los pacientes)", gl: "de que ficha de paciente é (enlaza cos pacientes)" }
+    - { name: organization_id, es: "en qué centro fue (enlaza con los centros)", gl: "en que centro foi (enlaza cos centros)" }
+    - { name: start_ts, es: "cuándo empezó la visita (fecha y hora)", gl: "cando comezou a visita (data e hora)" }
+    - { name: stop_ts, es: "cuándo terminó: la fecha de alta (vacía = sin alta registrada)", gl: "cando rematou: a data de alta (baleira = sen alta rexistrada)" }
+    - { name: encounter_class, es: "tipo de visita: inpatient = ingreso; emergency = urgencias; ambulatory / outpatient / wellness = consultas", gl: "tipo de visita: inpatient = ingreso; emergency = urxencias; ambulatory / outpatient / wellness = consultas" }
+    - { name: description, es: "motivo de la visita en palabras", gl: "motivo da visita en palabras" }
+    - { name: loaded_at, es: "cuándo se cargó esta fila en el sistema del hospital (si una visita sale dos veces, la más nueva es la buena)", gl: "cando se cargou esta fila no sistema do hospital (se unha visita sae dúas veces, a máis nova é a boa)" }
 encounters_H2_reenvio.csv:
   what:
     es: "ENCUENTROS · REENVÍO DE H2. El hospital H2 ha vuelto a mandar su fichero entero, y algunas filas vienen corregidas (por ejemplo, la fecha de alta). Por eso hay visitas que ahora salen dos veces: la versión vieja y la nueva."

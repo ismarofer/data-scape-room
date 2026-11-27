@@ -43,6 +43,34 @@ Lumi como única ayuda con escalera y solución ([UI 03](ui/03-asistente-lumi.md
 - Propuestas marcadas en cada sala (⚠ en la lista del cargador, explicación del resultado del laboratorio, plantilla de respuesta para la Comisión, historial de medidores).
 - Lector de pantalla y navegadores distintos de Edge.
 
+## 5 bis. Revisión del 23-nov: ¿se puede resolver con lo que hay en pantalla?
+Repaso nivel a nivel buscando datos que el alumno necesita pero que no están en la pantalla del nivel, y dificultades motoras o de tono. Detalle en cada spec de sala y en el ADR 013.
+
+| Nivel | Fallo | Arreglo | Dificultad |
+|---|---|---|---|
+| 0 · El primer candado | El hospital solo se nombraba en la historia/briefing. | La misión lo nombra. | 1 |
+| 1 · Radar RGPD | La explicación de cada columna estaba en `docs/`. | Regla de 4 acciones + qué contiene y riesgo en cada columna; pista 3 cubre las 19. | 3 → 2 |
+| 2 · Esquema en estrella | Puntos de conexión diminutos y dirección obligatoria. | Clic-clic o arrastrar desde la tarjeta; flecha automática; uniones sin sentido explicadas ([UI 08](ui/08-esquema-en-estrella.md)). | 3 → 2 |
+| 3 · Entrevistas | Centro/fecha en el nivel anterior; dos grupos de palabras obligatorios; Noa seca. | Tarjetas encima del chat (con «H3»); basta con el tema; respuestas amables que sugieren el tema. | 3 → 2 |
+| 3 · Tablero de pruebas | La tarjeta de fragmentación no decía qué centro. | Muestra «H3 (ORG05)». | 2 |
+| 4 · KPI con sentido | El porqué del mínimo solo en `docs/`. | La misión lo dice. | 2 |
+| Todas · Lumi y personajes | Tono de rechazo; falsos positivos del filtro de inyección. | Ver [UI 03](ui/03-asistente-lumi.md#tono-de-su-parte-nunca-hater-23-nov). | — |
+| Todas · Ayudas | Solución a los 10 min o 3 fallos. | 6 min o 2 fallos. | — |
+
+Sin fallos de este tipo: R1A, R1B, R1C, R3A (fusionado con R3C el 24-nov), R3C, R4C, R4D, R5B, R5C, R5D, R6A-C y la Comisión (toda su información está en la herramienta o en la misión). Tiempos: [tiempos.md](tiempos.md).
+
+## 5 ter. Revisión del 24-nov (ADR 014)
+| Nivel | Problema | Cambio | Dificultad |
+|---|---|---|---|
+| 2 · Esquema en estrella | Los prefijos `fct_`/`dim_` daban la respuesta; al fallar no se veía qué estaba mal. | Nombres sin prefijo + qué es una fila + columnas clave; posiciones mezcladas; documento nuevo con otro ejemplo; tarjeta/unión en rojo tras fallar. | 2 → 3 (sube a propósito: ahora hay que razonar) |
+| 2 · El protocolo + Modelo de reingreso | Casi lo mismo dos veces. | Fusionados: protocolo completo junto a las piezas; la cifra se saca con el Laboratorio. | 3 |
+| 2 · Pasos | Casi daban la respuesta. | Pasos = método y dónde mirar; lo concreto, en las pistas; documento enlazado. | — |
+| 3 · Entrevistas | Avanzaba sola al conseguir 2 pistas; objetivo poco claro; sin pistas no se seguía. | Lista de 3 preguntas a resolver; nunca avanza sola; «Terminar las entrevistas y seguir» siempre; más confianza por pista. | 2 |
+| 3 · Tablero / Veredicto / Excluidos | Sin marca de qué falla; pasos que daban la respuesta. | Desplegables en rojo; nº de centros en todas las tarjetas; pasos sin nombrar los grupos. | 2 / 2 / 2 |
+| 4 · KPI | «30 altas» arbitrario. | Tabla de centros con «1 reingreso mueve la tasa X puntos»; mínimo numérico (vale 4-317); explicación en el documento. | 2 |
+| 4 · Dashboard + crítico | Tipos fijos; casillas inútiles (doble eje, 3D, eje en cero); «≤ 1 hallazgo». | Gráficos libres (tipo × dato × reparto); eje en cero siempre; crítico 🔴 bloquea / 🟡 deja seguir con menos confianza / 🔵 sugiere. | 2 / 3 |
+| Todas | Puntos + 3 medidores; «código». | Un solo medidor (⭐ Confianza de la Comisión); «respuesta»; Laboratorio disponible en todos los niveles con datos; documentación del nivel enlazada. | — |
+
 ## 6. Cómo se ha probado
 | Prueba | Resultado (19-nov) |
 |---|---|
@@ -51,3 +79,5 @@ Lumi como única ayuda con escalera y solución ([UI 03](ui/03-asistente-lumi.md
 | `npm run content:validate` | OK, 0 avisos |
 | `npm run typecheck` | OK |
 | Capturas en Edge 1440×860 + conversación con la IA real en 4 niveles | revisado; 1 fuga de Lumi corregida en el prompt |
+| 23-nov: `npm test` / `npm run e2e` / `content:validate` / `typecheck` | 54/54 ✔ · 4/4 ✔ · OK · OK |
+| 24-nov (ADR 014): `npm test` / `npm run e2e` / `content:validate` / `typecheck` | 54/54 ✔ · 4/4 ✔ · OK (19 niveles, 10 documentos) · OK |

@@ -2,18 +2,18 @@ id: r3b_estrella
 room: R3
 type: build
 title: { es: "Esquema en estrella", gl: "Esquema en estrela" }
-docs_needed: [doc_de_keys]
+docs_needed: [doc_star]
 story:
-  es: "Toca dibujar el plano de los datos. Marcad cada tabla como hecho (algo que pasa, como un ingreso) o dimensión (lo que lo describe: quién, dónde, cuándo) y unid cada hecho con sus dimensiones."
-  gl: "Toca debuxar o plano dos datos. Marcade cada táboa como feito (algo que pasa, como un ingreso) ou dimensión (o que o describe: quen, onde, cando) e unide cada feito coas súas dimensións."
+  es: "Toca dibujar el plano de los datos que usará todo el equipo. Hay cinco tablas: decidid cuáles son hechos y cuáles dimensiones, y unid cada hecho con las dimensiones que lo describen. El documento del nivel explica cómo se distinguen."
+  gl: "Toca debuxar o plano dos datos que usará todo o equipo. Hai cinco táboas: decidide cales son feitos e cales dimensións, e unide cada feito coas dimensións que o describen. O documento do nivel explica como se distinguen."
 tools: [star_canvas]
 answer: { source: "build_answers.public.json#r3b_estrella", normalize: report }
 points: 110
-time_target_min: 8
+time_target_min: 7
 hints:
-  - { es: "Las tablas que empiezan por fct_ son hechos; las que empiezan por dim_ son dimensiones.", gl: "As táboas que comezan por fct_ son feitos; as que comezan por dim_ son dimensións." }
-  - { es: "Un ingreso (fct_admission) le pasa a un paciente, en un hospital y en una fecha: unidlo con esas tres dimensiones.", gl: "Un ingreso (fct_admission) pásalle a un paciente, nun hospital e nunha data: unídeo con esas tres dimensións." }
-  - { es: "Un diagnóstico (fct_condition) se une con el paciente y con la fecha. No se une con el hospital.", gl: "Un diagnóstico (fct_condition) úñese co paciente e coa data. Non se une co hospital." }
+  - { es: "Hechos = cosas que PASAN (una fila cada vez que pasa algo): admission y condition. Dimensiones = cosas que EXISTEN y describen quién, dónde y cuándo: patient, hospital y date.", gl: "Feitos = cousas que PASAN (unha fila cada vez que pasa algo): admission e condition. Dimensións = cousas que EXISTEN e describen quen, onde e cando: patient, hospital e date." }
+  - { es: "Un hecho se une con las dimensiones cuyas claves tiene en sus columnas: admission tiene patient_key, organization_id y admit_date, así que se une con patient, hospital y date.", gl: "Un feito únese coas dimensións cuxas claves ten nas súas columnas: admission ten patient_key, organization_id e admit_date, así que se une con patient, hospital e date." }
+  - { es: "condition tiene patient_key y diagnosis_date pero ninguna columna de centro: se une solo con patient y date. Las dimensiones no se unen entre sí. Después, «Comprobar esquema».", gl: "condition ten patient_key e diagnosis_date pero ningunha columna de centro: únese só con patient e date. As dimensións non se unen entre si. Despois, «Comprobar esquema»." }
 solution:
-  es: "Hechos: fct_admission y fct_condition. Dimensiones: dim_date, dim_hospital y dim_patient. Uniones: fct_admission → dim_date, dim_hospital y dim_patient; fct_condition → dim_date y dim_patient. Después, «Comprobar esquema»."
-  gl: "Feitos: fct_admission e fct_condition. Dimensións: dim_date, dim_hospital e dim_patient. Unións: fct_admission → dim_date, dim_hospital e dim_patient; fct_condition → dim_date e dim_patient. Despois, «Comprobar esquema»."
+  es: "Hechos: admission y condition. Dimensiones: patient, hospital y date. Uniones: admission → patient, hospital y date; condition → patient y date. Después, «Comprobar esquema»."
+  gl: "Feitos: admission e condition. Dimensións: patient, hospital e date. Unións: admission → patient, hospital e date; condition → patient e date. Despois, «Comprobar esquema»."

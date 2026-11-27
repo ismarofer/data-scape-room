@@ -7,7 +7,7 @@ import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import fstatic from "@fastify/static";
 import { z } from "zod";
-import { DecisionReq, HintReq, JoinReq, LANGS, SubmitReq, type Lang } from "@codigo-alta/shared";
+import { DecisionReq, HintReq, JoinReq, LANGS, SubmitReq, tr, type Lang } from "@codigo-alta/shared";
 import { Engine, GameError } from "./engine.js";
 import type { Content } from "./content.js";
 import { stripCorrect, withFixedStaging, type ModelsBundle } from "./models.js";
@@ -94,6 +94,8 @@ export function buildApp(o: AppOpts) {
   app.post("/api/ai/lumi", async (req) => { const b = z.object({ teamId: z.string(), message: z.string().max(2000), lang: L, work: Work.optional() }).parse(req.body); return needAi().lumi(b.teamId, b.message, b.lang, b.work); });
   app.post("/api/ai/lumi/help", async (req) => { const b = z.object({ teamId: z.string(), level: z.number().int().min(1).max(4), lang: L }).parse(req.body); return needAi().helpStep(b.teamId, b.level, b.lang); });
   app.get("/api/ai/lumi/history/:teamId", async (req: any) => ({ messages: o.engine.chatLog(req.params.teamId, "lumi", 40) }));
+  // the interviews, to review them in the solved level (the team's own conversation only)
+  app.get("/api/ai/npc/history/:teamId/:npcId", async (req: any) => ({ messages: ["noa", "brais"].includes(req.params.npcId) ? o.engine.chatLog(req.params.teamId, req.params.npcId, 40) : [] }));
   app.post("/api/ai/npc/:npcId", async (req: any) => { const b = z.object({ teamId: z.string(), message: z.string().max(2000), lang: L }).parse(req.body); return needAi().npc(b.teamId, req.params.npcId, b.message, b.lang); });
   app.get("/api/ai/greeting/:npcId", async (req: any) => ({ text: needAi().greeting(req.params.npcId, lang(req.query)) }));
   app.post("/api/ai/critic", async (req) => { const b = z.object({ teamId: z.string(), spec: z.object({ charts: z.array(z.any()).max(8) }), lang: L }).parse(req.body); return needAi().critic(b.teamId, b.spec as any, b.lang); });
@@ -118,6 +120,23 @@ export function buildApp(o: AppOpts) {
   app.post("/api/locks/master-key", async (req) => {
     facilitator(req);
     return o.engine.masterKey(z.object({ teamId: z.string() }).parse(req.body).teamId);
+  });
+  // testing shortcut: put a team (or a new test team) at the start of any level
+  app.get("/api/facilitator/levels", async (req: any) => {
+    facilitator(req);
+    return { levels: o.content.order.map((id) => { const l = o.content.locks.get(id)!; const r = o.content.rooms.get(l.room); return { id, title: tr(l.title, "es"), room: r ? `${r.number ?? ""} · ${r.stage ? tr(r.stage, "es") : tr(r.title, "es")}` : l.room }; }) };
+  });
+  app.post("/api/facilitator/jump", async (req) => {
+    facilitator(req);
+    const b = z.object({ teamId: z.string(), lockId: z.string() }).parse(req.body);
+    return o.engine.jumpTo(b.teamId, b.lockId);
+  });
+  app.post("/api/facilitator/test-team", async (req) => {
+    facilitator(req);
+    const b = z.object({ alias: z.string().min(2).max(24), lockId: z.string() }).parse(req.body);
+    const { teamId } = o.engine.join({ teamAlias: b.alias });
+    o.engine.jumpTo(teamId, b.lockId);
+    return { teamId, alias: b.alias };
   });
   app.post("/api/facilitator/pause", async (req) => {
     facilitator(req);

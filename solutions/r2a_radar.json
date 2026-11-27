@@ -1,1 +1,1 @@
-{"decision": null, "code": "patient_id=keep;ssn=pseudonymize;drivers=remove;passport=remove;prefix=remove;first_name=remove;last_name=remove;marital=remove;birthdate=generalize;deathdate=keep;birthplace=remove;address=remove;city=generalize;state=keep;county=keep;postal_code=generalize;gender=keep;lat=remove;lon=remove"}
+{"decision": null, "code": "patient_id=keep;ssn=pseudonymize;first_name=remove;address=remove;birthdate=generalize;postal_code=generalize;gender=keep;deathdate=keep"}

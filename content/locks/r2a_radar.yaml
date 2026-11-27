@@ -9,11 +9,11 @@ story:
 tools: [privacy_radar]
 validator: { type: privacy_rubric, rubric: privacy_rubric.yaml }
 points: 130
-time_target_min: 8
+time_target_min: 5
 hints:
-  - { es: "Pensad en cada columna: ¿con ella alguien podría saber quién es la persona? El nombre, la dirección y los documentos, sí.", gl: "Pensade en cada columna: con ela alguén podería saber quen é a persoa? O nome, o enderezo e os documentos, si." }
-  - { es: "El ssn identifica a la persona, pero hace falta para unir fichas repetidas: ni se mantiene ni se elimina. La fecha de nacimiento y el código postal son útiles, pero demasiado exactos.", gl: "O ssn identifica a persoa, pero fai falta para unir fichas repetidas: nin se mantén nin se elimina. A data de nacemento e o código postal son útiles, pero demasiado exactos." }
-  - { es: "ssn → pseudonimizar. birthdate y postal_code → generalizar. Nombre, apellidos, dirección, pasaporte y carné de conducir → eliminar. patient_id, gender y deathdate → mantener.", gl: "ssn → pseudonimizar. birthdate e postal_code → xeneralizar. Nome, apelidos, enderezo, pasaporte e carné de conducir → eliminar. patient_id, gender e deathdate → manter." }
+  - { es: "La regla: lo que dice quién es la persona y no sirve para el análisis se elimina (first_name y address). Lo que no identifica a nadie se mantiene (patient_id, gender y deathdate, que hace falta para el protocolo).", gl: "A regra: o que di quen é a persoa e non serve para a análise elimínase (first_name e address). O que non identifica a ninguén mantense (patient_id, gender e deathdate, que fai falta para o protocolo)." }
+  - { es: "ssn identifica a la persona, pero hace falta para juntar sus fichas repetidas: pseudonimizadlo (se cambia por un código). Os quedan birthdate y postal_code.", gl: "ssn identifica a persoa, pero fai falta para xuntar as súas fichas repetidas: pseudonimizádeo (cámbiase por un código). Quédanvos birthdate e postal_code." }
+  - { es: "birthdate y postal_code sirven (edad, área sanitaria) pero son demasiado exactos: generalizad los dos (año de nacimiento y las 2 primeras cifras). Después, «Aplicar decisiones».", gl: "birthdate e postal_code serven (idade, área sanitaria) pero son demasiado exactos: xeneralizade os dous (ano de nacemento e as 2 primeiras cifras). Despois, «Aplicar decisións»." }
 solution:
-  es: "Mantener: patient_id, deathdate, state, county y gender. Pseudonimizar: ssn. Generalizar: birthdate, postal_code y city. Eliminar: drivers, passport, prefix, first_name, last_name, marital, birthplace, address, lat y lon. Después, «Aplicar decisiones»."
-  gl: "Manter: patient_id, deathdate, state, county e gender. Pseudonimizar: ssn. Xeneralizar: birthdate, postal_code e city. Eliminar: drivers, passport, prefix, first_name, last_name, marital, birthplace, address, lat e lon. Despois, «Aplicar decisións»."
+  es: "Mantener: patient_id, gender y deathdate. Pseudonimizar: ssn. Generalizar: birthdate y postal_code. Eliminar: first_name y address. Después, «Aplicar decisiones»."
+  gl: "Manter: patient_id, gender e deathdate. Pseudonimizar: ssn. Xeneralizar: birthdate e postal_code. Eliminar: first_name e address. Despois, «Aplicar decisións»."

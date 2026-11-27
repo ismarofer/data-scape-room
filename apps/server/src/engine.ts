@@ -3,7 +3,8 @@ import type { DatabaseSync } from "node:sqlite";
 import { codeCandidates, itemizeReport, simulateWeeks, train, ML_FEATURES, LEAK_FEATURES, tr, type HelpStatus, type Lang, type LockT, type MlFeature, type MlRow, type TrainResult, type LockStateView, type Meters, type TeamState } from "@codigo-alta/shared";
 import { answerKey, type AnswerEntry, type Content } from "./content.js";
 import { evalClaims, evalPrivacy, MSG, type Rubric } from "./validators.js";
-import { evaluateDashboard, type DashboardSpec, type Finding } from "@codigo-alta/shared";
+import { chartTitle, evaluateDashboard, type DashboardSpec, type Finding } from "@codigo-alta/shared";
+import { LOADER_TRUTH } from "./loader-truth.js";
 
 export class GameError extends Error {
   constructor(public status: number, public code: string, message: string, public extra: Record<string, unknown> = {}) {
@@ -40,6 +41,12 @@ export class Engine {
   private mlCache = new Map<string, TrainResult>();
   constructor(public db: DatabaseSync, private o: EngineOpts) {
     this.now = o.now ?? Date.now;
+    // the browser rebuilds raw.* after a reload from the saved loader options: once the inbox is passed they must be the
+    // right ones (teams that loaded the files before the formats changed on 26-nov kept options that now read them wrong)
+    for (const r of db.prepare("SELECT team_id FROM lock_progress WHERE lock_id='r1a_bandeja' AND status='done'").all() as any[]) this.saveLoaderTruth(r.team_id);
+  }
+  private saveLoaderTruth(teamId: string) {
+    this.db.prepare("INSERT INTO team_kv(team_id,k,v,ts) VALUES(?,'wiz',?,?) ON CONFLICT(team_id,k) DO UPDATE SET v=excluded.v, ts=excluded.ts").run(teamId, JSON.stringify(LOADER_TRUTH), this.now());
   }
 
   private log(teamId: string, type: string, payload: unknown = {}) {
@@ -87,6 +94,8 @@ export class Engine {
   }
 
   /** Small shared key/value store for tool state (loader options, model choices, dashboard) so any laptop can resume the work. */
+  /** Plain value of a canonical answer (server only), e.g. for the Commission's summary cards. */
+  answerValue(key: string): unknown { return this.o.answerValues?.[key]; }
   kvGet(teamId: string, key: string): string | null {
     const r = this.db.prepare("SELECT v FROM team_kv WHERE team_id=? AND k=?").get(teamId, key) as any;
     return r?.v ?? null;
@@ -141,15 +150,24 @@ export class Engine {
     this.db.prepare("UPDATE teams SET meters_json=? WHERE id=?").run(JSON.stringify(m), teamId);
     this.db.prepare("INSERT INTO meter_history(team_id,ts,meters_json) VALUES(?,?,?)").run(teamId, this.now(), JSON.stringify(m));
   }
+  /**
+   * The game has ONE meter: the Commission's confidence (0-100, stored as meters.trust). Solving levels, good decisions
+   * and badges raise it; help from Lumi, false marks, risky decisions and the master key lower it. There are no points.
+   */
   private addScore(teamId: string, d: number) {
-    this.db.prepare("UPDATE teams SET score=score+? WHERE id=?").run(d, teamId);
+    if (!d) return;
+    const m = this.meters(teamId);
+    this.setMeters(teamId, { ...m, trust: clamp(m.trust + d) });
   }
+  /** How much a solved level raises the confidence (levels are worth 90-160 «weight» in the content → +2…+4). */
+  private reward(points: number) { return points > 0 ? Math.max(1, Math.round(points / 40)) : 0; }
 
   // ---------- state view (never contains answers) ----------
   state(teamId: string, lang: Lang = "es"): TeamState {
     const t = this.team(teamId);
     this.syncLocks(teamId);
     const rows = this.db.prepare("SELECT * FROM lock_progress WHERE team_id=? ORDER BY rowid").all(teamId) as any[];
+    const delivered = this.delivered(teamId), led = this.ledger(teamId);
     const locks: LockStateView[] = rows.map((r) => {
       const l = this.o.content.locks.get(r.lock_id)!;
       const open = r.status === "open";
@@ -172,8 +190,14 @@ export class Engine {
         id: l.id, room: l.room, type: l.type, title: tr(l.title, lang), story: showText ? tr(l.story, lang) : "", points: l.points, status: r.status,
         attempts: r.attempts, hintsUsed: r.hints_used, hints: showText ? l.hints.slice(0, usedHints).map((h) => tr(h, lang)) : [], decision: dec,
         solution: showText && r.hints_used >= 4 ? this.solutionText(l, lang) : undefined, help: open ? this.helpStatus(r, l) : undefined,
+        docs: showText ? l.docs_needed.flatMap((id) => { const d = this.o.content.docs.find((x) => x.id === id); return d ? [{ path: d.path, title: tr(d.title, lang) }] : []; }) : [],
         answerHint: showText && l.answer_hint ? tr(l.answer_hint, lang) : undefined, timeTargetMin: l.time_target_min, tools: open ? l.tools : [], startedAt: r.started_at ?? undefined,
         hintAvailableAt: undefined,
+        mine: r.status === "done" ? (() => {
+          const d = l.decision ? led.find((x) => x.lock_id === l.id) : undefined;
+          const o = d && l.decision!.options.find((x) => x.id === d.choice);
+          return { code: delivered.get(l.id), decision: o ? tr(o.label, lang) : undefined, options: d && l.decision ? l.decision.options.map((x) => ({ label: tr(x.label, lang), explain: x.explain ? tr(x.explain, lang) : undefined, chosen: x.id === d.choice })) : undefined };
+        })() : undefined,
       };
     });
     // A project document appears in the explorer once the first level that relies on it has been reached.
@@ -183,13 +207,13 @@ export class Engine {
       return first && reached.has(first) ? [{ id: d.id, path: d.path, title: tr(d.title, lang), body: tr(d.body, lang) }] : [];
     });
     return {
-      teamId, alias: t.alias, lang, score: t.score, meters: JSON.parse(t.meters_json),
-      startedAt: t.created_at, pausedAt: t.paused_at, currentLockId: rows.find((r) => r.status === "open")?.lock_id ?? null, locks,
+      teamId, alias: t.alias, lang, score: JSON.parse(t.meters_json).trust, meters: JSON.parse(t.meters_json),
+      clues: [...this.clues(teamId)], aiCost: this.o.content.session.ai_use_penalty, startedAt: t.created_at, pausedAt: t.paused_at, currentLockId: rows.find((r) => r.status === "open")?.lock_id ?? null, locks,
       rooms: this.o.content.session.rooms.flatMap((id) => {
         const r = this.o.content.rooms.get(id);
         if (!r) return [];
         const rg = this.o.content.guides.rooms[id];
-        return [{ id, title: tr(r.title, lang), number: r.number, stage: r.stage ? tr(r.stage, lang) : undefined, icon: r.icon, intro: tr(r.intro, lang), context: rg ? tr(rg.context, lang) : undefined, learn: rg ? tr(rg.learn, lang) : undefined, briefing: r.briefing.map((b) => tr(b, lang)), targetMinutes: r.target_minutes }];
+        return [{ id, title: tr(r.title, lang), number: r.number, stage: r.stage ? tr(r.stage, lang) : undefined, icon: r.icon, intro: tr(r.intro, lang), context: rg ? tr(rg.context, lang) : undefined, learn: rg ? tr(rg.learn, lang) : undefined, primer: rg?.primer ? { title: tr(rg.primer.title, lang), body: tr(rg.primer.body, lang) } : undefined, briefing: r.briefing.map((b) => tr(b, lang)), targetMinutes: r.target_minutes }];
       }), docs, glossary: Object.values(this.o.content.glossary).map((g) => ({ term: tr(g.term, lang), def: tr(g.def, lang) })).sort((a, b) => a.term.localeCompare(b.term, lang)), serverNow: this.now(),
     };
   }
@@ -201,10 +225,9 @@ export class Engine {
     if (this.decided(teamId, lock.decision.id)) throw new GameError(409, "already_decided", "La decisión ya está tomada");
     const opt = lock.decision.options.find((o) => o.id === optionId);
     if (!opt) throw new GameError(400, "bad_option", "Opción no válida");
-    const m = this.meters(teamId);
     const e = opt.effects ?? {};
-    this.setMeters(teamId, { ...m, quality: clamp(m.quality + (e.quality ?? 0)), trust: clamp(m.trust + (e.trust ?? 0)), compliance: clamp(m.compliance + (e.compliance ?? 0)) });
-    if (e.points) this.addScore(teamId, e.points);
+    // the old three effects (quality, trust, compliance) collapse into the single confidence meter
+    this.addScore(teamId, Math.round(((e.quality ?? 0) + (e.trust ?? 0) + (e.compliance ?? 0)) / 3) + this.reward(e.points ?? 0));
     this.db
       .prepare("INSERT INTO decision_ledger(team_id,lock_id,decision_id,choice,effects_json,ts) VALUES(?,?,?,?,?,?)")
       .run(teamId, lock.id, lock.decision.id, opt.id, JSON.stringify({ ...e, tag: opt.ledger_tag }), this.now());
@@ -230,15 +253,16 @@ export class Engine {
       if (!spec || !Array.isArray(spec.charts)) throw new GameError(400, "bad_spec", "Dashboard no válido");
       const findings = evaluateDashboard(spec);
       if (v.mode === "build") {
-        const ok = spec.charts.length >= 3 && spec.charts.length <= 4 && spec.charts.every((c) => c.title.trim().length > 0);
+        const ok = spec.charts.length >= 3 && spec.charts.length <= 4;
         return { ok, findings, feedback: ok ? undefined : MSG.dash_structure[lang] };
       }
-      const ok = findings.length <= v.max_findings;
+      // red (critical) findings block; yellow ones let the team go on with less confidence gained
+      const ok = !findings.some((f) => f.severity === "critical");
       return { ok, findings, feedback: ok ? undefined : MSG.dash_findings[lang] };
     }
     if (v?.type === "ml_train" || v?.type === "ml_threshold" || v?.type === "ml_equity") return this.mlCheck(v, code, lang);
     if (v?.type === "commission") throw new GameError(400, "not_code", "La Comisión se responde hablando, no con código");
-    if (v?.type === "interview") throw new GameError(400, "not_code", "Este candado se abre hablando con los personajes");
+    if (v?.type === "interview") return { ok: true }; // submit() decides the reward from the clues found
     if (v?.type === "verify_claims") {
       const exp = this.o.answers[v.answer_key];
       if (!exp) throw new GameError(500, "no_answer", "Candado sin respuesta configurada");
@@ -250,6 +274,10 @@ export class Engine {
     const key = answerKey(lock.answer.source);
     const ans = this.o.answers[key];
     if (!ans) throw new GameError(500, "no_answer", "Candado sin respuesta configurada");
+    for (const r of lock.numeric_ranges) {
+      // e.g. «min_n=25»: inside [min, max] it counts as the canonical option, outside it is simply wrong
+      code = code.replace(new RegExp(`(^|;)${r.field}=([^;]*)`), (m, pre, v) => { if (!/^\d+(\.\d+)?$/.test(v.trim())) return m; const n = Number(v); return `${pre}${r.field}=${n >= r.min && n <= r.max ? r.canonical : `out_of_range_${v.trim()}`}`; });
+    }
     const ok = codeCandidates(code, lock.answer.normalize).some((c) => {
       const h = this.hash(key, c);
       return h === ans.sha256_salted || ans.aliases.includes(h);
@@ -274,7 +302,7 @@ export class Engine {
     if (r.privacyCritical) {
       const first = !this.db.prepare("SELECT 1 FROM events_log WHERE team_id=? AND type='privacy_critical'").get(teamId);
       this.log(teamId, "privacy_critical", { lock: lock.id });
-      this.applyMeters(teamId, { compliance: first ? -20 : -5 });
+      this.addScore(teamId, first ? -6 : -2);
     }
     if (r.falsePositives && lock.validator?.type === "verify_claims") this.addScore(teamId, -lock.validator.false_positive_penalty * r.falsePositives);
     if (lock.validator?.type === "chart_rules") this.log(teamId, "dashboard_review", { lock: lock.id, findings: (r.findings ?? []).map((x) => x.id) });
@@ -287,7 +315,17 @@ export class Engine {
       this.notify(teamId, "state_update");
       return { ok: false, feedback: r.feedback, findings: r.findings, badColumns: r.badColumns, badItems: r.badItems, missingCount: r.missingCount };
     }
-    this.complete(teamId, lock.id, lock.points, false);
+    let points = lock.points;
+    if (lock.validator?.type === "interview") {
+      const got = lock.validator.clues.filter((c) => this.clues(teamId).has(c)).length;
+      points = Math.round(lock.points * (0.25 + 0.25 * got)); // 0 clues still lets you go on, each clue is worth more confidence
+    }
+    if (lock.validator?.type === "chart_rules" && lock.validator.mode === "review") {
+      const warns = (r.findings ?? []).filter((f) => f.severity === "warn").length;
+      points = Math.round(lock.points * Math.max(0.4, 1 - 0.15 * warns)); // yellow lets you continue, but each one costs
+    }
+    this.log(teamId, "solved", { lock: lock.id, code: code.slice(0, 20_000) }); // whole accepted answer: the solved level shows it read-only
+    this.complete(teamId, lock.id, points, false);
     return { ok: true, findings: r.findings };
   }
 
@@ -389,6 +427,14 @@ export class Engine {
     const rows = this.db.prepare("SELECT * FROM lock_progress WHERE team_id=?").all(teamId) as any[];
     return Object.fromEntries(rows.map((r) => [r.lock_id, { status: r.status, attempts: r.attempts, hints: r.hints_used, points: r.points, master: !!r.master_key_used }]));
   }
+  /** The accepted answer of every level the team passed (older teams: the last correct attempt, kept short). */
+  private delivered(teamId: string): Map<string, string> {
+    const out = new Map<string, string>();
+    for (const e of this.db.prepare("SELECT type, payload_json FROM events_log WHERE team_id=? AND type IN ('submit','solved') ORDER BY id").all(teamId) as any[]) {
+      try { const p = JSON.parse(e.payload_json); if (e.type === "solved" || (p.ok && p.code !== "(dashboard)" && !out.has(p.lock))) out.set(p.lock, String(p.code)); } catch { /* ignore */ }
+    }
+    return out;
+  }
   ledger(teamId: string): { lock_id: string; choice: string; tag?: string }[] {
     return (this.db.prepare("SELECT lock_id, choice, effects_json FROM decision_ledger WHERE team_id=? ORDER BY id").all(teamId) as any[]).map((r) => { let tag: string | undefined; try { tag = JSON.parse(r.effects_json).tag; } catch { /* ignore */ } return { lock_id: r.lock_id, choice: r.choice, tag }; });
   }
@@ -396,14 +442,14 @@ export class Engine {
     return Number((this.db.prepare("SELECT COUNT(*) AS n FROM events_log WHERE team_id=? AND type=?").get(teamId, type) as any).n);
   }
   meterValues(teamId: string): Meters { return this.meters(teamId); }
-  teamScore(teamId: string): number { return Number(this.team(teamId).score); }
+  teamScore(teamId: string): number { return this.meters(teamId).trust; }
   teamAlias(teamId: string): string { return String(this.team(teamId).alias); }
 
   // ---------- facilitator ----------
   teamDetail(teamId: string) {
     const t = this.team(teamId);
     return {
-      teamId, alias: t.alias, score: t.score, meters: JSON.parse(t.meters_json), progress: this.progress(teamId), ledger: this.ledger(teamId),
+      teamId, alias: t.alias, score: JSON.parse(t.meters_json).trust, meters: JSON.parse(t.meters_json), progress: this.progress(teamId), ledger: this.ledger(teamId),
       events: (this.db.prepare("SELECT type, payload_json, ts FROM events_log WHERE team_id=? ORDER BY id DESC LIMIT 60").all(teamId) as any[]).map((e) => ({ type: e.type, payload: e.payload_json, ts: e.ts })),
       ai: (this.db.prepare("SELECT character, lock_id, role, text, ts FROM ai_messages WHERE team_id=? AND character<>'_usage' ORDER BY id DESC LIMIT 120").all(teamId) as any[]).reverse(),
     };
@@ -413,16 +459,12 @@ export class Engine {
     return { exportedAt: this.now(), teams, aiTokens: Number((this.db.prepare("SELECT COALESCE(SUM(tokens),0) AS n FROM ai_messages").get() as any).n) };
   }
 
-  private applyMeters(teamId: string, d: { trust?: number; compliance?: number; quality?: number }) {
-    const m = this.meters(teamId);
-    this.setMeters(teamId, { ...m, trust: clamp(m.trust + (d.trust ?? 0)), compliance: clamp(m.compliance + (d.compliance ?? 0)), quality: clamp(m.quality + (d.quality ?? 0)) });
-  }
-
   private complete(teamId: string, lockId: string, points: number, master: boolean) {
     this.db
       .prepare("UPDATE lock_progress SET status='done', completed_at=?, points=?, master_key_used=? WHERE team_id=? AND lock_id=?")
       .run(this.now(), points, master ? 1 : 0, teamId, lockId);
-    this.addScore(teamId, points);
+    this.addScore(teamId, this.reward(points));
+    if (lockId === "r1a_bandeja") this.saveLoaderTruth(teamId); // passed: no answer left to give away, and the reload restore is always right
     this.openNext(teamId);
     this.notify(teamId, "state_update");
   }
@@ -508,7 +550,7 @@ export class Engine {
       const fails = (this.db.prepare("SELECT payload_json FROM events_log WHERE team_id=? AND type='submit'").all(teamId) as any[]).filter((e) => { try { const p = JSON.parse(e.payload_json); return p.lock === cur.lock_id && !p.ok; } catch { return false; } }).length;
       out.push(`Nivel actual: ${tr(L(cur.lock_id).title, lang)} · intentos fallidos al entregar: ${fails} · ayudas de Lumi pedidas: ${cur.hints_used}/${L(cur.lock_id).solution ? 4 : 3} · minutos en este nivel: ${cur.started_at ? Math.round((this.now() - cur.started_at) / 60000) : 0}.`);
     } else out.push("Han terminado todos los niveles.");
-    out.push(`Medidores: confianza ${m.trust}, cumplimiento ${m.compliance}, calidad de datos ${m.quality}, créditos de IA ${m.ai_credits}. Puntos: ${t.score}.`);
+    out.push(`Confianza de la Comisión (único medidor, 0-100): ${m.trust}.`);
     const dec = (this.db.prepare("SELECT lock_id, choice FROM decision_ledger WHERE team_id=? ORDER BY id").all(teamId) as any[]).flatMap((d) => {
       const lk = this.o.content.locks.get(d.lock_id); const opt = lk?.decision?.options.find((o) => o.id === d.choice);
       return opt ? [`${tr(lk!.title, lang)}: «${tr(opt.label, lang)}»`] : [];
@@ -525,7 +567,7 @@ export class Engine {
       if (f.length) out.push(`Constructor de modelos, piezas elegidas: ${f.join("; ")}.`);
     }
     if (kv.dash && Array.isArray(kv.dash.charts)) {
-      out.push(`Dashboard: ${kv.dash.charts.length} gráfico(s)${kv.dash.charts.length ? ": " + kv.dash.charts.map((c: any) => `${c.type}${c.title ? ` «${String(c.title).slice(0, 60)}»` : ""}`).join("; ") : ""}.`);
+      out.push(`Dashboard: ${kv.dash.charts.length} gráfico(s)${kv.dash.charts.length ? ": " + kv.dash.charts.map((c: any) => { try { return chartTitle(c); } catch { return "?"; } }).join("; ") : ""}.`);
     }
     return out.join("\n");
   }
@@ -548,12 +590,18 @@ export class Engine {
     for (const id of ids) if (!have.has(id)) this.log(teamId, "clue", { id });
     const cur = this.db.prepare("SELECT lock_id FROM lock_progress WHERE team_id=? AND status='open'").get(teamId) as any;
     const lock = cur ? this.o.content.locks.get(cur.lock_id) : undefined;
-    if (lock?.validator?.type === "interview") {
-      const got = lock.validator.clues.filter((c) => this.clues(teamId).has(c)).length;
-      if (got >= lock.validator.required_clues) { this.complete(teamId, lock.id, lock.points + (got === lock.validator.clues.length ? 20 : 0), false); return true; }
-    }
+    // the interview level does not close by itself: the team reads the clue and decides when to go on
     this.notify(teamId, "state_update");
     return false;
+  }
+  /** Each use of an AI character lowers the confidence (session.ai_use_penalty; 0 = free). Returns what it cost. */
+  chargeAi(teamId: string, who: "lumi" | "npc" | "critic"): number {
+    const n = this.o.content.session.ai_use_penalty[who] ?? 0;
+    if (n <= 0) return 0;
+    this.addScore(teamId, -n);
+    this.log(teamId, "ai_use", { who });
+    this.notify(teamId, "state_update");
+    return n;
   }
   spendCredit(teamId: string): boolean {
     const m = this.meters(teamId);
@@ -589,6 +637,48 @@ export class Engine {
     this.addScore(teamId, -this.o.content.session.master_key_penalty);
     this.log(teamId, "master_key", { lock: lock.id });
     return { lock: lock.id };
+  }
+
+  /**
+   * Facilitator / testing shortcut: puts a team at the start of any level. Every level before it counts as solved
+   * correctly (good decisions, correct loader options, a sensible KPI minimum) so the tools of the target level have
+   * what they need; the target and everything after it start from zero (attempts, help, decisions, clues, saved tool state).
+   * The confidence meter is not touched.
+   */
+  jumpTo(teamId: string, lockId: string) {
+    this.team(teamId);
+    const order = this.o.content.order;
+    const idx = order.indexOf(lockId);
+    if (idx < 0) throw new GameError(400, "bad_lock", "Ese nivel no existe");
+    this.syncLocks(teamId);
+    const now = this.now();
+    const before = order.slice(0, idx), after = order.slice(idx);
+    for (const id of before) {
+      const l = this.o.content.locks.get(id)!;
+      this.db.prepare("UPDATE lock_progress SET status='done', completed_at=COALESCE(completed_at, ?), points=CASE WHEN status='done' THEN points ELSE ? END WHERE team_id=? AND lock_id=?").run(now, l.points, teamId, id);
+      if (l.decision && !this.decided(teamId, l.decision.id)) {
+        const opt = l.decision.options.find((o) => o.correct) ?? l.decision.options[0];
+        this.db.prepare("INSERT INTO decision_ledger(team_id,lock_id,decision_id,choice,effects_json,ts) VALUES(?,?,?,?,?,?)").run(teamId, l.id, l.decision.id, opt.id, JSON.stringify({ ...(opt.effects ?? {}), tag: opt.ledger_tag }), now);
+      }
+    }
+    for (const id of after) {
+      this.db.prepare("UPDATE lock_progress SET status=?, started_at=?, completed_at=NULL, attempts=0, hints_used=0, master_key_used=0, points=0 WHERE team_id=? AND lock_id=?").run(id === lockId ? "open" : "locked", id === lockId ? now : null, teamId, id);
+      this.db.prepare("DELETE FROM decision_ledger WHERE team_id=? AND lock_id=?").run(teamId, id);
+    }
+    const reached = (id: string) => order.indexOf(id) >= 0 && order.indexOf(id) < idx;
+    // tool state the later levels rely on: kept (or filled in) for levels already passed, cleared for the target and after
+    const KV: Record<string, string[]> = { r1a_bandeja: ["wiz"], r3c_modelo: ["mb"], r5a_kpi: ["kpi_min"], r5b_dashboard: ["dash"] };
+    for (const [id, keys] of Object.entries(KV)) if (!reached(id)) for (const k of keys) this.db.prepare("DELETE FROM team_kv WHERE team_id=? AND k=?").run(teamId, k);
+    if (reached("r1a_bandeja")) this.saveLoaderTruth(teamId);
+    if (reached("r5a_kpi") && !this.kvGet(teamId, "kpi_min")) this.kvSet(teamId, "kpi_min", "30");
+    if (!reached("r4b_entrevistas")) this.db.prepare("DELETE FROM events_log WHERE team_id=? AND type='clue'").run(teamId);
+    if (!reached("f_comision")) {
+      this.db.prepare("DELETE FROM commission_turns WHERE team_id=?").run(teamId);
+      this.db.prepare("DELETE FROM events_log WHERE team_id=? AND type='commission_result'").run(teamId);
+    }
+    this.log(teamId, "jump", { lock: lockId });
+    this.notify(teamId, "state_update");
+    return { lock: lockId };
   }
 
   setPaused(paused: boolean) {

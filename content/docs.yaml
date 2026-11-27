@@ -22,15 +22,21 @@
       Cada hospital envía una hoja con el formato de su fichero. Esto es lo que declaran:
       | Ficheros | Separador | Codificación | Fechas |
       |---|---|---|---|
-      | patients, organizations, conditions | coma `,` | UTF-8 | (sin fechas de hora) |
-      | encounters_H1, H2, H4 y reenvío | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
+      | patients | coma `,` | UTF-8 | (sin fechas de hora) |
+      | organizations | barra vertical | UTF-8 | (sin fechas de hora) |
+      | conditions | tabulador | Latin-1 | (sin fechas de hora) |
+      | encounters_H1 y H2_reenvio | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
+      | encounters_H2 | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
       | encounters_H3 | punto y coma `;` | UTF-8 | `31/01/2023 14:05` |
+      | encounters_H4 | tabulador | UTF-8 | `2023-01-31 14:05:00` |
+
+      Cada sistema exporta a su manera: casi cada fichero necesita una combinación distinta.
 
       Aviso de Noa (Informática): «las hojas las rellena cada hospital a mano y a veces se equivocan; **fiaos de los datos**, no solo del papel».
 
       ## Cómo comprobar el formato de un fichero
       Elige el fichero en el cargador y mira el contador de arriba de la tabla («filas buenas · rechazadas · columnas»):
-      - **Separador.** Si ves **una sola columna enorme**, el separador es otro. Prueba con punto y coma. Con el separador correcto, el número de columnas coincide con el de la cabecera (`encounters`: 8; `patients`: 19).
+      - **Separador.** Si ves **una sola columna enorme**, el separador es otro: mira qué símbolo se repite entre los datos de una fila (`;`, una barra vertical o un hueco grande, que es el **tabulador**). Con el separador correcto, el número de columnas coincide con el de la cabecera (`encounters`: 8; `patients`: 19).
       - **Codificación.** Si en lugar de tildes ves símbolos como `Ã³` o `�`, la codificación está mal: prueba con la otra. «Codificación» es el código con el que un fichero guarda las letras; UTF-8 y Latin-1 guardan las tildes de forma distinta.
       - **Formato de fecha.** Mira cómo se escribe `start_ts` en la tabla y elige el formato que coincida. Si no coincide, casi todas las filas salen **rechazadas** («fecha ilegible»).
 
@@ -57,15 +63,21 @@
       Cada hospital envía unha folla co formato do seu ficheiro. Isto é o que declaran:
       | Ficheiros | Separador | Codificación | Datas |
       |---|---|---|---|
-      | patients, organizations, conditions | coma `,` | UTF-8 | (sen datas con hora) |
-      | encounters_H1, H2, H4 e reenvío | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
+      | patients | coma `,` | UTF-8 | (sen datas con hora) |
+      | organizations | barra vertical | UTF-8 | (sen datas con hora) |
+      | conditions | tabulador | Latin-1 | (sen datas con hora) |
+      | encounters_H1 e H2_reenvio | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
+      | encounters_H2 | coma `,` | UTF-8 | `2023-01-31 14:05:00` |
       | encounters_H3 | punto e coma `;` | UTF-8 | `31/01/2023 14:05` |
+      | encounters_H4 | tabulador | UTF-8 | `2023-01-31 14:05:00` |
+
+      Cada sistema exporta á súa maneira: case cada ficheiro precisa unha combinación distinta.
 
       Aviso de Noa (Informática): «as follas énchea cada hospital a man e ás veces equivócanse; **fiádevos dos datos**, non só do papel».
 
       ## Como comprobar o formato dun ficheiro
       Elixe o ficheiro no cargador e mira o contador de arriba da táboa («filas boas · rexeitadas · columnas»):
-      - **Separador.** Se ves **unha soa columna enorme**, o separador é outro. Proba con punto e coma. Co separador correcto, o número de columnas coincide co da cabeceira (`encounters`: 8; `patients`: 19).
+      - **Separador.** Se ves **unha soa columna enorme**, o separador é outro: mira que símbolo se repite entre os datos dunha fila (`;`, unha barra vertical ou un oco grande, que é o **tabulador**). Co separador correcto, o número de columnas coincide co da cabeceira (`encounters`: 8; `patients`: 19).
       - **Codificación.** Se en lugar de tiles ves símbolos como `Ã³` ou `�`, a codificación está mal: proba coa outra. «Codificación» é o código co que un ficheiro garda as letras; UTF-8 e Latin-1 gardan as tiles de forma distinta.
       - **Formato de data.** Mira como se escribe `start_ts` na táboa e elixe o formato que coincida. Se non coincide, case todas as filas saen **rexeitadas** («data ilexible»).
 
@@ -118,11 +130,8 @@
       - Un **reingreso** es un ingreso que ocurre **pasado ese margen** y dentro de la ventana que fija el protocolo, contando desde el alta del episodio anterior. Si la ventana está mal escrita, el número de reingresos cambia: por eso hay que leer el protocolo con calma.
       - Solo cuentan los **ingresos hospitalarios** (`inpatient`).
 
-      ## Esquema en estrella (sala 3)
-      Un **esquema en estrella** organiza las tablas en dos tipos:
-      - **Tablas de hechos** (`fct_`): guardan **lo que ocurre** y se puede contar o sumar: un ingreso, un diagnóstico.
-      - **Tablas de dimensiones** (`dim_`): **describen** los hechos: quién (`dim_patient`), dónde (`dim_hospital`), cuándo (`dim_date`).
-      Reglas del dibujo: cada hecho se **une a las dimensiones** que lo describen (un ingreso tiene fecha, hospital y paciente; un diagnóstico tiene fecha y paciente); las **dimensiones no se unen entre sí**; y un hecho no se une a otro hecho. Fíjate en que el dibujo parece una estrella: el hecho en el centro y las dimensiones alrededor.
+      ## Esquema en estrella
+      Está explicado, con un ejemplo, en el documento **«Esquema en estrella: hechos y dimensiones»** (`docs/esquema-en-estrella.md`).
     gl: |
       Este documento reúne o que necesitas para construír os modelos de datos (sala 3): que é unha clave, como se organizan as capas, como se protexe cada modelo con tests e como se deseña un esquema en estrela.
 
@@ -163,17 +172,14 @@
       - Un **reingreso** é un ingreso que ocorre **pasado ese marxe** e dentro da ventá que fixa o protocolo, contando desde a alta do episodio anterior. Se a ventá está mal escrita, o número de reingresos cambia: por iso hai que ler o protocolo con calma.
       - Só contan os **ingresos hospitalarios** (`inpatient`).
 
-      ## Esquema en estrela (sala 3)
-      Un **esquema en estrela** organiza as táboas en dous tipos:
-      - **Táboas de feitos** (`fct_`): gardan **o que ocorre** e se pode contar ou sumar: un ingreso, un diagnóstico.
-      - **Táboas de dimensións** (`dim_`): **describen** os feitos: quen (`dim_patient`), onde (`dim_hospital`), cando (`dim_date`).
-      Regras do debuxo: cada feito **únese ás dimensións** que o describen (un ingreso ten data, hospital e paciente; un diagnóstico ten data e paciente); as **dimensións non se unen entre si**; e un feito non se une a outro feito. Fíxate en que o debuxo parece unha estrela: o feito no centro e as dimensións arredor.
+      ## Esquema en estrela
+      Está explicado, cun exemplo, no documento **«Esquema en estrela: feitos e dimensións»** (`docs/esquema-en-estrella.md`).
 - id: doc_de_privacy
   path: docs/guia-privacidad.md
   title: { es: "Guía de privacidad: qué hacer con cada columna", gl: "Guía de privacidade: que facer con cada columna" }
   body:
     es: |
-      Antes de que nadie analice la tabla de pacientes hay que decidir, **columna por columna**, qué se hace con ella. Esta guía te explica las cuatro acciones, cómo decidir y qué hacer con **cada una de las 19 columnas** de `patients`.
+      Antes de que nadie analice la tabla de pacientes hay que decidir, **columna por columna**, qué se hace con ella. Esta guía te explica las cuatro acciones, cómo decidir y qué hacer con **las 8 columnas** de `patients` que hay que decidir.
 
       ## Por qué importa
       Los datos de salud están especialmente protegidos por la ley (RGPD). Aunque aquí sean ficticios, trabajamos **como si fueran reales**. Regla de oro: **usar solo lo necesario** y proteger lo que identifica a una persona.
@@ -194,39 +200,31 @@
       ## Las combinaciones también identifican
       Algunos datos no identifican por sí solos, pero **combinados** sí: la **fecha de nacimiento + el código postal + el sexo** bastan para reconocer a mucha gente. Por eso esas columnas se **generalizan** aunque cada una parezca inofensiva.
 
-      ## Las 19 columnas de `patients`
+      ## Las columnas que ya no están
+      `patients.csv` trae 19 columnas, pero el proyecto solo usa unas pocas. Noa ya ha quitado las que **no sirven para nada** aquí: `drivers` (carné de conducir), `passport`, `prefix` (Sr./Sra.), `last_name`, `marital` (estado civil), `birthplace`, `city`, `state`, `county`, `lat` y `lon` (GPS de la casa). Es la regla de oro en acción: si no hace falta, fuera.
+
+      ## Las 8 columnas que hay que decidir
       | Columna | Qué contiene | Riesgo | Qué hacer y por qué |
       |---|---|---|---|
       | `patient_id` | Código interno de la ficha (aleatorio) | Bajo: no significa nada fuera del hospital | **Mantener**: es lo que une la ficha con sus encuentros. |
       | `ssn` | Número de identificación de la persona | **Muy alto** (directo) | **Pseudonimizar**: es lo único que permite saber que dos fichas son la misma persona, así que se necesita para unir, pero no se muestra. *No* dejarlo en claro y *no* eliminarlo. |
-      | `drivers` | Carnet de conducir | **Muy alto** (directo) | **Eliminar**: no hace falta. |
-      | `passport` | Pasaporte | **Muy alto** (directo) | **Eliminar**: no hace falta. |
-      | `prefix` | Tratamiento (Sr., Sra.) | Bajo | **Eliminar**: no aporta nada al análisis. |
       | `first_name` | Nombre | **Alto** (directo) | **Eliminar**. Y no unas fichas por nombre: personas distintas se llaman igual. |
-      | `last_name` | Apellidos | **Alto** (directo) | **Eliminar**, igual que el nombre. |
-      | `marital` | Estado civil | Bajo, pero se combina con otros | **Eliminar**: no hace falta para medir reingresos. |
-      | `birthdate` | Fecha de nacimiento exacta | **Alto** combinada con código postal y sexo | **Generalizar** a **tramo de edad**: la edad sí importa (los mayores reingresan más), el día exacto no. |
-      | `deathdate` | Fecha de fallecimiento | Medio | **Mantener**: el protocolo exige excluir los registros **posteriores al fallecimiento**, y sin esta fecha no se puede. |
-      | `birthplace` | Pueblo de nacimiento | Medio | **Eliminar** (o generalizar): no se necesita. |
       | `address` | Calle y número | **Muy alto** (directo) | **Eliminar**. |
-      | `city` | Ciudad de residencia | Medio: en una ciudad pequeña casi se señala a alguien | **Generalizar** (a un área mayor) o eliminar. |
-      | `state` | Comunidad autónoma | Bajo | **Mantener**: es un nivel muy amplio. |
-      | `county` | Provincia | Bajo | **Mantener**: nivel amplio y útil para comparar zonas. |
+      | `birthdate` | Fecha de nacimiento exacta | **Alto** combinada con código postal y sexo | **Generalizar** a **tramo de edad**: la edad sí importa (los mayores reingresan más), el día exacto no. |
       | `postal_code` | Código postal | **Alto** combinado con nacimiento y sexo | **Generalizar** (por ejemplo, solo las primeras cifras o el área sanitaria). |
       | `gender` | Sexo | Bajo, pero es una variable sensible | **Mantener**: es útil y permite comprobar que el análisis no es injusto con un sexo concreto. |
-      | `lat` | Latitud GPS del domicilio | **Muy alto**: señala una vivienda | **Eliminar**. |
-      | `lon` | Longitud GPS del domicilio | **Muy alto**: señala una vivienda | **Eliminar**. |
+      | `deathdate` | Fecha de fallecimiento | Medio | **Mantener**: el protocolo exige excluir los registros **posteriores al fallecimiento**, y sin esta fecha no se puede. |
 
       ## Errores típicos
       - **Eliminar el SSN.** Parece lo más seguro, pero después **no podréis unir las fichas duplicadas** de una misma persona. Hay que pseudonimizarlo.
-      - **Dejar el SSN (o el nombre, la dirección, el carnet o el pasaporte) en claro.** Es el fallo más grave: baja el cumplimiento del equipo.
+      - **Dejar el SSN (o el nombre o la dirección) en claro.** Es el fallo más grave: baja el cumplimiento del equipo.
       - **Olvidar las combinaciones** (nacimiento + código postal + sexo).
       - **Creer que pseudonimizar es anonimizar.** Un pseudónimo sigue siendo un dato personal: protege, pero no deja de ser sensible.
 
       ## Cómo se pseudonimiza
       Se calcula un **hash** (una «huella» irreversible) del dato, añadiendo antes una **sal** secreta: `hash("sal" + ssn)`. Dos fichas con el mismo SSN dan la misma huella, así que se pueden unir; pero nadie puede deshacer la huella para obtener el SSN.
     gl: |
-      Antes de que ninguén analice a táboa de pacientes hai que decidir, **columna por columna**, que se fai con ela. Esta guía explícache as catro accións, como decidir e que facer con **cada unha das 19 columnas** de `patients`.
+      Antes de que ninguén analice a táboa de pacientes hai que decidir, **columna por columna**, que se fai con ela. Esta guía explícache as catro accións, como decidir e que facer coas **8 columnas** de `patients` que hai que decidir.
 
       ## Por que importa
       Os datos de saúde están especialmente protexidos pola lei (RXPD). Aínda que aquí sexan ficticios, traballamos **como se fosen reais**. Regra de ouro: **usar só o necesario** e protexer o que identifica a unha persoa.
@@ -247,32 +245,24 @@
       ## As combinacións tamén identifican
       Algúns datos non identifican por si sós, pero **combinados** si: a **data de nacemento + o código postal + o sexo** abondan para recoñecer a moita xente. Por iso esas columnas **xeneralízanse** aínda que cada unha pareza inofensiva.
 
-      ## As 19 columnas de `patients`
+      ## As columnas que xa non están
+      `patients.csv` trae 19 columnas, pero o proxecto só usa unhas poucas. Noa xa quitou as que **non serven para nada** aquí: `drivers` (carné de conducir), `passport`, `prefix` (Sr./Sra.), `last_name`, `marital` (estado civil), `birthplace`, `city`, `state`, `county`, `lat` e `lon` (GPS da casa). É a regra de ouro en acción: se non fai falta, fóra.
+
+      ## As 8 columnas que hai que decidir
       | Columna | Que contén | Risco | Que facer e por que |
       |---|---|---|---|
       | `patient_id` | Código interno da ficha (aleatorio) | Baixo: non significa nada fóra do hospital | **Manter**: é o que une a ficha cos seus encontros. |
       | `ssn` | Número de identificación da persoa | **Moi alto** (directo) | **Pseudonimizar**: é o único que permite saber que dúas fichas son a mesma persoa, así que se necesita para unir, pero non se amosa. *Non* deixalo en claro e *non* eliminalo. |
-      | `drivers` | Carné de conducir | **Moi alto** (directo) | **Eliminar**: non fai falta. |
-      | `passport` | Pasaporte | **Moi alto** (directo) | **Eliminar**: non fai falta. |
-      | `prefix` | Tratamento (Sr., Sra.) | Baixo | **Eliminar**: non achega nada á análise. |
       | `first_name` | Nome | **Alto** (directo) | **Eliminar**. E non unas fichas por nome: persoas distintas chámanse igual. |
-      | `last_name` | Apelidos | **Alto** (directo) | **Eliminar**, igual que o nome. |
-      | `marital` | Estado civil | Baixo, pero combínase con outros | **Eliminar**: non fai falta para medir reingresos. |
-      | `birthdate` | Data de nacemento exacta | **Alto** combinada con código postal e sexo | **Xeneralizar** a **tramo de idade**: a idade si importa (os maiores reingresan máis), o día exacto non. |
-      | `deathdate` | Data de falecemento | Medio | **Manter**: o protocolo esixe excluír os rexistros **posteriores ao falecemento**, e sen esta data non se pode. |
-      | `birthplace` | Pobo de nacemento | Medio | **Eliminar** (ou xeneralizar): non se necesita. |
       | `address` | Rúa e número | **Moi alto** (directo) | **Eliminar**. |
-      | `city` | Cidade de residencia | Medio: nunha cidade pequena case se sinala a alguén | **Xeneralizar** (a unha área maior) ou eliminar. |
-      | `state` | Comunidade autónoma | Baixo | **Manter**: é un nivel moi amplo. |
-      | `county` | Provincia | Baixo | **Manter**: nivel amplo e útil para comparar zonas. |
+      | `birthdate` | Data de nacemento exacta | **Alto** combinada con código postal e sexo | **Xeneralizar** a **tramo de idade**: a idade si importa (os maiores reingresan máis), o día exacto non. |
       | `postal_code` | Código postal | **Alto** combinado con nacemento e sexo | **Xeneralizar** (por exemplo, só as primeiras cifras ou a área sanitaria). |
       | `gender` | Sexo | Baixo, pero é unha variable sensible | **Manter**: é útil e permite comprobar que a análise non é inxusta cun sexo concreto. |
-      | `lat` | Latitude GPS do domicilio | **Moi alto**: sinala unha vivenda | **Eliminar**. |
-      | `lon` | Lonxitude GPS do domicilio | **Moi alto**: sinala unha vivenda | **Eliminar**. |
+      | `deathdate` | Data de falecemento | Medio | **Manter**: o protocolo esixe excluír os rexistros **posteriores ao falecemento**, e sen esta data non se pode. |
 
       ## Erros típicos
       - **Eliminar o SSN.** Parece o máis seguro, pero despois **non poderedes unir as fichas duplicadas** dunha mesma persoa. Hai que pseudonimizalo.
-      - **Deixar o SSN (ou o nome, o enderezo, o carné ou o pasaporte) en claro.** É o fallo máis grave: baixa o cumprimento do equipo.
+      - **Deixar o SSN (ou o nome ou o enderezo) en claro.** É o fallo máis grave: baixa o cumprimento do equipo.
       - **Esquecer as combinacións** (nacemento + código postal + sexo).
       - **Crer que pseudonimizar é anonimizar.** Un pseudónimo segue sendo un dato persoal: protexe, pero non deixa de ser sensible.
 
@@ -309,7 +299,11 @@
       | Mostrarla como las demás | Sencilla | Engaña: parece el peor centro |
       | Ocultarla sin decir nada | Limpia | **Oculta información** y genera desconfianza |
       | Fijar un **mínimo de altas** para publicar la tasa y **avisar** de que hay pocos casos | Honesta y comparable | Hay que elegir bien el mínimo |
-      Un mínimo bajo (10) sigue dejando pasar centros inestables; uno enorme (1 000) deja fuera a casi todos. Lo habitual es un mínimo del orden de unas decenas de casos.
+      Un mínimo bajo (10) sigue dejando pasar centros inestables; uno enorme (1 000) deja fuera a casi todos.
+
+      ## ¿De dónde sale el mínimo?
+      No hay un número mágico: se elige mirando **cuánto mueve la tasa un solo caso**. Con 3 altas, un reingreso más sube la tasa **33 puntos**; con 30 altas, **3 puntos**; con 300, **0,3**. Por debajo de unas decenas de altas, la tasa depende más de la suerte que del hospital.
+      Por eso los indicadores públicos de reingresos suelen exigir **unas 25-30 altas** como mínimo para publicar la tasa de un centro. En vuestros datos, cualquier mínimo que deje fuera a la clínica de 3 casos y mantenga a los hospitales de verdad (el más pequeño tiene más de 300 altas) es razonable: lo importante es **decidirlo antes de mirar quién gana** y explicarlo.
 
       ## Lo que no le gusta a la Comisión
       Cifras sin contexto, gráficos con el eje recortado y tasas de centros con muy pocos casos.
@@ -340,7 +334,11 @@
       | Amosala como as demais | Sinxela | Engana: parece o peor centro |
       | Agochala sen dicir nada | Limpa | **Oculta información** e xera desconfianza |
       | Fixar un **mínimo de altas** para publicar a taxa e **avisar** de que hai poucos casos | Honesta e comparable | Hai que elixir ben o mínimo |
-      Un mínimo baixo (10) segue deixando pasar centros inestables; un enorme (1 000) deixa fóra a case todos. O habitual é un mínimo da orde de unhas decenas de casos.
+      Un mínimo baixo (10) segue deixando pasar centros inestables; un enorme (1 000) deixa fóra a case todos.
+
+      ## De onde sae o mínimo?
+      Non hai un número máxico: elíxese mirando **canto move a taxa un só caso**. Con 3 altas, un reingreso máis sobe a taxa **33 puntos**; con 30 altas, **3 puntos**; con 300, **0,3**. Por debaixo dunhas decenas de altas, a taxa depende máis da sorte ca do hospital.
+      Por iso os indicadores públicos de reingresos adoitan esixir **unhas 25-30 altas** como mínimo para publicar a taxa dun centro. Nos vosos datos, calquera mínimo que deixe fóra a clínica de 3 casos e manteña os hospitais de verdade (o máis pequeno ten máis de 300 altas) é razoable: o importante é **decidilo antes de mirar quen gaña** e explicalo.
 
       ## O que non lle gusta á Comisión
       Cifras sen contexto, gráficos co eixe recortado e taxas de centros con moi poucos casos.
@@ -349,77 +347,73 @@
   title: { es: "Guía de estilo del cuadro de mando", gl: "Guía de estilo do cadro de mando" }
   body:
     es: |
-      Un **dashboard** (cuadro de mando) es una pantalla con pocos gráficos que ayudan a **decidir**. Esta guía recoge las reglas de la Comisión y por qué existen. El «Crítico de visualización» las comprobará una por una.
+      Un **dashboard** (cuadro de mando) es una pantalla con pocos gráficos que ayudan a **decidir**. En el constructor, cada gráfico se monta con tres decisiones: **tipo** (barras, línea, tabla o número grande), **qué dato** (tasa, número de reingresos o número de altas) y **por qué se reparte** (centro, edad, área, mes o año).
 
-      ## Cuántos gráficos
-      **Entre 3 y 4.** Cada gráfico debe **responder a una pregunta** de la Comisión (¿qué centros reingresan más? ¿cómo evoluciona mes a mes? ¿qué grupos de edad?). Más gráficos = más ruido.
+      ## Empieza por las preguntas
+      **Entre 3 y 4 gráficos**, y cada uno responde a una pregunta distinta de la Comisión: ¿qué centro reingresa más?, ¿cómo evoluciona?, ¿a quién le pasa más? Si dos gráficos enseñan lo mismo, sobra uno.
 
-      ## Las reglas, una por una
-      | Regla | Qué significa | Por qué |
+      ## Qué dato enseñar
+      - Para **comparar** centros o áreas, la **tasa** (reingresos / altas). El número de reingresos a secas siempre lo «gana» el hospital más grande: engaña.
+      - El número de altas o de reingresos sirve para dar **contexto** (cuánto trabajo hay), no para decir quién lo hace peor.
+      - Junto a una tasa, enseña cuántas altas hay detrás (**n**): no es lo mismo un 10 % de 30 que de 900.
+
+      ## Qué tipo de gráfico
+      | Tipo | Para qué | Cuándo NO |
       |---|---|---|
-      | **Eje en cero** (barras) | La barra empieza en 0 | Si el eje empieza en 5 %, una barra de 6 % parece el triple de una de 5,5 %: **exagera** la diferencia |
-      | **Número de casos visible** | Junto a cada tasa, el número de altas (n) | Una tasa sin denominador engaña (ver «Peticiones de la dirección») |
-      | **Mínimo de altas** | Se ocultan o avisan los centros con menos de 30 altas | Los centros pequeños dan tasas extremas por azar |
-      | **Ordenar de mayor a menor** | En barras por centro, de la más alta a la más baja | Se lee de un vistazo quién destaca |
-      | **Título = conclusión** | Una frase que diga **qué se ve**, no solo qué es | «Un centro supera con claridad al resto…» informa; «Reingresos por centro» solo etiqueta |
-      | **Máximo dos colores de énfasis** | Un color base y otro para resaltar; que se distingan con daltonismo | El arcoíris distrae y no todo el mundo ve todos los colores |
-      | **Sin doble eje** | No mezclar dos escalas en un gráfico | Confunde: parece que dos cosas están relacionadas cuando solo comparten el dibujo |
-      | **Sin 3D** | Barras planas | El 3D deforma las barras y dificulta compararlas |
+      | **Barras** | Comparar categorías (centros, edades, áreas) | — |
+      | **Línea** | Ver cómo cambia algo **en el tiempo** (meses, años) | Para categorías: una línea entre «centro A» y «centro B» no significa nada |
+      | **Tabla** | Cuando importan los números exactos | Si hay que ver el conjunto de un vistazo |
+      | **Número grande (KPI)** | Una cifra clave con su contexto | Para comparar |
+      | **Área** | Como la línea, para el tiempo | Igual que la línea: nunca para categorías |
+      | **Tarta o anillo** | **Casi nunca.** El ojo compara mal ángulos y áreas: dos porciones de 18 % y 15 % parecen iguales | Para tasas, nunca: la tasa de cada centro no es una «parte» de un total. Usad barras |
 
-      ## Cómo escribir un buen título
-      Un título que dice la conclusión suele tener **6 palabras o más** y un **verbo de comparación o una cifra**: *supera, concentra, sube, baja, mayor, menor, más, menos…*
-      - Malo: «Reingresos por centro».
-      - Bueno: «Un centro supera con claridad al resto en reingresos a 30 días».
-      Escribe lo que **de verdad** se ve en el gráfico: no inventes la conclusión antes de mirarlo.
+      ## Lo que el constructor ya hace bien por ti
+      Las barras y las líneas **empiezan siempre en cero** (si no, una diferencia pequeña parece enorme) y no hay 3D ni doble eje: no aportan nada y confunden.
 
-      ## Elegir el tipo de gráfico
-      - **Barras por centro / por grupo de edad:** para **comparar categorías**.
-      - **Línea mensual:** para ver **cómo cambia** algo con el tiempo.
-      - **Tabla:** cuando importan los números exactos.
-      - **Indicador único (KPI):** una cifra grande con su contexto.
+      ## Los centros pequeños
+      Con muy pocas altas una tasa es puro azar. Aplica el **mínimo de altas** que fijasteis en «KPI con sentido» a los gráficos por centro.
 
-      ## Lista de comprobación antes de entregar
-      - ¿3 o 4 gráficos, cada uno con su pregunta?
-      - ¿Eje en cero, n visible y mínimo de altas en cada gráfico?
-      - ¿Orden de mayor a menor en las barras por centro?
-      - ¿Máximo dos colores, sin 3D ni doble eje?
-      - ¿Cada título dice una conclusión?
+      ## Colores
+      Uno, o uno más otro para destacar lo importante. El arcoíris distrae y no se distingue con daltonismo.
+
+      ## Cómo lee el crítico
+      - 🔴 **Engaña:** el gráfico puede llevar a una conclusión falsa. Hay que arreglarlo para entregar.
+      - 🟡 **Mejorable:** se entiende, pero se puede contar mejor. Se puede entregar, pero se gana menos confianza.
+      - 🔵 **Sugerencia.**
     gl: |
-      Un **dashboard** (cadro de mando) é unha pantalla con poucos gráficos que axudan a **decidir**. Esta guía recolle as regras da Comisión e por que existen. O «Crítico de visualización» comprobaraas unha por unha.
+      Un **dashboard** (cadro de mando) é unha pantalla con poucos gráficos que axudan a **decidir**. No construtor, cada gráfico móntase con tres decisións: **tipo** (barras, liña, táboa ou número grande), **que dato** (taxa, número de reingresos ou número de altas) e **por que se reparte** (centro, idade, área, mes ou ano).
 
-      ## Cantos gráficos
-      **Entre 3 e 4.** Cada gráfico debe **responder a unha pregunta** da Comisión (que centros reingresan máis? como evoluciona mes a mes? que grupos de idade?). Máis gráficos = máis ruído.
+      ## Comeza polas preguntas
+      **Entre 3 e 4 gráficos**, e cada un responde a unha pregunta distinta da Comisión: que centro reingresa máis?, como evoluciona?, a quen lle pasa máis? Se dous gráficos amosan o mesmo, sobra un.
 
-      ## As regras, unha por unha
-      | Regra | Que significa | Por que |
+      ## Que dato amosar
+      - Para **comparar** centros ou áreas, a **taxa** (reingresos / altas). O número de reingresos a secas sempre o «gaña» o hospital máis grande: engana.
+      - O número de altas ou de reingresos serve para dar **contexto** (canto traballo hai), non para dicir quen o fai peor.
+      - Xunto a unha taxa, amosa cantas altas hai detrás (**n**): non é o mesmo un 10 % de 30 ca de 900.
+
+      ## Que tipo de gráfico
+      | Tipo | Para que | Cando NON |
       |---|---|---|
-      | **Eixe en cero** (barras) | A barra empeza en 0 | Se o eixe empeza en 5 %, unha barra de 6 % parece o triplo dunha de 5,5 %: **esaxera** a diferenza |
-      | **Número de casos visible** | Xunto a cada taxa, o número de altas (n) | Unha taxa sen denominador engana (ver «Peticións da dirección») |
-      | **Mínimo de altas** | Agóchanse ou avísase dos centros con menos de 30 altas | Os centros pequenos dan taxas extremas por azar |
-      | **Ordenar de maior a menor** | En barras por centro, da máis alta á máis baixa | Lese dun vistazo quen destaca |
-      | **Título = conclusión** | Unha frase que diga **que se ve**, non só que é | «Un centro supera con claridade ao resto…» informa; «Reingresos por centro» só etiqueta |
-      | **Máximo dúas cores de énfase** | Unha cor base e outra para resaltar; que se distingan con daltonismo | O arco da vella distrae e non todo o mundo ve todas as cores |
-      | **Sen dobre eixe** | Non mesturar dúas escalas nun gráfico | Confunde: parece que dúas cousas están relacionadas cando só comparten o debuxo |
-      | **Sen 3D** | Barras planas | O 3D deforma as barras e dificulta comparalas |
+      | **Barras** | Comparar categorías (centros, idades, áreas) | — |
+      | **Liña** | Ver como cambia algo **no tempo** (meses, anos) | Para categorías: unha liña entre «centro A» e «centro B» non significa nada |
+      | **Táboa** | Cando importan os números exactos | Se hai que ver o conxunto dunha ollada |
+      | **Número grande (KPI)** | Unha cifra clave co seu contexto | Para comparar |
+      | **Área** | Coma a liña, para o tempo | Igual ca a liña: nunca para categorías |
+      | **Torta ou anel** | **Case nunca.** O ollo compara mal ángulos e áreas: dúas porcións de 18 % e 15 % parecen iguais | Para taxas, nunca: a taxa de cada centro non é unha «parte» dun total. Usade barras |
 
-      ## Como escribir un bo título
-      Un título que di a conclusión adoita ter **6 palabras ou máis** e un **verbo de comparación ou unha cifra**: *supera, concentra, sobe, baixa, maior, menor, máis, menos…*
-      - Malo: «Reingresos por centro».
-      - Bo: «Un centro supera con claridade ao resto en reingresos a 30 días».
-      Escribe o que **de verdade** se ve no gráfico: non inventes a conclusión antes de miralo.
+      ## O que o construtor xa fai ben por ti
+      As barras e as liñas **empezan sempre en cero** (se non, unha diferenza pequena parece enorme) e non hai 3D nin dobre eixe: non achegan nada e confunden.
 
-      ## Elixir o tipo de gráfico
-      - **Barras por centro / por grupo de idade:** para **comparar categorías**.
-      - **Liña mensual:** para ver **como cambia** algo co tempo.
-      - **Táboa:** cando importan os números exactos.
-      - **Indicador único (KPI):** unha cifra grande co seu contexto.
+      ## Os centros pequenos
+      Con moi poucas altas unha taxa é puro azar. Aplica o **mínimo de altas** que fixastes en «KPI con sentido» aos gráficos por centro.
 
-      ## Lista de comprobación antes de entregar
-      - 3 ou 4 gráficos, cada un coa súa pregunta?
-      - Eixe en cero, n visible e mínimo de altas en cada gráfico?
-      - Orde de maior a menor nas barras por centro?
-      - Máximo dúas cores, sen 3D nin dobre eixe?
-      - Cada título di unha conclusión?
+      ## Cores
+      Unha, ou unha máis outra para destacar o importante. O arco da vella distrae e non se distingue con daltonismo.
+
+      ## Como le o crítico
+      - 🔴 **Engana:** o gráfico pode levar a unha conclusión falsa. Hai que arranxalo para entregar.
+      - 🟡 **Mellorable:** enténdese, pero pódese contar mellor. Pódese entregar, pero gáñase menos confianza.
+      - 🔵 **Suxestión.**
 - id: doc_ds_ai
   path: docs/verificar-ia.md
   title: { es: "Cómo se verifica lo que dice una IA", gl: "Como se verifica o que di unha IA" }
@@ -686,3 +680,67 @@
 
       ## Equidade
       Mide o modelo **por grupos** (sexo, tramo de idade…). Un bo resultado global pode agochar que funciona mal cun grupo concreto. Mira o documento «Variables sensibles e sesgos».
+- id: doc_star
+  path: docs/esquema-en-estrella.md
+  title: { es: "Esquema en estrella: hechos y dimensiones", gl: "Esquema en estrela: feitos e dimensións" }
+  body:
+    es: |
+      Antes de calcular nada, un equipo de datos dibuja el **plano** de sus tablas. La forma más usada para analizar se llama **esquema en estrella**. Este documento te enseña a dibujarlo con **otro ejemplo**; el del hospital lo hacéis vosotros.
+
+      ## Dos tipos de tabla
+      | | **Hecho** | **Dimensión** |
+      |---|---|---|
+      | Qué guarda | Algo que **pasa** y se puede contar o sumar | Una **cosa que existe** y describe lo que pasa |
+      | Una fila es… | «una vez que pasó algo» | «una cosa»: una persona, un sitio, un día |
+      | Crece… | muchísimo (cada día pasan cosas nuevas) | poco (no aparecen personas o sitios nuevos a cada rato) |
+      | Pregunta que responde | ¿cuántos?, ¿cuánto? | ¿quién?, ¿dónde?, ¿cuándo?, ¿qué? |
+
+      ## Ejemplo: una app de música
+      Tablas: `escucha` (una fila cada vez que alguien escucha una canción: usuario_id, cancion_id, fecha, segundos), `usuario` (una fila por usuario: edad, país), `cancion` (una fila por canción: título, género, artista) y `calendario` (una fila por día).
+      - `escucha` es el **hecho**: cada fila es algo que pasó.
+      - `usuario`, `cancion` y `calendario` son **dimensiones**: describen cada escucha (quién, qué, cuándo).
+
+      ## Cómo saber qué se une con qué
+      Mira las **columnas del hecho**: cada **código** (`usuario_id`, `cancion_id`) o **fecha** apunta a una dimensión. Si el hecho no tiene una columna para algo, **no se une** con esa dimensión. En el ejemplo, `escucha` se une con `usuario`, `cancion` y `calendario`. Si hubiera otro hecho, `me_gusta` (usuario_id, cancion_id, fecha), se uniría con las mismas tres… pero si `me_gusta` no tuviera fecha, no se uniría con `calendario`.
+
+      ## Tres reglas del dibujo
+      1. Cada hecho se une con **las dimensiones que lo describen** (las que tienen columna en el hecho).
+      2. **Dos dimensiones no se unen entre sí**: siempre van a través de un hecho.
+      3. **Dos hechos no se unen entre sí**: comparten dimensiones.
+      El dibujo parece una estrella: el hecho en el centro y sus dimensiones alrededor.
+
+      ## Por qué se hace así
+      Para contar «¿cuántas escuchas de rock hubo en marzo entre menores de 18?» basta con unir el hecho con tres dimensiones. Casi todos los cuadros de mando de las empresas se apoyan en un esquema así.
+
+      ## Y en este proyecto
+      El esquema que dibujéis no se queda en un dibujo: al calcular el modelo de reingreso se crean de verdad en la capa **oro** (panel BASE DE DATOS) las tablas `fct_admission` y `fct_condition` (hechos) y `dim_patient`, `dim_hospital` y `dim_date` (dimensiones), unidas por sus claves. Podéis abrirlas y preguntarles en el Laboratorio.
+    gl: |
+      Antes de calcular nada, un equipo de datos debuxa o **plano** das súas táboas. A forma máis usada para analizar chámase **esquema en estrela**. Este documento ensínache a debuxalo con **outro exemplo**; o do hospital facédelo vós.
+
+      ## Dous tipos de táboa
+      | | **Feito** | **Dimensión** |
+      |---|---|---|
+      | Que garda | Algo que **pasa** e se pode contar ou sumar | Unha **cousa que existe** e describe o que pasa |
+      | Unha fila é… | «unha vez que pasou algo» | «unha cousa»: unha persoa, un sitio, un día |
+      | Crece… | moitísimo (cada día pasan cousas novas) | pouco (non aparecen persoas ou sitios novos a cada pouco) |
+      | Pregunta que responde | cantos?, canto? | quen?, onde?, cando?, que? |
+
+      ## Exemplo: unha app de música
+      Táboas: `escoita` (unha fila cada vez que alguén escoita unha canción: usuario_id, cancion_id, data, segundos), `usuario` (unha fila por usuario: idade, país), `cancion` (unha fila por canción: título, xénero, artista) e `calendario` (unha fila por día).
+      - `escoita` é o **feito**: cada fila é algo que pasou.
+      - `usuario`, `cancion` e `calendario` son **dimensións**: describen cada escoita (quen, que, cando).
+
+      ## Como saber que se une con que
+      Mira as **columnas do feito**: cada **código** (`usuario_id`, `cancion_id`) ou **data** apunta a unha dimensión. Se o feito non ten unha columna para algo, **non se une** con esa dimensión. No exemplo, `escoita` únese con `usuario`, `cancion` e `calendario`. Se houbese outro feito, `gústame` (usuario_id, cancion_id, data), uniríase coas mesmas tres… pero se `gústame` non tivese data, non se uniría con `calendario`.
+
+      ## Tres regras do debuxo
+      1. Cada feito únese coas **dimensións que o describen** (as que teñen columna no feito).
+      2. **Dúas dimensións non se unen entre si**: sempre van a través dun feito.
+      3. **Dous feitos non se unen entre si**: comparten dimensións.
+      O debuxo parece unha estrela: o feito no centro e as súas dimensións arredor.
+
+      ## Por que se fai así
+      Para contar «cantas escoitas de rock houbo en marzo entre menores de 18?» abonda con unir o feito con tres dimensións. Case todos os cadros de mando das empresas apóianse nun esquema así.
+
+      ## E neste proxecto
+      O esquema que debuxedes non queda nun debuxo: ao calcular o modelo de reingreso créanse de verdade na capa **ouro** (panel BASE DE DATOS) as táboas `fct_admission` e `fct_condition` (feitos) e `dim_patient`, `dim_hospital` e `dim_date` (dimensións), unidas polas súas claves. Podedes abrilas e preguntarlles no Laboratorio.
